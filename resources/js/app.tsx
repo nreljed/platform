@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/Components/ui/tooltip";
 import { Toaster, toast } from "@/Components/ui/toast";
-import { registerDashboard, type PageImport } from "./dashboard";
+import { ErrorBoundary } from "@/Components/ErrorBoundary";
+import type { PageImport } from "./dashboard";
 
 import "@/Components/ui/sidebar";
 
@@ -32,15 +33,25 @@ function InertiaFlashListener() {
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 export type FoundationAppConfig = {
+  /**
+   * The starting page map — normally `registerCoreTemplates()` from `./dashboard`.
+   * Core pages are opt-in: a project decides which pages it uses by spreading
+   * the kit here (and/or adding its own entries).
+   */
+  basePages?: Record<string, PageImport>;
   projectPages?: Record<string, PageImport>;
   projectPrefix?: string;
+  /**
+   * Explicit name → import overrides for CORE-owned pages (applied last, wins).
+   */
+  pageOverrides?: Record<string, PageImport>;
 };
 
 export type { PageImport } from "./dashboard";
 
-export function createFoundationApp(config: FoundationAppConfig = {}): void {
+export function buildPageMap(config: FoundationAppConfig = {}): Record<string, PageImport> {
   const pageMap: Record<string, PageImport> = {
-    ...registerDashboard(),
+    ...config.basePages,
   };
 
   if (config.projectPages) {
@@ -54,6 +65,18 @@ export function createFoundationApp(config: FoundationAppConfig = {}): void {
       }
     }
   }
+
+  if (config.pageOverrides) {
+    for (const [name, importFn] of Object.entries(config.pageOverrides)) {
+      pageMap[name.toLowerCase()] = importFn;
+    }
+  }
+
+  return pageMap;
+}
+
+export function createFoundationApp(config: FoundationAppConfig = {}): void {
+  const pageMap = buildPageMap(config);
 
   createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -77,7 +100,9 @@ export function createFoundationApp(config: FoundationAppConfig = {}): void {
           disableTransitionOnChange
         >
           <TooltipProvider>
-            <App {...props} />
+            <ErrorBoundary key={props.initialPage.url}>
+              <App {...props} />
+            </ErrorBoundary>
             <InertiaFlashListener />
             <Toaster />
           </TooltipProvider>

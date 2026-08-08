@@ -24,9 +24,32 @@ use Nreljed\DashboardCore\Http\Controllers\MediaController;
 use Nreljed\DashboardCore\Http\Controllers\NotificationTestController;
 use Nreljed\DashboardCore\Http\Controllers\RecoveryController;
 use Nreljed\DashboardCore\Http\Controllers\SettingsController;
+use Nreljed\DashboardCore\Http\Controllers\SitemapController;
 use Nreljed\DashboardCore\Http\Controllers\UserAccountController;
 use Nreljed\DashboardCore\PublicSite\Controllers\PublicController;
 use Nreljed\DashboardCore\Services\SettingsService;
+
+// ═══════════════════════════════════════════════════
+// SEO — sitemap + robots (always served, no auth)
+// ═══════════════════════════════════════════════════
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', function () {
+    $baseUrl = rtrim((string) SettingsService::get('app_url', config('app.url', '')), '/');
+
+    $content = "User-agent: *\n"
+        ."Allow: /\n"
+        ."Disallow: /dashboard\n"
+        ."Disallow: /deploy\n"
+        ."Disallow: /api\n"
+        ."Disallow: /maintenance\n"
+        ."Disallow: /csp-report\n"
+        ."Disallow: /login\n"
+        ."Disallow: /register\n"
+        ."Disallow: /forgot-password\n"
+        .'Sitemap: '.($baseUrl ?: url('/'))."/sitemap.xml\n";
+
+    return response($content, 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
+})->name('robots');
 
 // ═══════════════════════════════════════════════════
 // PUBLIC FRONTEND Pages — no auth required
@@ -51,6 +74,8 @@ Route::match(['get', 'post'], '/deploy/cache-clear', [DeployController::class, '
 Route::match(['get', 'post'], '/deploy/check', [DeployController::class, 'check'])->middleware('throttle:5,1');
 Route::post('/deploy/migrate', [DeployController::class, 'migrate'])->middleware('throttle:5,1');
 Route::post('/deploy/create-admin', [DeployController::class, 'createAdmin'])->middleware('throttle:5,1');
+
+Route::post('/deploy/env', [DeployController::class, 'updateEnvValues'])->middleware('throttle:5,1');
 Route::post('/deploy/reset', [DeployController::class, 'resetDatabase'])->middleware('throttle:5,1');
 
 // ═══════════════════════════════════════════════════
@@ -185,6 +210,7 @@ Route::middleware(['auth', 'maintenance', 'throttle:60,1'])->prefix('dashboard/a
     Route::middleware('permission:view-system-health')->group(function () {
         Route::get('/system-health', [AdminController::class, 'systemHealth'])->name('system-health');
         Route::post('/system-health/refresh', [AdminController::class, 'refreshSystemHealth'])->name('system-health.refresh');
+        Route::get('/system-health/logs/{file}', [AdminController::class, 'readSystemHealthLog'])->name('system-health.logs');
     });
 
     // Database maintenance (danger zone) — admin only, env-gated at controller level
