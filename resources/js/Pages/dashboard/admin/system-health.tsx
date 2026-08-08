@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { jsonHeaders } from "@/lib/gallery-utils";
+import { normalizeVersion } from "@/lib/versions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
 import { Button } from "@/Components/ui/button";
@@ -206,6 +207,7 @@ interface LatestVersion {
   version?: string;
   url?: string;
   published_at?: string;
+  checked_at?: string;
   name?: string;
   body?: string;
   error?: string;
@@ -218,6 +220,7 @@ interface CoreLatestVersion {
   version?: string;
   url?: string;
   published_at?: string;
+  checked_at?: string;
   name?: string;
   body?: string;
   error?: string;
@@ -322,6 +325,16 @@ interface SystemHealthProps {
 /*
 ─── Helper Components ───
 */
+
+function formatDateTime(value?: string) {
+  if (!value) {
+    return null;
+  }
+
+  const date = new Date(value);
+
+  return Number.isNaN(date.getTime()) ? null : date.toLocaleString();
+}
 
 function StatusDot({ ok }: { ok: boolean }) {
   return (
@@ -615,14 +628,17 @@ export default function SystemHealth(props: SystemHealthProps) {
   const canCompareVersions = props.deployed_version.exists && props.latest_version.found;
 
   const isUpToDate =
-    canCompareVersions && props.deployed_version.version === props.latest_version.version;
+    canCompareVersions &&
+    normalizeVersion(props.deployed_version.version) ===
+      normalizeVersion(props.latest_version.version);
 
   const coreInstalled = props.core_package.version;
   const coreIsDev = props.core_package.is_dev === true;
   const canCompareCoreVersions =
     props.core_latest_version.found && Boolean(coreInstalled) && !coreIsDev;
   const coreUpToDate =
-    canCompareCoreVersions && coreInstalled === props.core_latest_version.version;
+    canCompareCoreVersions &&
+    normalizeVersion(coreInstalled) === normalizeVersion(props.core_latest_version.version);
 
   const appStatus: "up-to-date" | "update-available" | "unknown" | "git" | "not-recorded" =
     canCompareVersions
@@ -635,13 +651,34 @@ export default function SystemHealth(props: SystemHealthProps) {
           ? "unknown"
           : "not-recorded";
 
-  const coreStatus: "up-to-date" | "update-available" | "dev" | "unknown" = canCompareCoreVersions
-    ? coreUpToDate
-      ? "up-to-date"
-      : "update-available"
-    : coreIsDev
-      ? "dev"
-      : "unknown";
+  const coreStatus:
+    "up-to-date" | "update-available" | "dev" | "check-off" | "check-failed" | "not-recorded" =
+    canCompareCoreVersions
+      ? coreUpToDate
+        ? "up-to-date"
+        : "update-available"
+      : coreIsDev
+        ? "dev"
+        : props.core_latest_version.skipped
+          ? "check-off"
+          : props.core_latest_version.error
+            ? "check-failed"
+            : "not-recorded";
+
+  const coreStatusHint: Record<
+    "up-to-date" | "update-available" | "dev" | "check-off" | "check-failed" | "not-recorded",
+    string
+  > = {
+    "up-to-date": "Installed core matches the latest release.",
+    "update-available": "Run `composer update nreljed/dashboard-core`, rebuild, and deploy.",
+    dev: "Local path repo (@dev). Publish via `composer run core:publish`; production installs tagged releases.",
+    "check-off": "Add GITHUB_TOKEN to the server .env to enable release checks.",
+    "check-failed":
+      props.core_latest_version.message ??
+      props.core_latest_version.error ??
+      "Release check failed.",
+    "not-recorded": "No core version recorded for this install yet.",
+  };
 
   const all_extensions_loaded = props.extensions.every((e) => !e.required || e.loaded);
 
@@ -769,23 +806,23 @@ export default function SystemHealth(props: SystemHealthProps) {
               <div className="rounded-lg border border-border/50 p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       Application
                     </p>
-                    <p className="mt-0.5 flex items-center gap-2 text-sm font-medium">
+                    <p className="mt-1 flex flex-wrap items-center gap-2 text-lg font-semibold">
                       {props.deployed_version.exists ? (
                         <span className="font-mono">{props.deployed_version.version}</span>
                       ) : (
                         <span className="text-muted-foreground">not recorded</span>
                       )}
                       {props.deployed_version.origin === "git" && (
-                        <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">
-                          <GitBranch className="h-3 w-3" />
+                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                          <GitBranch className="h-3.5 w-3.5" />
                           Git HEAD{props.deployed_version.is_dirty ? " · dirty" : " · clean"}
                         </span>
                       )}
                     </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       {props.latest_version.found ? (
                         <>
                           Latest: <span className="font-mono">{props.latest_version.version}</span>
@@ -793,7 +830,7 @@ export default function SystemHealth(props: SystemHealthProps) {
                             <>
                               {" "}
                               &middot;{" "}
-                              {new Date(props.latest_version.published_at).toLocaleDateString()}
+                              {new Date(props.latest_version.published_at).toLocaleString()}
                             </>
                           )}
                         </>
@@ -806,6 +843,11 @@ export default function SystemHealth(props: SystemHealthProps) {
                         </>
                       )}
                     </p>
+                    {formatDateTime(props.latest_version.checked_at) && (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Checked {formatDateTime(props.latest_version.checked_at)}
+                      </p>
+                    )}
                   </div>
                   <Badge
                     variant={
@@ -834,23 +876,23 @@ export default function SystemHealth(props: SystemHealthProps) {
               <div className="mt-2 rounded-lg border border-border/50 p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       Dashboard Core
                     </p>
-                    <p className="mt-0.5 flex flex-wrap items-center gap-2 text-sm font-medium">
+                    <p className="mt-1 flex flex-wrap items-center gap-2 text-lg font-semibold">
                       {coreInstalled ? (
                         <span className="font-mono">v{coreInstalled}</span>
                       ) : (
                         <span className="text-muted-foreground">unrecorded</span>
                       )}
                       {coreIsDev && (
-                        <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">
-                          <GitBranch className="h-3 w-3" />
+                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                          <GitBranch className="h-3.5 w-3.5" />
                           dev build
                         </span>
                       )}
                       {props.core_package.constraint && (
-                        <span className="text-[10px] text-muted-foreground">
+                        <span className="text-xs text-muted-foreground">
                           constraint {props.core_package.constraint}
                         </span>
                       )}
@@ -859,19 +901,19 @@ export default function SystemHealth(props: SystemHealthProps) {
                           href={props.core_package.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="font-mono text-xs text-primary hover:underline"
+                          className="font-mono text-sm text-primary hover:underline"
                         >
                           {props.core_package.short}
                         </a>
                       ) : null}
                       {props.core_package.needs_reinstall && (
-                        <span className="text-[10px] text-amber-500 dark:text-amber-400">
+                        <span className="text-xs text-amber-500 dark:text-amber-400">
                           vendor {props.core_package.vendor_version} vs source{" "}
                           {props.core_package.source_version} &mdash; run composer reinstall
                         </span>
                       )}
                     </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       {props.core_latest_version.found ? (
                         <>
                           Latest:{" "}
@@ -880,9 +922,7 @@ export default function SystemHealth(props: SystemHealthProps) {
                             <>
                               {" "}
                               &middot;{" "}
-                              {new Date(
-                                props.core_latest_version.published_at,
-                              ).toLocaleDateString()}
+                              {new Date(props.core_latest_version.published_at).toLocaleString()}
                             </>
                           )}
                         </>
@@ -895,6 +935,11 @@ export default function SystemHealth(props: SystemHealthProps) {
                         </>
                       )}
                     </p>
+                    {formatDateTime(props.core_latest_version.checked_at) && (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Checked {formatDateTime(props.core_latest_version.checked_at)}
+                      </p>
+                    )}
                   </div>
                   <Badge
                     variant={
@@ -902,7 +947,7 @@ export default function SystemHealth(props: SystemHealthProps) {
                         ? "success"
                         : coreStatus === "update-available"
                           ? "warning"
-                          : coreStatus === "dev"
+                          : coreStatus === "dev" || coreStatus === "check-off"
                             ? "info"
                             : "secondary"
                     }
@@ -914,9 +959,14 @@ export default function SystemHealth(props: SystemHealthProps) {
                         ? "Update available"
                         : coreStatus === "dev"
                           ? "Dev build"
-                          : "Unknown"}
+                          : coreStatus === "check-off"
+                            ? "Check off"
+                            : coreStatus === "check-failed"
+                              ? "Check failed"
+                              : "Not recorded"}
                   </Badge>
                 </div>
+                <p className="mt-2 text-xs text-muted-foreground">{coreStatusHint[coreStatus]}</p>
               </div>
             </CardContent>
           </Card>
