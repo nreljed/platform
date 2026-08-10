@@ -80,7 +80,10 @@ class DatabaseMaintenanceService
                 fn (string $key, array $group) => [
                     'key' => $key,
                     'label' => $group['label'] ?? $key,
+                    'description' => $group['description'] ?? null,
                     'destructive' => (bool) ($group['destructive'] ?? false),
+                    'baseline' => (bool) ($group['baseline'] ?? false),
+                    'unresolved' => ! $this->classResolvable($group['class'] ?? ''),
                 ],
                 array_keys($this->seederGroups()),
                 $this->seederGroups(),
@@ -350,7 +353,7 @@ class DatabaseMaintenanceService
     }
 
     /**
-     * @return array<string, array{class: class-string, label?: string, destructive?: bool, baseline?: bool}>
+     * @return array<string, array{class: class-string, label?: string, description?: string, destructive?: bool, baseline?: bool}>
      */
     private function seederGroups(): array
     {
@@ -361,6 +364,8 @@ class DatabaseMaintenanceService
      * Baseline groups always run on reset; demo groups only when requested.
      *
      * @return array<string, class-string>
+     *
+     * @throws DatabaseMaintenanceException
      */
     private function seedersForReset(bool $demo): array
     {
@@ -372,7 +377,14 @@ class DatabaseMaintenanceService
             $selected += array_filter($groups, static fn (array $group) => ! ($group['baseline'] ?? false));
         }
 
-        return array_map(static fn (array $group): string => $group['class'], $selected);
+        $classes = [];
+        foreach ($selected as $key => $group) {
+            $class = $group['class'] ?? '';
+            $this->assertClassResolvable($key, $class);
+            $classes[$key] = $class;
+        }
+
+        return $classes;
     }
 
     /**
@@ -391,10 +403,27 @@ class DatabaseMaintenanceService
                 throw new DatabaseMaintenanceException("Unknown seeder group '{$key}'.");
             }
 
-            $classes[$key] = $groups[$key]['class'];
+            $class = $groups[$key]['class'];
+            $this->assertClassResolvable($key, $class);
+            $classes[$key] = $class;
         }
 
         return $classes;
+    }
+
+    private function classResolvable(string $class): bool
+    {
+        return $class !== '' && class_exists($class);
+    }
+
+    /**
+     * @throws DatabaseMaintenanceException
+     */
+    private function assertClassResolvable(string $key, string $class): void
+    {
+        if (! $this->classResolvable($class)) {
+            throw new DatabaseMaintenanceException("Seeder group '{$key}' references a class that does not exist: {$class}.");
+        }
     }
 
     private function tableCount(): int
