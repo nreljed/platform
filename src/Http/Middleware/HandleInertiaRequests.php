@@ -178,12 +178,7 @@ class HandleInertiaRequests extends Middleware
         $slugs = [];
 
         try {
-            $slugs = array_merge($slugs, collect(config('roles.permissions', []))->pluck('slug')->all());
-        } catch (\Throwable) {
-        }
-
-        try {
-            $slugs = array_merge($slugs, collect(app(FeatureRegistry::class)->permissions())->pluck('slug')->all());
+            $slugs = collect(\Nreljed\DashboardCore\Support\RoleCatalog::permissions())->pluck('slug')->all();
         } catch (\Throwable) {
         }
 
