@@ -36,39 +36,30 @@ return [
     | frontend/GitHub Action. Consuming apps override this array in their own
     | published config to point at their seeders.
     |
-    | Each group may define: class (required), label, description (optional,
-    | rendered by the UI), destructive (default false), baseline (default false).
-    | Groups whose class does not exist are surfaced as "unresolved" in the UI
-    | and are refused when selected for reseed/reset.
-    |
     */
 
     'seeders' => [
         'roles' => [
             'class' => RolesAndPermissionsSeeder::class,
             'label' => 'Roles & Permissions',
-            'description' => 'Re-creates all core roles and their permission assignments. Safe to re-run.',
             'destructive' => false,
             'baseline' => true,
         ],
         'settings' => [
             'class' => SettingsSeeder::class,
             'label' => 'Settings',
-            'description' => 'Restores the default site settings (general, registration, security, email, ...). Safe to re-run.',
             'destructive' => false,
             'baseline' => true,
         ],
         'demo_users' => [
             'class' => DemoUsersSeeder::class,
             'label' => 'Demo users',
-            'description' => 'Re-creates the demo role users (editor, author, user, admin). Safe to re-run.',
             'destructive' => false,
             'baseline' => false,
         ],
         'blog' => [
             'class' => BlogContentSeeder::class,
             'label' => 'Blog content',
-            'description' => 'Re-creates the demo blog posts, categories and tags. May overwrite existing demo content.',
             'destructive' => true,
             'baseline' => false,
         ],

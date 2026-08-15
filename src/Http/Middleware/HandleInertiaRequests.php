@@ -3,6 +3,7 @@
 namespace Nreljed\DashboardCore\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Inertia\AlwaysProp;
 use Inertia\Middleware;
 use Nreljed\DashboardCore\Http\Controllers\EmailSettingsController;
 use Nreljed\DashboardCore\Models\Notification;
@@ -12,6 +13,7 @@ use Nreljed\DashboardCore\Services\EmailSettingsService;
 use Nreljed\DashboardCore\Services\FeatureRegistry;
 use Nreljed\DashboardCore\Services\NotificationService;
 use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\DashboardCore\Support\RoleCatalog;
 use Nreljed\DashboardCore\Traits\RelativeTime;
 use Tighten\Ziggy\Ziggy;
 
@@ -96,6 +98,11 @@ class HandleInertiaRequests extends Middleware
                 }
             },
             'featureNavItems' => $this->getFeatureNavItems(...),
+            'sharedData' => new AlwaysProp($this->getFeatureSharedData(...)),
+            'repeaterConfigs' => $this->getFeatureRepeaterConfigs(...),
+            'profileFieldConfigs' => $this->getFeatureProfileFieldConfigs(...),
+            'settingsRoutes' => $this->getFeatureSettingsRoutes(...),
+            'featureSettingsNav' => $this->getFeatureSettingsNav(...),
             'features' => [
                 'databaseMaintenanceEnabled' => function () {
                     try {
@@ -155,6 +162,42 @@ class HandleInertiaRequests extends Middleware
         }
     }
 
+    protected function getFeatureRepeaterConfigs(): array
+    {
+        try {
+            return app(FeatureRegistry::class)->getAllRepeaterConfigs();
+        } catch (\Throwable) {
+            return [];
+        }
+    }
+
+    protected function getFeatureProfileFieldConfigs(): array
+    {
+        try {
+            return app(FeatureRegistry::class)->getAllProfileFieldConfigs();
+        } catch (\Throwable) {
+            return [];
+        }
+    }
+
+    protected function getFeatureSettingsRoutes(): array
+    {
+        try {
+            return app(FeatureRegistry::class)->getAllSettingsRoutes();
+        } catch (\Throwable) {
+            return [];
+        }
+    }
+
+    protected function getFeatureSettingsNav(): array
+    {
+        try {
+            return app(FeatureRegistry::class)->getAllSettingsNav();
+        } catch (\Throwable) {
+            return [];
+        }
+    }
+
     protected function getModules(): array
     {
         try {
@@ -178,7 +221,7 @@ class HandleInertiaRequests extends Middleware
         $slugs = [];
 
         try {
-            $slugs = collect(\Nreljed\DashboardCore\Support\RoleCatalog::permissions())->pluck('slug')->all();
+            $slugs = collect(RoleCatalog::permissions())->pluck('slug')->all();
         } catch (\Throwable) {
         }
 

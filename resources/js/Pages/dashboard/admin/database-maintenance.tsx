@@ -34,16 +34,18 @@ import {
   UserRound,
 } from "lucide-react";
 
-const GROUP_FALLBACK_DESCRIPTION = (destructive: boolean) =>
-  destructive ? "Re-running may overwrite existing content." : "Re-running is safe and idempotent.";
+const GROUP_DESCRIPTIONS: Record<string, string> = {
+  roles: "Re-creates all core roles and their permission assignments. Safe to re-run.",
+  settings:
+    "Restores the default site settings (general, registration, security, email, ...). Safe to re-run.",
+  demo_users: "Re-creates the demo role users (editor, author, user, admin). Safe to re-run.",
+  blog: "Re-creates the demo blog posts, categories and tags. May overwrite existing demo content.",
+};
 
 interface ReseedGroup {
   key: string;
   label: string;
-  description: string | null;
   destructive: boolean;
-  baseline: boolean;
-  unresolved: boolean;
 }
 
 interface DatabaseMaintenanceStatus {
@@ -68,7 +70,6 @@ interface FormErrors {
   confirmation?: string;
   password?: string;
   purge_media?: string;
-  with_demo?: string;
   groups?: string;
 }
 
@@ -115,13 +116,10 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
   const [resetConfirmation, setResetConfirmation] = useState("");
   const [resetPassword, setResetPassword] = useState("");
   const [purgeMedia, setPurgeMedia] = useState(false);
-  const [withDemo, setWithDemo] = useState(false);
   const [reseedConfirmation, setReseedConfirmation] = useState("");
   const [reseedPassword, setReseedPassword] = useState("");
   const [selectedGroups, setSelectedGroups] = useState<string[]>(() =>
-    status.reseed_groups
-      .filter((group) => !group.destructive && !group.unresolved)
-      .map((group) => group.key),
+    status.reseed_groups.filter((group) => !group.destructive).map((group) => group.key),
   );
   const [processing, setProcessing] = useState<"reset" | "reseed" | null>(null);
   const [resetErrors, setResetErrors] = useState<FormErrors>({});
@@ -142,7 +140,6 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
         confirmation: resetConfirmation,
         password: resetPassword,
         purge_media: purgeMedia,
-        with_demo: withDemo,
       },
       {
         preserveScroll: true,
@@ -153,7 +150,7 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
         onFinish: () => setProcessing(null),
       },
     );
-  }, [processing, resetConfirmation, resetPassword, purgeMedia, withDemo]);
+  }, [processing, resetConfirmation, resetPassword, purgeMedia]);
 
   const runReseed = useCallback(() => {
     if (processing) return;
@@ -188,13 +185,6 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
     reseedConfirmation === "RESEED" && reseedPassword.length > 0 && selectedGroups.length > 0;
   const isProcessing = processing !== null;
   const isResetLocked = status.locked || isProcessing;
-
-  const baselineGroups = status.reseed_groups.filter((group) => group.baseline && !group.unresolved);
-  const demoGroups = status.reseed_groups.filter((group) => !group.baseline && !group.unresolved);
-  const baselineLabel =
-    baselineGroups.length > 0
-      ? baselineGroups.map((group) => group.label).join(", ")
-      : "the baseline groups configured for this app";
 
   return (
     <AdminLayout title="Database Maintenance">
@@ -319,7 +309,8 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
               variant: "destructive",
               icon: AlertTriangle,
               title: "Reset Database",
-              description: `Drop every table, re-run migrations, then re-create the admin account plus ${baselineLabel}. All data is permanently lost.`,
+              description:
+                "Drop every table, re-run migrations, then re-create the admin account plus core roles, permissions and settings. Demo users and blog content are not seeded — use the reseed tool to restore them. All data is permanently lost.",
               content: (
                 <>
                   <Alert variant="destructive">
@@ -339,7 +330,8 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
                         Drops every table and re-runs all migrations (
                         <span className="font-mono">migrate:fresh</span>).
                       </li>
-                      <li>Re-runs the baseline seeders: {baselineLabel}.</li>
+                      <li>Re-creates the core roles and permissions.</li>
+                      <li>Restores the default site settings.</li>
                       <li>
                         Re-creates the admin account from{" "}
                         <span className="font-mono">ADMIN_EMAIL</span> /{" "}
@@ -349,18 +341,10 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
                       <li>
                         Only deletes the actual media files if the purge option below is checked.
                       </li>
-                      {withDemo && demoGroups.length > 0 ? (
-                        <li>
-                          Demo content is seeded after the baseline:{" "}
-                          {demoGroups.map((group) => group.label).join(", ")}.
-                        </li>
-                      ) : (
-                        <li>
-                          Demo content groups ({demoGroups.map((group) => group.label).join(", ")} or
-                          as configured for this app) are <strong>not</strong> seeded — tick the
-                          option below or use the Reseed accordion to restore them.
-                        </li>
-                      )}
+                      <li>
+                        Demo users and blog content are <strong>not</strong> seeded — restore them
+                        with the Reseed accordion.
+                      </li>
                     </ul>
                   </div>
 
@@ -415,27 +399,6 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
                     </div>
                   </Field>
 
-                  {!status.is_production && demoGroups.length > 0 && (
-                    <Field>
-                      <div className="flex items-start gap-2">
-                        <Checkbox
-                          id="db_reset_demo"
-                          checked={withDemo}
-                          onCheckedChange={(checked) => setWithDemo(checked === true)}
-                          disabled={isResetLocked}
-                        />
-                        <div className="space-y-0.5">
-                          <FieldLabel htmlFor="db_reset_demo">Seed demo content</FieldLabel>
-                          <FieldDescription>
-                            After the baseline, also re-runs the demo content groups:{" "}
-                            {demoGroups.map((group) => group.label).join(", ")}. Only available
-                            outside production.
-                          </FieldDescription>
-                        </div>
-                      </div>
-                    </Field>
-                  )}
-
                   <Separator />
 
                   <div className="flex justify-end">
@@ -474,9 +437,10 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
                       {status.reseed_groups.map((group) => (
                         <li key={group.key}>
                           <span className="font-medium text-foreground">{group.label}</span> —{" "}
-                          {group.unresolved
-                            ? "The seeder class for this group is missing or not installed in this app."
-                            : (group.description ?? GROUP_FALLBACK_DESCRIPTION(group.destructive))}
+                          {GROUP_DESCRIPTIONS[group.key] ??
+                            (group.destructive
+                              ? "Re-running may overwrite existing content."
+                              : "Re-running is safe and idempotent.")}
                         </li>
                       ))}
                     </ul>
@@ -494,7 +458,7 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
                             id={`db_reseed_group_${group.key}`}
                             checked={selectedGroups.includes(group.key)}
                             onCheckedChange={() => toggleGroup(group.key)}
-                            disabled={isProcessing || group.unresolved}
+                            disabled={isProcessing}
                           />
                           <div className="space-y-0.5">
                             <FieldLabel htmlFor={`db_reseed_group_${group.key}`}>
@@ -504,21 +468,12 @@ export default function DatabaseMaintenance({ status }: DatabaseMaintenanceProps
                                   destructive
                                 </Badge>
                               )}
-                              {group.baseline && (
-                                <Badge variant="secondary" className="ml-2">
-                                  baseline
-                                </Badge>
-                              )}
-                              {group.unresolved && (
-                                <Badge variant="outline" className="ml-2">
-                                  missing class
-                                </Badge>
-                              )}
                             </FieldLabel>
                             <FieldDescription>
-                              {group.unresolved
-                                ? "The seeder class for this group is missing or not installed in this app."
-                                : (group.description ?? GROUP_FALLBACK_DESCRIPTION(group.destructive))}
+                              {GROUP_DESCRIPTIONS[group.key] ??
+                                (group.destructive
+                                  ? "Re-running may overwrite existing content."
+                                  : "Re-running is safe and idempotent.")}
                             </FieldDescription>
                           </div>
                         </div>

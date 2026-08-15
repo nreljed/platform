@@ -25,7 +25,6 @@ class DatabaseResetRequest extends FormRequest
                 }
             }],
             'purge_media' => ['sometimes', 'boolean'],
-            'with_demo' => ['sometimes', 'boolean'],
         ];
     }
 }

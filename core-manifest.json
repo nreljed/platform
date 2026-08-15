@@ -18,7 +18,6 @@
   "overridable_config": [
     "config/admin.php",
     "config/core.php",
-    "config/database-maintenance.php",
     "config/deploy.php",
     "config/roles.php"
   ]

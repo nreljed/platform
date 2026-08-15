@@ -34,7 +34,7 @@ class DatabaseMaintenanceController extends Controller
             $this->service->resetDatabase(
                 purgeMedia: $request->boolean('purge_media'),
                 userId: $request->user()->id,
-                demo: $request->boolean('with_demo') && ! app()->isProduction(),
+                demo: false,
             );
         } catch (DatabaseMaintenanceException $e) {
             $this->endSession($request);
