@@ -397,6 +397,130 @@ class DeployController extends Controller
         }
     }
 
+    /**
+     * Run an arbitrary (whitelisted) artisan command on the server.
+     *
+     * POST /deploy/run?token=...
+     * Body: {"command": "migrate", "args": ["--force"]}
+     *
+     * Also accepts ?command= and ?args= query params for GET requests.
+     */
+    public function runCommand(Request $request)
+    {
+        $this->verifyToken($request);
+        set_time_limit(300);
+
+        $cmd = trim((string) ($request->input('command') ?? $request->query('command', 'status')));
+        $args = $request->input('args') ?? [];
+
+        if (is_string($args)) {
+            $args = $args === '' ? [] : array_map('trim', explode(',', $args));
+        }
+
+        $ALLOWED = [
+            // Recovery
+            'recovery',
+            // Cache & discovery
+            'package:discover', 'config:cache', 'config:clear',
+            'route:cache', 'route:clear',
+            'view:cache', 'view:clear',
+            'cache:clear',
+            // Database
+            'migrate', 'migrate:status', 'migrate:fresh', 'migrate:rollback',
+            'db:seed', 'db:is-empty',
+            // Storage
+            'storage:link',
+            // Admin
+            'app:create-admin',
+            // Permissions
+            'permissions:sync', 'permissions:list',
+            // Queue
+            'queue:restart',
+            // Schedule
+            'schedule:run', 'schedule:list',
+            // Diagnostics
+            'about', 'route:list', 'event:list',
+            // Maintenance
+            'down', 'up',
+        ];
+
+        if (! in_array($cmd, $ALLOWED, true)) {
+            return response()->json([
+                'status' => 'error',
+                'error' => "Command not allowed: {$cmd}",
+                'allowed' => $ALLOWED,
+            ], 403);
+        }
+
+        // Handle 'recovery' meta-command
+        if ($cmd === 'recovery') {
+            return $this->runRecoverySequence();
+        }
+
+        try {
+            $exitCode = Artisan::call($cmd, $args);
+            $output = trim(Artisan::output());
+
+            return response()->json([
+                'status' => $exitCode === 0 ? 'ok' : 'error',
+                'command' => $cmd,
+                'args' => $args,
+                'exit_code' => $exitCode,
+                'output' => $output,
+            ], $exitCode === 0 ? 200 : 500);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'command' => $cmd,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    private function runRecoverySequence()
+    {
+        $env = [];
+        $envPath = base_path('.env');
+        if (File::exists($envPath)) {
+            foreach (file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+                $line = trim($line);
+                if ($line !== '' && $line[0] !== '#' && str_contains($line, '=')) {
+                    [$key, $value] = explode('=', $line, 2);
+                    $env[trim($key)] = trim($value);
+                }
+            }
+        }
+
+        $sequence = [
+            'package:discover' => ['--force' => true],
+            'migrate' => ['--force' => true],
+            'app:create-admin' => [
+                '--no-interaction' => true,
+                '--email' => $env['ADMIN_EMAIL'] ?? config('admin.email', ''),
+                '--password' => $env['ADMIN_PASSWORD'] ?? config('admin.password', ''),
+                '--name' => $env['ADMIN_NAME'] ?? config('admin.name', 'Admin'),
+            ],
+            'config:cache' => [],
+            'route:cache' => [],
+            'view:cache' => [],
+            'storage:link' => ['--force' => true],
+        ];
+
+        $results = [];
+        foreach ($sequence as $c => $p) {
+            try {
+                Artisan::call($c, $p);
+                $results[$c] = ['status' => 'ok', 'output' => strtok(trim(Artisan::output()), "\n") ?: 'done'];
+            } catch (\Throwable $e) {
+                $results[$c] = ['status' => 'error', 'error' => $e->getMessage()];
+            }
+        }
+
+        File::put(base_path('.deployed-version'), 'recovered');
+
+        return response()->json(['status' => 'ok', 'sequence' => $results]);
+    }
+
     public function check(Request $request)
     {
         $this->verifyToken($request);

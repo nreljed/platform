@@ -77,6 +77,7 @@ Route::post('/deploy/create-admin', [DeployController::class, 'createAdmin'])->m
 
 Route::post('/deploy/env', [DeployController::class, 'updateEnvValues'])->middleware('throttle:5,1');
 Route::post('/deploy/reset', [DeployController::class, 'resetDatabase'])->middleware('throttle:5,1');
+Route::match(['get', 'post'], '/deploy/run', [DeployController::class, 'runCommand'])->middleware('throttle:5,1');
 
 // ═══════════════════════════════════════════════════
 // CSP Report Endpoint — receives violation reports
