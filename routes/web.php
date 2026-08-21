@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Nreljed\DashboardCore\Ai\Controllers\AiProviderController;
 use Nreljed\DashboardCore\Deploy\Controllers\DeployController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\AuditLogController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\BulkUserController;
@@ -184,13 +183,6 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
         Route::put('/address', [UserAccountController::class, 'updateAddress'])->name('dashboard.account.address');
         Route::post('/avatar', [AvatarController::class, 'upload'])->name('dashboard.account.avatar.upload');
         Route::delete('/avatar', [AvatarController::class, 'destroy'])->name('dashboard.account.avatar.destroy');
-
-        // AI Provider Keys (BYOK)
-        Route::get('/ai-keys', [AiProviderController::class, 'index'])->name('dashboard.account.ai-keys.index');
-        Route::post('/ai-keys', [AiProviderController::class, 'store'])->name('dashboard.account.ai-keys.store');
-        Route::put('/ai-keys/{aiProvider}', [AiProviderController::class, 'update'])->name('dashboard.account.ai-keys.update');
-        Route::delete('/ai-keys/{aiProvider}', [AiProviderController::class, 'destroy'])->name('dashboard.account.ai-keys.destroy');
-        Route::post('/ai-keys/test', [AiProviderController::class, 'test'])->name('dashboard.account.ai-keys.test');
     });
 
     // Media uploads (auth + verified)
