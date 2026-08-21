@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Nreljed\DashboardCore\Ai\Models\AiProvider;
+use Nreljed\DashboardCore\Ai\Policies\AiProviderPolicy;
+use Nreljed\DashboardCore\Blog\Models\Post;
 use Nreljed\DashboardCore\Http\Middleware\AdminMiddleware;
 use Nreljed\DashboardCore\Http\Middleware\CheckIpAccess;
 use Nreljed\DashboardCore\Http\Middleware\CheckMaintenanceMode;
@@ -30,6 +33,7 @@ use Nreljed\DashboardCore\Models\User;
 use Nreljed\DashboardCore\Notifications\ResetPassword as CustomResetPassword;
 use Nreljed\DashboardCore\Notifications\VerifyEmail as CustomVerifyEmail;
 use Nreljed\DashboardCore\Observers\UserObserver;
+use Nreljed\DashboardCore\Policies\PostPolicy;
 use Nreljed\DashboardCore\Policies\RolePolicy;
 use Nreljed\DashboardCore\Services\FeatureRegistry;
 use Nreljed\DashboardCore\Services\FormattingService;
@@ -68,6 +72,8 @@ class DashboardCoreServiceProvider extends ServiceProvider
 
         RedirectIfAuthenticated::redirectUsing(fn () => route('dashboard.index'));
 
+        Gate::policy(Post::class, PostPolicy::class);
+        Gate::policy(AiProvider::class, AiProviderPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
 
         Gate::before(function (User $user, string $ability) {

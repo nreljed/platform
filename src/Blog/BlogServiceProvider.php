@@ -2,7 +2,6 @@
 
 namespace Nreljed\DashboardCore\Blog;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -10,7 +9,6 @@ use Nreljed\DashboardCore\Blog\Models\Post;
 use Nreljed\DashboardCore\Concerns\InteractsWithFeatures;
 use Nreljed\DashboardCore\Contracts\FeatureProvider;
 use Nreljed\DashboardCore\Observers\PostObserver;
-use Nreljed\DashboardCore\Policies\PostPolicy;
 
 class BlogServiceProvider extends ServiceProvider implements FeatureProvider
 {
@@ -33,7 +31,6 @@ class BlogServiceProvider extends ServiceProvider implements FeatureProvider
         $this->loadMigrations();
 
         Post::observe(PostObserver::class);
-        Gate::policy(Post::class, PostPolicy::class);
     }
 
     protected function loadRoutes(): void

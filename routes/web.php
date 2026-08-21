@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Nreljed\DashboardCore\Ai\Controllers\AiProviderController;
 use Nreljed\DashboardCore\Deploy\Controllers\DeployController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\AuditLogController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\BulkUserController;
@@ -76,7 +77,6 @@ Route::post('/deploy/create-admin', [DeployController::class, 'createAdmin'])->m
 
 Route::post('/deploy/env', [DeployController::class, 'updateEnvValues'])->middleware('throttle:5,1');
 Route::post('/deploy/reset', [DeployController::class, 'resetDatabase'])->middleware('throttle:5,1');
-Route::match(['get', 'post'], '/deploy/run', [DeployController::class, 'runCommand'])->middleware('throttle:5,1');
 
 // ═══════════════════════════════════════════════════
 // CSP Report Endpoint — receives violation reports
@@ -183,6 +183,13 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
         Route::put('/address', [UserAccountController::class, 'updateAddress'])->name('dashboard.account.address');
         Route::post('/avatar', [AvatarController::class, 'upload'])->name('dashboard.account.avatar.upload');
         Route::delete('/avatar', [AvatarController::class, 'destroy'])->name('dashboard.account.avatar.destroy');
+
+        // AI Provider Keys (BYOK)
+        Route::get('/ai-keys', [AiProviderController::class, 'index'])->name('dashboard.account.ai-keys.index');
+        Route::post('/ai-keys', [AiProviderController::class, 'store'])->name('dashboard.account.ai-keys.store');
+        Route::put('/ai-keys/{aiProvider}', [AiProviderController::class, 'update'])->name('dashboard.account.ai-keys.update');
+        Route::delete('/ai-keys/{aiProvider}', [AiProviderController::class, 'destroy'])->name('dashboard.account.ai-keys.destroy');
+        Route::post('/ai-keys/test', [AiProviderController::class, 'test'])->name('dashboard.account.ai-keys.test');
     });
 
     // Media uploads (auth + verified)
@@ -207,8 +214,8 @@ Route::middleware(['auth', 'maintenance', 'throttle:60,1'])->prefix('dashboard/a
         Route::get('/logs/{file}/download', [AdminController::class, 'downloadSystemHealthLog'])->name('logs.download');
     });
 
-    // Database maintenance (danger zone) — admin only, env-gated at controller level
-    Route::middleware(['admin', 'permission:manage-options'])->group(function () {
+    // Database maintenance (danger zone) — permission-gated, env-gated at controller level
+    Route::middleware('permission:manage-settings')->group(function () {
         Route::get('/database', [DatabaseMaintenanceController::class, 'index'])->name('database');
         Route::post('/database/reset', [DatabaseMaintenanceController::class, 'reset'])->name('database.reset');
         Route::post('/database/reseed', [DatabaseMaintenanceController::class, 'reseed'])->name('database.reseed');
@@ -228,8 +235,8 @@ Route::middleware(['auth', 'maintenance', 'throttle:60,1'])->prefix('dashboard/a
             Route::get('/dev', [SettingsController::class, 'dev'])->name('dev');
             Route::get('/ip-access', [SettingsController::class, 'ipAccess'])->name('ip-access');
 
-            // Database maintenance toggle (danger zone) — admin only, password-confirmed
-            Route::middleware(['admin', 'permission:manage-options'])
+            // Database maintenance toggle (danger zone) — permission-gated, password-confirmed
+            Route::middleware('permission:manage-settings')
                 ->post('/dev/database-maintenance-toggle', [SettingsController::class, 'toggleDatabaseMaintenance'])
                 ->name('dev.database-maintenance-toggle');
 
