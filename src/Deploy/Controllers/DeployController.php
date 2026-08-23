@@ -24,6 +24,30 @@ class DeployController extends Controller
         }
     }
 
+    /**
+     * Format a value for vlucas/phpdotenv-safe .env storage.
+     *
+     * Unquoted values cannot contain whitespace, quotes, '#' or '$'.
+     * Anything else is double-quoted with backslash escapes so that
+     * values like "nstudio webdesign" never produce unparseable .env lines.
+     */
+    private function formatEnvValue(string $value): string
+    {
+        if ($value === '') {
+            return '';
+        }
+
+        $needsQuotes = preg_match('/[\s\'"]/', $value) === 1
+            || str_contains($value, '#')
+            || str_contains($value, '$');
+
+        if (! $needsQuotes) {
+            return $value;
+        }
+
+        return '"'.str_replace(['\\', '"', '$'], ['\\\\', '\\"', '\\$'], $value).'"';
+    }
+
     public function updateEnv(Request $request)
     {
         $this->verifyToken($request);
@@ -103,7 +127,7 @@ class DeployController extends Controller
             if (preg_match('/^\s*([A-Z0-9_]+)\s*=/', $line, $m)) {
                 $key = $m[1];
                 if (array_key_exists($key, $safe)) {
-                    $line = "{$key}={$safe[$key]}";
+                    $line = "{$key}=".$this->formatEnvValue($safe[$key]);
                     $written[$key] = true;
                 }
             }
@@ -112,7 +136,7 @@ class DeployController extends Controller
 
         foreach ($safe as $key => $value) {
             if (! isset($written[$key])) {
-                $lines[] = "{$key}={$value}";
+                $lines[] = "{$key}=".$this->formatEnvValue($value);
             }
         }
 
