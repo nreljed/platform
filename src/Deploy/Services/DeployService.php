@@ -93,6 +93,11 @@ class DeployService
                 }
             }
 
+            // Purge volatile state BEFORE extraction: vendor must match exactly
+            // what CI built (--no-dev), and cached config/routes/views/services
+            // from previous deploys can reference classes that no longer exist.
+            $this->purgeVolatileDirectories($output);
+
             $zip->extractTo(base_path());
             $zip->close();
             File::delete($zipFile);
@@ -223,6 +228,31 @@ class DeployService
         if ($removed > 0) {
             $output[] = "Cleaned $removed stale migration files";
         }
+    }
+
+    /**
+     * Remove directories that must always mirror the incoming zip exactly.
+     *
+     * vendor/ is rebuilt from scratch on every deploy so orphaned packages
+     * (e.g. require-dev leftovers like Telescope) can never survive, and
+     * bootstrap/cache is cleared because cached config/routes/views/services
+     * may reference classes removed by this deploy.
+     *
+     * @param  array<int, string>  $output
+     */
+    private function purgeVolatileDirectories(array &$output): void
+    {
+        foreach (['vendor', 'bootstrap/cache'] as $dir) {
+            $path = base_path($dir);
+            if (! File::exists($path)) {
+                continue;
+            }
+            File::deleteDirectory($path);
+            if (! File::isDirectory($path)) {
+                File::makeDirectory($path, 0755, true, true);
+            }
+        }
+        $output[] = 'Purged vendor/ + bootstrap/cache/';
     }
 
     /**
