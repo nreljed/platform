@@ -13,9 +13,9 @@
 */
 
 $candidates = [
+    __DIR__.'/../vendor/autoload.php',           // standalone repo checkout (own vendor/)
     __DIR__.'/../../../../vendor/autoload.php', // composer vcs install (consuming app root)
     __DIR__.'/../../../vendor/autoload.php',    // monorepo (master app)
-    __DIR__.'/../../vendor/autoload.php',       // standalone package install
 ];
 
 foreach ($candidates as $autoload) {
