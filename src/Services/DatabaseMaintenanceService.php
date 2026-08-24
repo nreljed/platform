@@ -127,14 +127,18 @@ class DatabaseMaintenanceService
                 }
             }
 
-            $exitCode = $this->run('app:create-admin', [
-                '--no-interaction' => true,
-                '--email' => config('admin.email', ''),
-                '--password' => config('admin.password', ''),
-                '--name' => config('admin.name', 'Admin'),
-            ], $output);
-            if ($exitCode !== 0) {
-                throw new DatabaseMaintenanceException('app:create-admin failed. Check the ADMIN_EMAIL and ADMIN_PASSWORD environment variables.');
+            if (config('admin.email') && config('admin.password')) {
+                $exitCode = $this->run('app:create-admin', [
+                    '--no-interaction' => true,
+                    '--email' => config('admin.email'),
+                    '--password' => config('admin.password'),
+                    '--name' => config('admin.name', 'Admin'),
+                ], $output);
+                if ($exitCode !== 0) {
+                    throw new DatabaseMaintenanceException('app:create-admin failed.');
+                }
+            } else {
+                $output[] = 'app:create-admin skipped (ADMIN_EMAIL/ADMIN_PASSWORD not configured) - restore the admin per-request from CI secrets via /deploy/create-admin.';
             }
 
             if ($purgeMedia) {

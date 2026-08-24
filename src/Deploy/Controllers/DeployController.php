@@ -158,7 +158,7 @@ class DeployController extends Controller
         $this->wipeCache();
 
         $commands = [
-            'migrate:fresh' => [['--force' => true, '--seed' => true]],
+            'migrate' => [['--force' => true]],
             'cache:clear' => [[]],
             'package:discover' => [[]],
             'app:create-admin' => [[
@@ -351,7 +351,7 @@ class DeployController extends Controller
 
         $commands = [
             'package:discover' => [[]],
-            'migrate:fresh' => [['--force' => true, '--seed' => true]],
+            'migrate' => [['--force' => true]],
             'app:create-admin' => [[
                 '--no-interaction' => true,
                 '--email' => config('admin.email', ''),
@@ -370,7 +370,7 @@ class DeployController extends Controller
                 $output[] = "$cmd: ".strtok(trim(Artisan::output()), "\n");
             } catch (\Throwable $e) {
                 $output[] = "$cmd: ERROR ".$e->getMessage();
-                if (in_array($cmd, ['migrate:fresh', 'migrate', 'config:cache'])) {
+                if (in_array($cmd, ['migrate', 'config:cache'])) {
                     $output[] = "Deploy aborted: $cmd failed";
 
                     return false;
