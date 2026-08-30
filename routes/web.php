@@ -4,8 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Nreljed\DashboardCore\Ai\Controllers\AiProviderController;
-use Nreljed\DashboardCore\Deploy\Controllers\DeployController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\AuditLogController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\BulkUserController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\DatabaseMaintenanceController;
@@ -26,7 +24,6 @@ use Nreljed\DashboardCore\Http\Controllers\RecoveryController;
 use Nreljed\DashboardCore\Http\Controllers\SettingsController;
 use Nreljed\DashboardCore\Http\Controllers\SitemapController;
 use Nreljed\DashboardCore\Http\Controllers\UserAccountController;
-use Nreljed\DashboardCore\PublicSite\Controllers\PublicController;
 use Nreljed\DashboardCore\Services\SettingsService;
 
 // ═══════════════════════════════════════════════════
@@ -52,31 +49,10 @@ Route::get('/robots.txt', function () {
 })->name('robots');
 
 // ═══════════════════════════════════════════════════
-// PUBLIC FRONTEND Pages — no auth required
-// ═══════════════════════════════════════════════════
-Route::middleware('maintenance')->group(function () {
-    Route::get('/', fn () => Inertia::render('public/welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-    ]))->name('home');
-
-    Route::get('/about', [PublicController::class, 'about'])->name('about');
-    Route::get('/services', [PublicController::class, 'services'])->name('services');
-    Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
-});
-
-// ═══════════════════════════════════════════════════
 // DEPLOY Endpoints — token-protected, no CSRF, rate-limited
 // ═══════════════════════════════════════════════════
-// check + cache-clear accept GET so cron/probe workflows can poll status.
-Route::post('/deploy/upload', [DeployController::class, 'upload'])->middleware('throttle:5,1');
-Route::match(['get', 'post'], '/deploy/cache-clear', [DeployController::class, 'cacheClear'])->middleware('throttle:5,1');
-Route::match(['get', 'post'], '/deploy/check', [DeployController::class, 'check'])->middleware('throttle:5,1');
-Route::post('/deploy/migrate', [DeployController::class, 'migrate'])->middleware('throttle:5,1');
-Route::post('/deploy/create-admin', [DeployController::class, 'createAdmin'])->middleware('throttle:5,1');
-
-Route::post('/deploy/env', [DeployController::class, 'updateEnvValues'])->middleware('throttle:5,1');
-Route::post('/deploy/reset', [DeployController::class, 'resetDatabase'])->middleware('throttle:5,1');
+// Self-contained infra block owned by the deploy module (src/Deploy/Routes).
+require __DIR__.'/../src/Deploy/Routes/web.php';
 
 // ═══════════════════════════════════════════════════
 // CSP Report Endpoint — receives violation reports
@@ -183,13 +159,6 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
         Route::put('/address', [UserAccountController::class, 'updateAddress'])->name('dashboard.account.address');
         Route::post('/avatar', [AvatarController::class, 'upload'])->name('dashboard.account.avatar.upload');
         Route::delete('/avatar', [AvatarController::class, 'destroy'])->name('dashboard.account.avatar.destroy');
-
-        // AI Provider Keys (BYOK)
-        Route::get('/ai-keys', [AiProviderController::class, 'index'])->name('dashboard.account.ai-keys.index');
-        Route::post('/ai-keys', [AiProviderController::class, 'store'])->name('dashboard.account.ai-keys.store');
-        Route::put('/ai-keys/{aiProvider}', [AiProviderController::class, 'update'])->name('dashboard.account.ai-keys.update');
-        Route::delete('/ai-keys/{aiProvider}', [AiProviderController::class, 'destroy'])->name('dashboard.account.ai-keys.destroy');
-        Route::post('/ai-keys/test', [AiProviderController::class, 'test'])->name('dashboard.account.ai-keys.test');
     });
 
     // Media uploads (auth + verified)
