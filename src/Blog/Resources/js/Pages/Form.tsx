@@ -11,7 +11,7 @@ import { Label } from "@/Components/ui/label";
 import { TermsSelector } from "@/Components/shared/terms-selector";
 import PublishSection from "@/Components/shared/publish-section";
 import { FeaturedImageSelector } from "@/Components/shared/featured-image-selector";
-import { SeoPanel, type SeoData } from "@/Components/shared/seo/SeoPanel";
+import { SeoPanel, type SeoData } from "../Components/seo/SeoPanel";
 import { useAuth } from "@/hooks/use-auth";
 
 interface Category {

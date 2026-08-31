@@ -15,7 +15,7 @@ class MissingAiProviderException extends RuntimeException
 
         parent::__construct(
             "No AI API key configured for {$providerName}. "
-            ."Please add your {$providerName} API key in Account â†’ AI Keys."
+            ."Please add your {$providerName} API key in Account → AI Keys."
         );
     }
 }

@@ -17,10 +17,10 @@ interface DebugData {
   locality: string;
   fullAddress: string;
   displayName: string;
-  matchedGovernorate: string | null;
+  matchedRegion: string | null;
   matchedCity: string | null;
   geocodingSource: string | null;
-  isWithinTunisia: boolean;
+  withinBounds: boolean;
   countryCodeMatch: boolean;
   configuredCountry?: string;
   osmId: number | null;
@@ -179,7 +179,7 @@ export function MapDebugPanel({ data, zoom, defaultOpen = false, className }: Ma
                 <DebugRow
                   label="Within bounds"
                   value={
-                    data!.isWithinTunisia ? (
+                    data!.withinBounds ? (
                       <span className="text-green-600 dark:text-green-400 font-semibold">
                         \u2713 Yes
                       </span>
@@ -238,11 +238,11 @@ export function MapDebugPanel({ data, zoom, defaultOpen = false, className }: Ma
 
               <DebugSection label="City Matching">
                 <DebugRow
-                  label="Governorate (matched)"
+                  label="Region (matched)"
                   value={
-                    data!.matchedGovernorate ? (
+                    data!.matchedRegion ? (
                       <span className="text-green-600 dark:text-green-400">
-                        {data!.matchedGovernorate}
+                        {data!.matchedRegion}
                       </span>
                     ) : (
                       <span className="text-muted-foreground italic">Not matched</span>

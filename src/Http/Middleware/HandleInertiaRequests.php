@@ -12,6 +12,7 @@ use Nreljed\DashboardCore\Services\DatabaseMaintenanceService;
 use Nreljed\DashboardCore\Services\EmailSettingsService;
 use Nreljed\DashboardCore\Services\FeatureRegistry;
 use Nreljed\DashboardCore\Services\NotificationService;
+use Nreljed\DashboardCore\Services\PermissionCacheService;
 use Nreljed\DashboardCore\Services\SettingsService;
 use Nreljed\DashboardCore\Support\RoleCatalog;
 use Nreljed\DashboardCore\Traits\RelativeTime;
@@ -226,11 +227,12 @@ class HandleInertiaRequests extends Middleware
         }
 
         $allSlugs = array_values(array_unique($slugs));
+        $userSlugs = app(PermissionCacheService::class)->getUserPermissionSlugs($user->id);
 
         $permissions = [];
 
         foreach ($allSlugs as $slug) {
-            $permissions[$slug] = $user->can($slug);
+            $permissions[$slug] = in_array($slug, $userSlugs, true);
         }
 
         return [

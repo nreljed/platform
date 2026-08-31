@@ -88,29 +88,18 @@ interface NominatimResponse {
   };
 }
 
-export const TUNISIA_BOUNDS = {
-  southWest: { lat: 30.2, lng: 7.5 },
-  northEast: { lat: 37.5, lng: 11.6 },
+export const WORLD_BOUNDS = {
+  southWest: { lat: -60, lng: -180 },
+  northEast: { lat: 75, lng: 180 },
   asLeaflet: () =>
     [
-      [30.2, 7.5],
-      [37.5, 11.6],
+      [-60, -180],
+      [75, 180],
     ] as [[number, number], [number, number]],
-  asPhotonBbox: () => [7.5, 30.2, 11.6, 37.5] as [number, number, number, number],
+  asPhotonBbox: () => [-180, -60, 180, 75] as [number, number, number, number],
 };
 
-export const TUNISIA_CENTER = { lat: 34, lng: 9.5 };
-
-export const TUNISIA_PHOTON_BBOX: [number, number, number, number] = [7.5, 30.2, 11.6, 37.5];
-
-export function isWithinTunisia(lat: number, lng: number): boolean {
-  return (
-    lat >= TUNISIA_BOUNDS.southWest.lat &&
-    lat <= TUNISIA_BOUNDS.northEast.lat &&
-    lng >= TUNISIA_BOUNDS.southWest.lng &&
-    lng <= TUNISIA_BOUNDS.northEast.lng
-  );
-}
+export const WORLD_CENTER = { lat: 20, lng: 0 };
 
 function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 6371e3;
@@ -534,13 +523,6 @@ export async function reverseGeocode(
   lng: number,
   options?: { timeout?: number; signal?: AbortSignal },
 ): Promise<AddressData | null> {
-  if (!isWithinTunisia(lat, lng)) {
-    if (Math.abs(lat) > 1 || Math.abs(lng) > 1) {
-      console.warn(`[Geocode] Coordinates (${lat}, ${lng}) outside Tunisia bounds`);
-    }
-    return null;
-  }
-
   const timeout = options?.timeout ?? 7000;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);

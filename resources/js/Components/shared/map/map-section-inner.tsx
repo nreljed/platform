@@ -19,7 +19,7 @@ import {
 } from "./map";
 import { MapDebugPanel } from "./map-debug-panel";
 import type { DebugData } from "./map-debug-panel";
-import { reverseGeocode, TUNISIA_BOUNDS, TUNISIA_CENTER } from "@/lib/geocoding";
+import { reverseGeocode, WORLD_BOUNDS, WORLD_CENTER } from "@/lib/geocoding";
 import type { AddressData } from "@/lib/geocoding";
 import { getCountryBounds } from "@/lib/country-bounds";
 import { AlertTriangleIcon, BugIcon, MapPin } from "lucide-react";
@@ -168,15 +168,15 @@ export default function MapSectionInner({
   const mapConfig = React.useMemo(() => {
     const countryFallback = options.countryCode ? getCountryBounds(options.countryCode) : null;
     const fbBounds = countryFallback?.bounds || [
-      TUNISIA_BOUNDS.southWest.lat,
-      TUNISIA_BOUNDS.southWest.lng,
-      TUNISIA_BOUNDS.northEast.lat,
-      TUNISIA_BOUNDS.northEast.lng,
+      WORLD_BOUNDS.southWest.lat,
+      WORLD_BOUNDS.southWest.lng,
+      WORLD_BOUNDS.northEast.lat,
+      WORLD_BOUNDS.northEast.lng,
     ];
-    const fbCenter = countryFallback?.center ||
-      options.center || [TUNISIA_CENTER.lat, TUNISIA_CENTER.lng];
-    const fbMinZoom = countryFallback?.minZoom || 6;
-    const fbDefaultZoom = countryFallback?.defaultZoom || 7;
+    const fbCenter =
+      countryFallback?.center || options.center || [WORLD_CENTER.lat, WORLD_CENTER.lng];
+    const fbMinZoom = countryFallback?.minZoom || 2;
+    const fbDefaultZoom = countryFallback?.defaultZoom || 3;
 
     const swLat = fbBounds[0];
     const swLng = fbBounds[1];
@@ -244,10 +244,10 @@ export default function MapSectionInner({
         locality: "",
         fullAddress: "",
         displayName: "",
-        matchedGovernorate: null,
+        matchedRegion: null,
         matchedCity: null,
         geocodingSource: null,
-        isWithinTunisia: false,
+        withinBounds: false,
         countryCodeMatch: false,
         configuredCountry: options.countryCode || "",
         osmId: null,
@@ -294,10 +294,10 @@ export default function MapSectionInner({
           locality: addressData.locality,
           fullAddress: addressData.fullAddress,
           displayName: addressData.displayName,
-          matchedGovernorate: null,
+          matchedRegion: null,
           matchedCity: addressData.city,
           geocodingSource: addressData.source,
-          isWithinTunisia: mapConfig.isWithinBounds(lat, lng),
+          withinBounds: mapConfig.isWithinBounds(lat, lng),
           countryCodeMatch: options.countryCode
             ? addressData.countryCode === options.countryCode
             : false,
@@ -741,7 +741,7 @@ export default function MapSectionInner({
                 ? `${debugData.housenumber ? debugData.housenumber + " " : ""}${debugData.street}`
                 : ""}
               {debugData.city && `, ${debugData.city}`}
-              {debugData.matchedGovernorate && ` (${debugData.matchedGovernorate})`}
+              {debugData.matchedRegion && ` (${debugData.matchedRegion})`}
               {debugData.postcode && `, ${debugData.postcode}`}
             </span>
             <span className="text-[10px] text-muted-foreground/60">Zoom: {mapZoomLevel}</span>

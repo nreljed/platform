@@ -50,7 +50,7 @@ resources/js/
 │   ├── dashboard/            # KpiCard, Sparkline, RevenueChart, RecentOrdersTable, ...
 │   ├── editor/               # Lexical rich text editor (image, layout, tables, YouTube,
 │   │                         #   slash commands, TOC, find/replace, word count)
-│   ├── frontend/             # SiteHeader, SiteFooter, BrandLogo, CurrencySwitcher
+│   ├── frontend/             # SiteHeader, SiteFooter, BrandLogo
 │   ├── layout/               # app-sidebar, impersonation banner
 │   ├── navigation/           # command-search (Ctrl+K palette)
 │   ├── shared/               # FeaturedImageSelector, TermsSelector, GalleryUploader, ...

@@ -11,7 +11,7 @@ export default function Welcome() {
   return (
     <PublicLayout
       title="Welcome"
-      description="Zero-cost SaaS infrastructure built with Laravel, React, and shadcn/ui."
+      description="A starting point for your SaaS built with Laravel, React, Inertia, and shadcn/ui."
     >
       <div className="flex flex-1 items-center justify-center px-6 py-24">
         <div className="mx-auto max-w-2xl text-center">
@@ -19,8 +19,8 @@ export default function Welcome() {
             {appName}
           </h1>
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            Zero-cost SaaS infrastructure. Built with Laravel, React, and shadcn/ui. Manage your
-            costs, track analytics, and scale for free.
+            Your all-in-one starter kit. Built on Laravel, React, Inertia, and shadcn/ui. Powerful
+            modules you can enable and extend to fit your product.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             {props.auth?.user ? (

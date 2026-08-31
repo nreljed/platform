@@ -10,11 +10,29 @@ class FeatureRegistry
     /** @var array<string, FeatureProvider> */
     protected array $providers = [];
 
+    /** @var array<string, mixed> */
+    protected array $memoized = [];
+
     public function __construct()
     {
         foreach ($this->configuredProviders() as $class) {
             $this->providers[$class] = $this->getProviderOrFail($class);
         }
+    }
+
+    /**
+     * Memoize a deterministic aggregate on the registry instance. Only safe
+     * for config-shaped output (nav, settings, permissions, module list)
+     * that is free of per-user or live-DB state.
+     *
+     * @template T
+     *
+     * @param  (callable():T)  $resolver
+     * @return T
+     */
+    protected function remember(string $key, callable $resolver): mixed
+    {
+        return $this->memoized[$key] ??= $resolver();
     }
 
     /**
@@ -47,23 +65,25 @@ class FeatureRegistry
 
     public function getAllNavItems(): array
     {
-        $items = [];
+        return $this->remember('nav_items', function () {
+            $items = [];
 
-        foreach ($this->providers as $provider) {
-            $groupLabel = $provider->getNavGroupLabel();
+            foreach ($this->providers as $provider) {
+                $groupLabel = $provider->getNavGroupLabel();
 
-            foreach ($provider->getNavItems() as $item) {
-                // Normalize group labels so the sidebar renders consistent
-                // headings even when a provider only exposes getNavGroupLabel().
-                if ($groupLabel !== null && ! isset($item['groupLabel'])) {
-                    $item['groupLabel'] = $groupLabel;
+                foreach ($provider->getNavItems() as $item) {
+                    // Normalize group labels so the sidebar renders consistent
+                    // headings even when a provider only exposes getNavGroupLabel().
+                    if ($groupLabel !== null && ! isset($item['groupLabel'])) {
+                        $item['groupLabel'] = $groupLabel;
+                    }
+
+                    $items[] = $item;
                 }
-
-                $items[] = $item;
             }
-        }
 
-        return $items;
+            return $items;
+        });
     }
 
     public function getAllSharedData(): array
@@ -175,10 +195,10 @@ class FeatureRegistry
 
     public function getAllSettingsRoutes(): array
     {
-        return array_filter(array_map(
+        return $this->remember('settings_routes', fn () => array_filter(array_map(
             fn (FeatureProvider $provider) => $this->resolveSettingsUrl($provider->getSettingsRoute()),
             array_values($this->providers),
-        ));
+        )));
     }
 
     /**
@@ -189,55 +209,59 @@ class FeatureRegistry
      */
     public function getAllSettingsNav(): array
     {
-        $nav = [];
+        return $this->remember('settings_nav', function () {
+            $nav = [];
 
-        foreach ($this->providers as $provider) {
-            if (! $provider->hasSettings()) {
-                continue;
+            foreach ($this->providers as $provider) {
+                if (! $provider->hasSettings()) {
+                    continue;
+                }
+
+                $route = $provider->getSettingsRoute();
+                $url = $this->resolveSettingsUrl($route);
+
+                if ($route === null || $url === null) {
+                    continue;
+                }
+
+                $nav[] = [
+                    'label' => $provider->name(),
+                    'route' => $route,
+                    'url' => $url,
+                ];
             }
 
-            $route = $provider->getSettingsRoute();
-            $url = $this->resolveSettingsUrl($route);
-
-            if ($route === null || $url === null) {
-                continue;
-            }
-
-            $nav[] = [
-                'label' => $provider->name(),
-                'route' => $route,
-                'url' => $url,
-            ];
-        }
-
-        return $nav;
+            return $nav;
+        });
     }
 
     public function getAllHasSettings(): array
     {
-        return array_filter(array_map(
+        return $this->remember('has_settings', fn () => array_filter(array_map(
             fn (FeatureProvider $provider) => $provider->hasSettings(),
             array_values($this->providers),
-        ));
+        )));
     }
 
     public function permissions(): array
     {
-        $permissions = [];
+        return $this->remember('permissions', function () {
+            $permissions = [];
 
-        foreach ($this->providers as $provider) {
-            $group = $provider->name();
+            foreach ($this->providers as $provider) {
+                $group = $provider->name();
 
-            foreach ($provider->permissions() as $permission) {
-                if (is_array($permission) && ! isset($permission['group']) && $group !== null) {
-                    $permission['group'] = $group;
+                foreach ($provider->permissions() as $permission) {
+                    if (is_array($permission) && ! isset($permission['group']) && $group !== null) {
+                        $permission['group'] = $group;
+                    }
+
+                    $permissions[] = $permission;
                 }
-
-                $permissions[] = $permission;
             }
-        }
 
-        return $permissions;
+            return $permissions;
+        });
     }
 
     /**
@@ -250,7 +274,7 @@ class FeatureRegistry
 
     public function getAll(): array
     {
-        return array_map(
+        return $this->remember('modules', fn () => array_map(
             fn (FeatureProvider $provider) => array_filter([
                 'name' => $provider->name(),
                 'slug' => $provider->slug(),
@@ -262,7 +286,7 @@ class FeatureRegistry
                 'settings_route' => $this->resolveSettingsUrl($provider->getSettingsRoute()),
             ], fn ($v) => $v !== null && $v !== [] && $v !== false),
             array_values($this->providers),
-        );
+        ));
     }
 
     public function cleanupUserData(int $userId): void

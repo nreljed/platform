@@ -2,16 +2,21 @@
 
 namespace Nreljed\DashboardCore\Ai\Agents;
 
+use Laravel\Ai\Concerns\RemembersConversations;
 use Laravel\Ai\Contracts\Agent;
+use Laravel\Ai\Contracts\Conversational;
 use Laravel\Ai\Promptable;
 use Laravel\Ai\Responses\AgentResponse;
+use Laravel\Ai\Responses\StreamableAgentResponse;
 use Nreljed\DashboardCore\Ai\Agents\Traits\ResolvesUserProvider;
 use Nreljed\DashboardCore\Ai\Concerns\LogsAiUsage;
 use Nreljed\DashboardCore\Models\User;
 
-class ChatAgent implements Agent
+class ChatAgent implements Agent, Conversational
 {
-    use LogsAiUsage, Promptable, ResolvesUserProvider;
+    use LogsAiUsage, Promptable, RemembersConversations, ResolvesUserProvider {
+        ResolvesUserProvider::forUser insteadof RemembersConversations;
+    }
 
     /**
      * System instructions for the chat assistant.
@@ -31,19 +36,52 @@ INSTRUCTIONS;
     }
 
     /**
+     * The user driving the conversation. Enables automatic conversation
+     * persistence while the BYOK provider is resolved separately.
+     */
+    public function conversationParticipant(): ?object
+    {
+        return $this->user;
+    }
+
+    /**
+     * @see conversationParticipant()
+     */
+    public function hasConversationParticipant(): bool
+    {
+        return $this->user !== null;
+    }
+
+    /**
      * Send a chat message and get a text response.
      */
     public function chat(User $user, string $message, ?string $conversationId = null): string
     {
-        $this->forUser($user);
+        $this->forUser($user)->injectProviderKey();
 
-        $this->injectProviderKey();
+        if ($conversationId !== null) {
+            $this->continue($conversationId, $user);
+        }
 
         $response = $this->prompt($message);
 
         $this->logUsage($user, $response);
 
         return (string) $response;
+    }
+
+    /**
+     * Stream a chat message back to the caller token-by-token.
+     */
+    public function streamChat(User $user, string $message, ?string $conversationId = null): StreamableAgentResponse
+    {
+        $this->forUser($user)->injectProviderKey();
+
+        if ($conversationId !== null) {
+            $this->continue($conversationId, $user);
+        }
+
+        return $this->stream($message);
     }
 
     /**
