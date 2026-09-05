@@ -87,31 +87,11 @@ class AccountService
 
     public function updatePersonalInfo(User $user, array $data): void
     {
-        $user->fill($data);
-        $user->save();
+        if (array_key_exists('social_media', $data)) {
+            $socialMedia = $data['social_media'];
+            unset($data['social_media']);
 
-        AuditService::log(AuditAction::ProfileUpdate, $user->id, [
-            'changed_fields' => array_keys($user->getChanges()),
-        ]);
-    }
-
-    public function updateContactInfo(User $user, ?array $phoneNumbers, ?array $socialMedia): void
-    {
-        if ($phoneNumbers !== null) {
-            $filtered = array_filter($phoneNumbers, fn ($item) => ! empty($item['label']) || ! empty($item['phone']));
-            $processed = array_map(function ($item) {
-                if (! empty($item['label']) && $item['label'] === 'Other' && ! empty($item['label_custom'])) {
-                    $item['label'] = $item['label_custom'];
-                    unset($item['label_custom']);
-                }
-
-                return $item;
-            }, $filtered);
-            $user->phone = json_encode(array_values($processed));
-        }
-
-        if ($socialMedia !== null) {
-            $filtered = array_filter($socialMedia, fn ($item) => ! empty($item['social_title']) && ! empty($item['social_value']));
+            $filtered = array_filter($socialMedia ?? [], fn ($item) => ! empty($item['social_title']) && ! empty($item['social_value']));
             $processed = array_map(function ($item) {
                 if (! empty($item['social_value'])) {
                     $url = trim($item['social_value']);
@@ -127,9 +107,10 @@ class AccountService
 
                 return $item;
             }, $filtered);
-            $user->social_links = array_values($processed);
+            $data['social_links'] = array_values($processed);
         }
 
+        $user->fill($data);
         $user->save();
 
         AuditService::log(AuditAction::ProfileUpdate, $user->id, [

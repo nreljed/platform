@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Nreljed\DashboardCore\Ai\Models\AiProvider;
 use Nreljed\DashboardCore\Http\Requests\Account\DeleteAccountRequest;
-use Nreljed\DashboardCore\Http\Requests\Account\UpdateContactRequest;
 use Nreljed\DashboardCore\Http\Requests\Account\UpdateEmailRequest;
 use Nreljed\DashboardCore\Http\Requests\Account\UpdateNotificationPreferencesRequest;
 use Nreljed\DashboardCore\Http\Requests\Account\UpdatePasswordRequest;
@@ -45,8 +44,6 @@ class UserAccountController extends Controller
                 'url' => $user->url,
                 'email' => $user->email,
                 'email_verified_at' => $user->email_verified_at,
-                'contact_email' => $user->contact_email,
-                'phone_numbers' => $user->phone ?? [],
                 'social_media' => $user->social_links ?? [],
                 'avatar' => $user->avatar_url,
                 'user_registered' => $user->created_at,
@@ -71,7 +68,8 @@ class UserAccountController extends Controller
             ],
             'mustVerifyEmail' => $user instanceof MustVerifyEmail
                 && SettingsService::get('require_email_verification', '0') === '1',
-            'status' => session('status'),
+            'status' => session('status') ?? session('email_status'),
+            'passwordStatus' => session('password_status'),
         ]);
     }
 
@@ -137,24 +135,15 @@ class UserAccountController extends Controller
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'bio' => 'nullable|string|max:1000',
-            'url' => 'nullable|url|max:255',
-            'contact_email' => 'nullable|email|max:255',
+            'social_media' => ['nullable', 'array', 'max:20'],
+            'social_media.*.social_title' => ['nullable', 'string', 'max:50'],
+            'social_media.*.social_value' => ['nullable', 'string', 'max:255'],
+            'social_media.*.social_title_custom' => ['nullable', 'string', 'max:50'],
         ]);
 
         $this->accountService->updatePersonalInfo($request->user(), $validated);
 
         return redirect()->route('dashboard.account.page.profile')->with('status', 'Profile updated successfully.');
-    }
-
-    public function updateContact(UpdateContactRequest $request)
-    {
-        $this->accountService->updateContactInfo(
-            $request->user(),
-            $request->validated('phone_numbers'),
-            $request->validated('social_media'),
-        );
-
-        return redirect()->route('dashboard.account.page.profile')->with('status', 'Contact info updated successfully.');
     }
 
     public function updateEmail(UpdateEmailRequest $request)
@@ -183,7 +172,7 @@ class UserAccountController extends Controller
             return back()->withErrors(['password' => $result['message']]);
         }
 
-        return redirect()->back()->with('status', $result['message']);
+        return redirect()->back()->with('password_status', $result['message']);
     }
 
     public function destroy(DeleteAccountRequest $request)

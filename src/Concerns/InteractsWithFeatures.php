@@ -82,6 +82,11 @@ trait InteractsWithFeatures
         return [];
     }
 
+    public function getProfileSections(): array
+    {
+        return [];
+    }
+
     public function getEmailTemplates(): array
     {
         return [];

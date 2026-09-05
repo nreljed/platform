@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { Section, SectionField } from "@/Components/shared/section";
 import { Input } from "@/Components/ui/input";
 import { Textarea } from "@/Components/ui/textarea";
-import { UrlInput } from "@/Components/shared/url-input";
+import { Repeater } from "@/Components/shared/repeater";
 import {
   Select,
   SelectContent,
@@ -10,11 +10,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/Components/ui/select";
-import { User } from "lucide-react";
+import { Building2, User } from "lucide-react";
+
+const SOCIAL_PRESETS = [
+  { label: "Facebook", value: "Facebook" },
+  { label: "Instagram", value: "Instagram" },
+  { label: "LinkedIn", value: "LinkedIn" },
+  { label: "X (Twitter)", value: "X (Twitter)" },
+  { label: "YouTube", value: "YouTube" },
+  { label: "TikTok", value: "TikTok" },
+  { label: "Other", value: "Other" },
+];
 
 interface PersonalInfoSectionProps {
   data?: Record<string, unknown> | null;
-  onChange?: (_field: string, _value: string) => void;
+  onChange?: (_field: string, _value: unknown) => void;
   errors?: Record<string, unknown>;
   loading?: boolean;
   onSubmit?: (_e: React.FormEvent) => void;
@@ -32,7 +42,7 @@ export function PersonalInfoSection({
   accordionDefaultOpen,
 }: PersonalInfoSectionProps) {
   const handleChange = useCallback(
-    (field: string, value: string) => {
+    (field: string, value: unknown) => {
       onChange?.(field, value);
     },
     [onChange],
@@ -69,7 +79,7 @@ export function PersonalInfoSection({
   return (
     <Section
       title="Personal Information"
-      description="Your personal information and website"
+      description="Your personal information and social media links"
       icon={User}
       onSubmit={onSubmit}
       loading={loading}
@@ -190,40 +200,47 @@ export function PersonalInfoSection({
       </div>
 
       <div className="md:col-span-2">
-        <SectionField
-          label="Website"
-          htmlFor="url"
-          error={errors?.url as string}
-          description="Your personal website URL"
-        >
-          <UrlInput
-            id="url"
-            value={(data?.url as string) || ""}
-            onChange={(value) => handleChange("url", value)}
-            placeholder="https://example.com"
-            disabled={loading}
-            error={errors?.url as string}
-          />
-        </SectionField>
-      </div>
-
-      <div className="md:col-span-2">
-        <SectionField
-          label="Contact Email"
-          htmlFor="contact_email"
-          error={errors?.contact_email as string}
-          description="A public contact email (separate from your login email)"
-        >
-          <Input
-            id="contact_email"
-            type="email"
-            value={(data?.contact_email as string) || ""}
-            onChange={(e) => handleChange("contact_email", e.target.value)}
-            placeholder="contact@example.com"
-            disabled={loading}
-            aria-invalid={!!errors?.contact_email}
-          />
-        </SectionField>
+        <div className="flex items-center gap-2 mb-1">
+          <Building2 className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm font-medium text-foreground">Social Media Links</span>
+        </div>
+        <Repeater
+          label=""
+          description="Add your social media profiles"
+          value={
+            ((data?.social_media as Array<Record<string, unknown>>) || []).length > 0
+              ? (data?.social_media as Array<Record<string, unknown>>)
+              : []
+          }
+          onChange={(value) => handleChange("social_media", value)}
+          fields={[
+            {
+              name: "social_title",
+              label: "Platform",
+              type: "select",
+              placeholder: "Choose platform",
+              options: SOCIAL_PRESETS,
+              presetMode: true,
+              presetOtherValue: "Other",
+              customPlaceholder: "Enter custom platform name",
+              required: true,
+            },
+            {
+              name: "social_value",
+              label: "URL",
+              type: "url",
+              placeholder: "https://...",
+              required: true,
+            },
+          ]}
+          maxItems={20}
+          disabled={loading}
+          accordionMode={true}
+          titleField="social_title"
+          showFieldsInTitle={["social_title_custom"]}
+          accordionDefaultOpen={false}
+          errors={errors as Record<string, string>}
+        />
       </div>
     </Section>
   );

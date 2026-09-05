@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { router } from "@inertiajs/react";
 import { toast } from "@/Components/ui/toast";
 import { Section } from "@/Components/shared/section";
@@ -9,18 +9,25 @@ import { PasswordInput } from "@/Components/shared/password-input";
 interface PasswordSectionProps {
   asAccordion?: boolean;
   accordionDefaultOpen?: boolean;
+  initialStatus?: string;
 }
 
 export function PasswordSection({
   asAccordion,
   accordionDefaultOpen: _accordionDefaultOpen,
+  initialStatus,
 }: PasswordSectionProps) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState(initialStatus || "");
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (initialStatus) setSuccess(initialStatus);
+  }, [initialStatus]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

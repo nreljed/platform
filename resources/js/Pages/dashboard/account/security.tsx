@@ -14,6 +14,7 @@ import { PasswordSection } from "@/Components/account/sections/PasswordSection";
 export default function Security() {
   const { props } = usePage();
   const status = props.status as string | undefined;
+  const passwordStatus = props.passwordStatus as string | undefined;
   const user = props.user as Record<string, unknown> | undefined;
 
   return (
@@ -49,7 +50,11 @@ export default function Security() {
               accordionDefaultOpen={false}
             />
 
-            <PasswordSection asAccordion accordionDefaultOpen={false} />
+            <PasswordSection
+              asAccordion
+              accordionDefaultOpen={false}
+              initialStatus={passwordStatus}
+            />
           </div>
         </div>
       </div>

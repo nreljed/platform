@@ -8,7 +8,7 @@ import { Badge } from "@/Components/ui/badge";
 import { Field, FieldError, FieldLabel } from "@/Components/ui/field";
 import { SettingsAccordionItem } from "@/Components/shared/settings-accordion";
 import { cn } from "@/lib/utils";
-import { Mail, CheckCircle2 } from "lucide-react";
+import { Mail, CheckCircle2, AlertTriangle } from "lucide-react";
 import { CurrentPasswordInput } from "@/Components/shared/current-password-input";
 
 interface EmailSectionProps {
@@ -23,7 +23,7 @@ interface EmailSectionProps {
 export function EmailSection({
   user: userProp,
   email: emailProp,
-  mustVerifyEmail: _mustVerifyEmail,
+  mustVerifyEmail = false,
   initialStatus,
   asAccordion: _asAccordion,
   accordionDefaultOpen,
@@ -31,6 +31,7 @@ export function EmailSection({
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [verificationLoading, setVerificationLoading] = useState(false);
   const [success, setSuccess] = useState(initialStatus || "");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -88,6 +89,31 @@ export function EmailSection({
     );
   };
 
+  const handleResendVerification = () => {
+    if (verificationLoading) return;
+    setVerificationLoading(true);
+
+    router.post(
+      route("verification.send"),
+      {},
+      {
+        preserveScroll: true,
+        onSuccess: () => {
+          toast.add({ title: "Verification link sent!", type: "success" });
+          setSuccess("verification-link-sent");
+          setVerificationLoading(false);
+        },
+        onError: () => {
+          toast.add({
+            title: "Failed to send verification link. Please try again.",
+            type: "error",
+          });
+          setVerificationLoading(false);
+        },
+      },
+    );
+  };
+
   return (
     <SettingsAccordionItem
       value="email"
@@ -96,10 +122,32 @@ export function EmailSection({
       description="Used for notifications and login"
       defaultOpen={accordionDefaultOpen}
     >
-      {emailVerified && success && (
+      {mustVerifyEmail && !emailVerified && (
+        <div className="mb-4 flex flex-col gap-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300">
+          <div className="flex items-center gap-2 font-medium">
+            <AlertTriangle className="h-4 w-4" />
+            Your email address is not verified
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p>Some account features require a verified email address.</p>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={handleResendVerification}
+              disabled={verificationLoading}
+            >
+              {verificationLoading ? "Sending..." : "Resend verification link"}
+            </Button>
+          </div>
+        </div>
+      )}
+      {success && (
         <div className="mb-4 flex items-center gap-2 text-sm font-medium text-green-600 dark:text-green-500">
           <CheckCircle2 className="h-4 w-4" />
-          {success}
+          {success === "verification-link-sent"
+            ? "A new verification link has been sent to your email address."
+            : success}
         </div>
       )}
       <Field>

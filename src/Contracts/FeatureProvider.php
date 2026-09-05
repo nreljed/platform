@@ -57,6 +57,17 @@ interface FeatureProvider
 
     public function getProfileFieldsConfig(): array;
 
+    /**
+     * Return a list of profile section keys that this feature wants to opt
+     * into on the `/dashboard/account/profile` page.
+     *
+     * The core profile page renders a slot that resolves each returned key to
+     * a core React section component. This lets features extend the account
+     * area (e.g. `['address']` for shop billing/shipping) WITHOUT overriding
+     * the whole profile page component.
+     */
+    public function getProfileSections(): array;
+
     public function getEmailTemplates(): array;
 
     public function getNotificationTypes(): array;

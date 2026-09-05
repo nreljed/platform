@@ -193,6 +193,13 @@ class FeatureRegistry
         );
     }
 
+    public function getAllProfileSections(): array
+    {
+        return array_values(array_unique(array_merge(
+            ...array_map(fn (FeatureProvider $provider) => $provider->getProfileSections(), array_values($this->providers))
+        )));
+    }
+
     public function getAllSettingsRoutes(): array
     {
         return $this->remember('settings_routes', fn () => array_filter(array_map(

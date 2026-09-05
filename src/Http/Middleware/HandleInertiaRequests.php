@@ -101,6 +101,7 @@ class HandleInertiaRequests extends Middleware
             'featureNavItems' => $this->getFeatureNavItems(...),
             'sharedData' => new AlwaysProp($this->getFeatureSharedData(...)),
             'repeaterConfigs' => $this->getFeatureRepeaterConfigs(...),
+            'profileSections' => $this->getFeatureProfileSections(...),
             'profileFieldConfigs' => $this->getFeatureProfileFieldConfigs(...),
             'settingsRoutes' => $this->getFeatureSettingsRoutes(...),
             'featureSettingsNav' => $this->getFeatureSettingsNav(...),
@@ -167,6 +168,15 @@ class HandleInertiaRequests extends Middleware
     {
         try {
             return app(FeatureRegistry::class)->getAllRepeaterConfigs();
+        } catch (\Throwable) {
+            return [];
+        }
+    }
+
+    protected function getFeatureProfileSections(): array
+    {
+        try {
+            return app(FeatureRegistry::class)->getAllProfileSections();
         } catch (\Throwable) {
             return [];
         }
@@ -266,9 +276,6 @@ class HandleInertiaRequests extends Middleware
 
         $displayNameOptions = $user->getDisplayNameOptions();
 
-        $phoneData = $user->phone ? [['value' => $user->phone]] : [];
-        $socialData = $user->social_links ?? [];
-
         return [
             'id' => $user->id,
             'username' => $user->username,
@@ -284,16 +291,9 @@ class HandleInertiaRequests extends Middleware
             'last_name' => $user->last_name ?? '',
             'url' => $user->url ?? '',
             'bio' => $user->bio ?? '',
-            'contact_email' => $user->contact_email ?? '',
             'user_registered' => $user->created_at?->toISOString(),
             'roles' => $user->roles->pluck('slug')->toArray(),
             'role' => $roleSlug,
-            'profile_data' => [
-                'properties' => [
-                    'phone_numbers' => $phoneData,
-                    'social_media' => $socialData,
-                ],
-            ],
         ];
     }
 }

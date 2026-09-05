@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Link, Head, router, usePage } from "@inertiajs/react";
+import type { RequestPayload } from "@inertiajs/core";
 import { toast } from "@/Components/ui/toast";
 import { Loader2 } from "lucide-react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
@@ -14,7 +15,7 @@ import { AccountSettingsNav } from "@/Components/account/AccountSettingsNav";
 import { AccountInfoSection } from "@/Components/account/sections/AccountInfoSection";
 import { AvatarSection } from "@/Components/account/sections/AvatarSection";
 import { PersonalInfoSection } from "@/Components/account/sections/PersonalInfoSection";
-import { ContactInfoSection } from "@/Components/account/sections/ContactInfoSection";
+import { AddressSection } from "@/Components/settings/sections/AddressSection";
 
 export default function Profile() {
   const { props } = usePage();
@@ -48,8 +49,22 @@ export default function Profile() {
       bio: (u.bio as string) || (auth.bio as string),
       url: (u.url as string) || (auth.url as string) || "",
       avatar: (auth.avatar as string) || (u.avatar as string),
+      billing_address:
+        (u.billing_address as Record<string, string> | null) ??
+        (auth.billing_address as Record<string, string> | null) ??
+        null,
+      shipping_address:
+        (u.shipping_address as Record<string, string> | null) ??
+        (auth.shipping_address as Record<string, string> | null) ??
+        null,
+      social_media:
+        (u.social_media as Array<Record<string, unknown>> | null) ??
+        (auth.social_media as Array<Record<string, unknown>> | null) ??
+        [],
     };
   }, [serverUser, authUser]);
+
+  const profileSections = (props.profileSections as string[]) || [];
 
   const roles = (authUser?.roles as string[]) || (serverUser?.roles as string[]) || [];
 
@@ -76,9 +91,11 @@ export default function Profile() {
         display_name_options: (data.display_name_options as Record<string, string>) || {},
         first_name: (data.first_name as string) || "",
         last_name: (data.last_name as string) || "",
-        url: (data.url as string) || (data.website as string) || "",
         bio: (data.bio as string) || "",
-        contact_email: (data.contact_email as string) || "",
+        social_media:
+          (data.social_media as Array<Record<string, unknown>>) ||
+          (data.social_links as Array<Record<string, unknown>>) ||
+          [],
       };
     },
     [user],
@@ -101,7 +118,7 @@ export default function Profile() {
     if (status) toast.add({ title: status, type: "success" });
   }, [status]);
 
-  const handleFieldChange = useCallback((field: string, value: string) => {
+  const handleFieldChange = useCallback((field: string, value: unknown) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }, []);
 
@@ -109,14 +126,16 @@ export default function Profile() {
     (e: React.FormEvent) => {
       e.preventDefault();
       if (!formData) return;
-      const payload: Record<string, string> = {};
+      const payload: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(formData)) {
         if (typeof value === "string") {
+          payload[key] = value;
+        } else if (Array.isArray(value)) {
           payload[key] = value;
         }
       }
       payload._update_type = "profile";
-      router.patch(route("dashboard.account.profile"), payload, {
+      router.patch(route("dashboard.account.profile"), payload as RequestPayload, {
         preserveScroll: true,
         preserveState: true,
         replace: true,
@@ -300,11 +319,17 @@ export default function Profile() {
               accordionDefaultOpen={false}
             />
 
-            <ContactInfoSection
-              data={user as Record<string, unknown>}
-              asAccordion
-              accordionDefaultOpen={false}
-            />
+            {profileSections.includes("address") && (
+              <AddressSection
+                billingAddress={
+                  (user.billing_address as Record<string, string> | null) ?? null
+                }
+                shippingAddress={
+                  (user.shipping_address as Record<string, string> | null) ?? null
+                }
+                asAccordion
+              />
+            )}
           </div>
         </div>
       </div>

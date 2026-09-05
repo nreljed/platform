@@ -148,13 +148,12 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
         Route::get('/integrations', [UserAccountController::class, 'integrations'])->name('dashboard.account.page.integrations');
         Route::get('/advanced', [UserAccountController::class, 'advanced'])->name('dashboard.account.page.advanced');
 
-        // Form submission endpoints
+        // Form submission endpoints — throttled (password-confirmed mutations)
         Route::patch('/profile', [UserAccountController::class, 'updateProfile'])->name('dashboard.account.profile');
-        Route::patch('/contact', [UserAccountController::class, 'updateContact'])->name('dashboard.account.contact');
-        Route::post('/email', [UserAccountController::class, 'updateEmail'])->name('dashboard.account.email');
-        Route::post('/password', [UserAccountController::class, 'updatePassword'])->name('dashboard.account.password');
-        Route::delete('/', [UserAccountController::class, 'destroy'])->name('dashboard.account.destroy');
-        Route::post('/verify-delete-password', [UserAccountController::class, 'verifyDeletePassword'])->name('dashboard.account.verify-delete-password');
+        Route::post('/email', [UserAccountController::class, 'updateEmail'])->middleware('throttle:auth')->name('dashboard.account.email');
+        Route::post('/password', [UserAccountController::class, 'updatePassword'])->middleware('throttle:auth')->name('dashboard.account.password');
+        Route::delete('/', [UserAccountController::class, 'destroy'])->middleware('throttle:auth')->name('dashboard.account.destroy');
+        Route::post('/verify-delete-password', [UserAccountController::class, 'verifyDeletePassword'])->middleware('throttle:auth')->name('dashboard.account.verify-delete-password');
         Route::post('/notifications', [UserAccountController::class, 'updateNotificationPreferences'])->name('dashboard.account.notifications');
         Route::put('/address', [UserAccountController::class, 'updateAddress'])->name('dashboard.account.address');
         Route::post('/avatar', [AvatarController::class, 'upload'])->name('dashboard.account.avatar.upload');
