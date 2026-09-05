@@ -32,6 +32,7 @@ final class FeatureProviderContractTest extends TestCase
             'getNavItems',
             'getNotificationTypes',
             'getProfileFieldsConfig',
+            'getProfileSections',
             'getRepeaterConfig',
             'getSettingsRoute',
             'getSharedData',
