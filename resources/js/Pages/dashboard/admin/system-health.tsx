@@ -181,6 +181,8 @@ interface ModuleItem {
   slug: string;
   enabled: boolean;
   version: string | null;
+  package: string | null;
+  composer_version: string | null;
 }
 interface CronItem {
   name: string;
@@ -584,6 +586,16 @@ export default function SystemHealth(props: SystemHealthProps) {
           "Core Latest",
           props.core_latest_version.found ? (props.core_latest_version.version ?? "?") : "Unknown",
         ),
+        ...(props.modules.length > 0
+          ? props.modules.map((m) =>
+              L(
+                `Module ${m.name}${m.package ? ` (${m.package})` : ""}`,
+                m.composer_version
+                  ? `v${m.composer_version}${m.version && m.version !== m.composer_version ? ` (declared ${m.version})` : ""}`
+                  : "bundled",
+              ),
+            )
+          : []),
         "",
       );
     lines.push(
@@ -968,6 +980,52 @@ export default function SystemHealth(props: SystemHealthProps) {
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">{coreStatusHint[coreStatus]}</p>
               </div>
+
+              {/* Feature Modules */}
+              {props.modules.length > 0 && (
+                <div className="mt-2 rounded-lg border border-border/50 p-3">
+                  <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
+                    Feature Modules
+                  </p>
+                  <div className="space-y-1.5">
+                    {props.modules.map((module) => (
+                      <div
+                        key={module.slug}
+                        className="flex flex-wrap items-center justify-between gap-2"
+                      >
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium">{module.name}</p>
+                          {module.package ? (
+                            <p className="font-mono text-[11px] text-muted-foreground truncate">
+                              {module.package}
+                            </p>
+                          ) : (
+                            <p className="text-[11px] text-muted-foreground">
+                              bundled in dashboard-core
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {module.composer_version ? (
+                            <>
+                              <span className="font-mono text-sm">
+                                v{module.composer_version}
+                              </span>
+                              {module.version && module.version !== module.composer_version && (
+                                <span className="text-[11px] text-amber-500 dark:text-amber-400">
+                                  declared {module.version}
+                                </span>
+                              )}
+                            </>
+                          ) : (
+                            <span className="text-sm text-muted-foreground">bundled</span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

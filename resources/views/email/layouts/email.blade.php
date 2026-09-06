@@ -74,6 +74,11 @@
               <p style="font-size:13px; color:#71717a; margin:8px 0 0;">
                 <a href="{{ $siteUrl }}">{{ $siteUrl }}</a>
               </p>
+              @isset($managePreferencesUrl)
+              <p style="font-size:13px; color:#71717a; margin:8px 0 0;">
+                <a href="{{ $managePreferencesUrl }}">Manage notification preferences</a>
+              </p>
+              @endisset
             </td>
           </tr>
         </table>

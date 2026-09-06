@@ -13,7 +13,19 @@ class SettingsService
 
     private static function groups(): array
     {
-        return array_merge(self::DEFAULT_GROUPS, config('core.settings.groups', []));
+        $moduleGroups = [];
+
+        try {
+            $moduleGroups = app(FeatureRegistry::class)->getAllSettingsGroups();
+        } catch (\Throwable) {
+            // Registry unavailable outside a booted app - degrade to config only.
+        }
+
+        return array_values(array_unique(array_merge(
+            self::DEFAULT_GROUPS,
+            config('core.settings.groups', []),
+            $moduleGroups,
+        )));
     }
 
     public static function get(string $key, mixed $default = null): mixed

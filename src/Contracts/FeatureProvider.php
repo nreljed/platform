@@ -27,6 +27,14 @@ interface FeatureProvider
 
     public function version(): string;
 
+    /**
+     * Return the fully-qualified Composer package this feature ships as (e.g.
+     * "nreljed/shop-module"), or null when bundled inside core. Optional —
+     * InteractsWithFeatures provides a null default. Used to resolve the real
+     * installed version for the system-health page.
+     */
+    public function getComposerPackage(): ?string;
+
     public function dependencies(): array;
 
     public function getNavGroupLabel(): ?string;
@@ -71,6 +79,25 @@ interface FeatureProvider
     public function getEmailTemplates(): array;
 
     public function getNotificationTypes(): array;
+
+    /**
+     * Return a map of storage folder => model class that this feature wants
+     * scanned by the `core:cleanup-orphan-media` command, e.g.
+     * `['products' => Product::class]`. Aggregated alongside the host
+     * `core.orphan_media` config.
+     *
+     * @return array<string, class-string>
+     */
+    public function getOrphanMediaTargets(): array;
+
+    /**
+     * Return the names of additional settings groups this feature owns, e.g.
+     * `['shop']`. Aggregated into SettingsService::groups() alongside the
+     * host `core.settings.groups` config.
+     *
+     * @return array<int, string>
+     */
+    public function getSettingsGroups(): array;
 
     public function permissions(): array;
 

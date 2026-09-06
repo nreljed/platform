@@ -84,12 +84,7 @@ class SystemHealthService
                 'disks' => array_keys(config('filesystems.disks', [])),
             ],
             'modules' => app()->bound(FeatureRegistry::class)
-                ? collect(app(FeatureRegistry::class)->getAll())->map(fn ($m) => [
-                    'name' => $m['name'],
-                    'slug' => $m['slug'],
-                    'enabled' => $m['enabled'] ?? true,
-                    'version' => $m['version'] ?? null,
-                ])->values()->toArray()
+                ? $this->resolveModules(app(FeatureRegistry::class)->getAll())
                 : [],
             'features' => [
                 'valid' => $featureIssues === [],
@@ -113,6 +108,31 @@ class SystemHealthService
             'laravel_cache' => $this->getLaravelCacheStatus(),
             'debug_access_url' => $this->getDebugAccessUrl(),
         ];
+    }
+
+    /**
+     * Enrich the registry modules with the *installed* Composer version so
+     * the health page reflects reality even when a provider's declared
+     * version() drifts or is hardcoded (e.g. Shop shipping "1.0.0" in code
+     * while Composer installed "0.1.4").
+     *
+     * @param  array<int, array<string, mixed>>  $modules
+     * @return array<int, array<string, mixed>>
+     */
+    protected function resolveModules(array $modules): array
+    {
+        $resolver = app(PackageVersionService::class);
+
+        return collect($modules)->map(function (array $m) use ($resolver): array {
+            $package = $m['package'] ?? null;
+
+            return array_merge($m, [
+                'package' => $package,
+                'composer_version' => $package !== null && $package !== ''
+                    ? $resolver->installedVersion($package)
+                    : null,
+            ]);
+        })->values()->toArray();
     }
 
     protected function getFeatureIssues(): array

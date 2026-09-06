@@ -165,6 +165,20 @@ class FeatureRegistry
         );
     }
 
+    public function getAllOrphanMediaTargets(): array
+    {
+        return array_merge(
+            ...array_map(fn (FeatureProvider $provider) => $provider->getOrphanMediaTargets(), array_values($this->providers))
+        );
+    }
+
+    public function getAllSettingsGroups(): array
+    {
+        return array_merge(
+            ...array_map(fn (FeatureProvider $provider) => $provider->getSettingsGroups(), array_values($this->providers))
+        );
+    }
+
     public function getAllGalleryConfigs(): array
     {
         return array_merge(
@@ -287,6 +301,7 @@ class FeatureRegistry
                 'slug' => $provider->slug(),
                 'description' => $provider->description(),
                 'version' => $provider->version(),
+                'package' => $provider->getComposerPackage(),
                 'dependencies' => $provider->dependencies(),
                 'enabled' => true,
                 'has_settings' => $provider->hasSettings(),

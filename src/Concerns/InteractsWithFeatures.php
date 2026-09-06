@@ -22,6 +22,18 @@ trait InteractsWithFeatures
         return '1.0.0';
     }
 
+    /**
+     * Return the fully-qualified Composer package that this feature ships as,
+     * e.g. "nreljed/shop-module". Used by the system-health page to display
+     * the *installed* (Composer-resolved) version rather than the declared
+     * version(). Returns null for features bundled inside another package
+     * (Blog ships inside dashboard-core).
+     */
+    public function getComposerPackage(): ?string
+    {
+        return null;
+    }
+
     public function dependencies(): array
     {
         return [];
@@ -93,6 +105,16 @@ trait InteractsWithFeatures
     }
 
     public function getNotificationTypes(): array
+    {
+        return [];
+    }
+
+    public function getOrphanMediaTargets(): array
+    {
+        return [];
+    }
+
+    public function getSettingsGroups(): array
     {
         return [];
     }
