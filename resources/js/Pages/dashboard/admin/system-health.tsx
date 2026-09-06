@@ -591,7 +591,7 @@ export default function SystemHealth(props: SystemHealthProps) {
               L(
                 `Module ${m.name}${m.package ? ` (${m.package})` : ""}`,
                 m.composer_version
-                  ? `v${m.composer_version}${m.version && m.version !== m.composer_version ? ` (declared ${m.version})` : ""}`
+                  ? `v${m.composer_version}`
                   : "bundled",
               ),
             )
@@ -1007,16 +1007,7 @@ export default function SystemHealth(props: SystemHealthProps) {
                         </div>
                         <div className="flex items-center gap-2">
                           {module.composer_version ? (
-                            <>
-                              <span className="font-mono text-sm">
-                                v{module.composer_version}
-                              </span>
-                              {module.version && module.version !== module.composer_version && (
-                                <span className="text-[11px] text-amber-500 dark:text-amber-400">
-                                  declared {module.version}
-                                </span>
-                              )}
-                            </>
+                            <span className="font-mono text-sm">v{module.composer_version}</span>
                           ) : (
                             <span className="text-sm text-muted-foreground">bundled</span>
                           )}

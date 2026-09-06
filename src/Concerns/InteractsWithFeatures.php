@@ -2,6 +2,8 @@
 
 namespace Nreljed\DashboardCore\Concerns;
 
+use Nreljed\DashboardCore\Services\PackageVersionService;
+
 /**
  * Safe no-op defaults for the optional capability methods of the
  * FeatureProvider contract.
@@ -19,6 +21,20 @@ trait InteractsWithFeatures
 
     public function version(): string
     {
+        $package = $this->getComposerPackage();
+
+        if ($package !== null && $package !== '') {
+            try {
+                $installed = app(PackageVersionService::class)->installedVersion($package);
+
+                if ($installed !== null && $installed !== '') {
+                    return $installed;
+                }
+            } catch (\Throwable) {
+                // fall through to the declared default
+            }
+        }
+
         return '1.0.0';
     }
 
