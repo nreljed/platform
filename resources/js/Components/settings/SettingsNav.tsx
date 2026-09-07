@@ -19,7 +19,7 @@ const CORE_ITEMS: SettingsNavItem[] = [
   { value: "registration", label: "Registration", icon: ShieldCheck },
   { value: "notifications", label: "Notifications", icon: Bell },
   { value: "security", label: "Security", icon: Lock },
-  { value: "email", label: "Email", icon: Mail },
+  { value: "email", label: "SMTP", icon: Mail },
   { value: "maintenance", label: "Maintenance", icon: Wrench },
   { value: "ip-access", label: "IP Access", icon: Network },
 ];

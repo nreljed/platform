@@ -3,6 +3,8 @@
 namespace Nreljed\DashboardCore\Services;
 
 use Illuminate\Support\Facades\Config;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 
 class MailerConfigurator
 {
@@ -10,7 +12,7 @@ class MailerConfigurator
 
     /**
      * Dynamically configure Laravel mail config from stored settings.
-     * Called on every request via AppServiceProvider::boot().
+     * Called on every request via the dashboard-core service provider.
      */
     public function configure(): void
     {
@@ -64,6 +66,33 @@ class MailerConfigurator
                 'address' => $settings['reply_to_email'],
                 'name' => $settings['from_name'] ?? null,
             ]);
+        }
+    }
+
+    /**
+     * Apply per-message envelope settings (From, Reply-To, Return-Path) on
+     * every outgoing message. Mirrors the PHPMailer behaviour in Project-WP:
+     * force-from only overrides when enabled, and the return-path prefers the
+     * "use from as return-path" checkbox over a manually entered address.
+     */
+    public function applyMessageSettings(Email $message): void
+    {
+        $settings = $this->settingsService->getOptions();
+
+        if ($settings['force_from_email'] && $settings['from_email']) {
+            $message->from(new Address($settings['from_email'], $settings['from_name'] ?: ''));
+        } elseif ($settings['force_from_name'] && $settings['from_name'] && $settings['from_email']) {
+            $message->from(new Address($settings['from_email'], $settings['from_name']));
+        }
+
+        if ($settings['reply_to_email'] && ! $message->getReplyTo()) {
+            $message->replyTo(new Address($settings['reply_to_email'], $settings['from_name'] ?: ''));
+        }
+
+        if ($settings['use_from_as_return_path'] && $settings['from_email']) {
+            $message->returnPath($settings['from_email']);
+        } elseif ($settings['return_path']) {
+            $message->returnPath($settings['return_path']);
         }
     }
 }

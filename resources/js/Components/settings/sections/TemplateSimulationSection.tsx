@@ -265,14 +265,17 @@ export function TemplateSimulationSection({ asAccordion = false }: { asAccordion
             </DialogHeader>
             {dialogHtml && (
               <div className="flex justify-center">
-                <div
+                <iframe
+                  title="Template preview"
+                  sandbox="allow-same-origin"
                   className={cn(
-                    "rounded-md border bg-white dark:bg-gray-900 [&_img]:max-w-full overflow-hidden",
-                    previewSize === "desktop" && "w-full",
-                    previewSize === "tablet" && "w-[600px]",
-                    previewSize === "mobile" && "w-[375px]",
+                    "w-full rounded-md border bg-white dark:bg-gray-900",
+                    previewSize === "desktop" && "max-w-[820px]",
+                    previewSize === "tablet" && "max-w-[600px]",
+                    previewSize === "mobile" && "max-w-[375px]",
                   )}
-                  dangerouslySetInnerHTML={{ __html: dialogHtml }}
+                  style={{ height: "min(62vh, 560px)" }}
+                  srcDoc={dialogHtml}
                 />
               </div>
             )}

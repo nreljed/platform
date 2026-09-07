@@ -4,6 +4,18 @@ All notable changes to `nreljed/dashboard-core` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.28] - 2026-09-07
+
+### Added
+
+- Settings: applied the Force From Email / Force From Name / Reply-To / Return-Path envelope options to actual outgoing mail (previously stored but never used). A `MessageSending` listener now mirrors the Project-WP PHPMailer behaviour: force-from overrides each message's sender when enabled, the return-path prefers "Use From Email as Return-Path" over a manually entered address, and Reply-To is added when the message has none.
+- Settings: SMTP section now exposes the previously-hidden `Auto TLS`, `Use From Email as Return-Path` (with Return-Path field disabled while enabled), a password show/hide toggle, and an "encrypted at rest" badge.
+- Settings: template preview now renders in a sandboxed `<iframe srcDoc>` instead of `dangerouslySetInnerHTML` (isolates email styles, safer).
+
+### Changed
+
+- Settings nav: renamed the "Email" menu item to "SMTP" in both `AdminSettingsNav` and legacy `SettingsNav` (Project-WP parity).
+
 ## [0.1.27] - 2026-09-07
 
 ### Fixed

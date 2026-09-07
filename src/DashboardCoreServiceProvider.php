@@ -11,6 +11,8 @@ use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
@@ -162,6 +164,14 @@ class DashboardCoreServiceProvider extends ServiceProvider
         } catch (\Throwable $e) {
             report($e);
         }
+
+        Event::listen(MessageSending::class, function (MessageSending $event): void {
+            try {
+                $this->app->make(MailerConfigurator::class)->applyMessageSettings($event->message);
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        });
     }
 
     protected function configureNotifications(): void

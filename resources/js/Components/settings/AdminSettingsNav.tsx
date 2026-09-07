@@ -45,7 +45,7 @@ const NAV_ITEMS: NavCategory[] = [
     label: "Communication",
     items: [
       { icon: Bell, label: "Notifications", route: "dashboard.admin.settings.notifications" },
-      { icon: Mail, label: "Email", route: "dashboard.admin.settings.email" },
+      { icon: Mail, label: "SMTP", route: "dashboard.admin.settings.email" },
     ],
   },
   {
