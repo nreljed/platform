@@ -13,12 +13,53 @@ use Laravel\Ai\Exceptions\AiException;
 use Nreljed\DashboardCore\Ai\Models\AiProvider;
 use Nreljed\DashboardCore\Ai\Requests\StoreAiProviderRequest;
 use Nreljed\DashboardCore\Ai\Requests\TestAiProviderRequest;
+use Nreljed\DashboardCore\Ai\Services\AiService;
 use Nreljed\DashboardCore\Http\Controllers\Controller;
 
 use function Laravel\Ai\agent;
 
 class AiProviderController extends Controller
 {
+    public function __construct(
+        protected AiService $aiService,
+    ) {}
+
+    /**
+     * Return the authenticated user's AI usage snapshot (caps, today, all-time).
+     */
+    public function usage(Request $request): JsonResponse
+    {
+        return response()->json([
+            'usage' => $this->aiService->getUsageSnapshot($request->user()),
+        ]);
+    }
+
+    /**
+     * Update the authenticated user's soft daily AI usage caps.
+     */
+    public function usageCap(Request $request): JsonResponse|RedirectResponse
+    {
+        $validated = $request->validate([
+            'requests' => ['required', 'integer', 'min:1'],
+            'tokens' => ['required', 'integer', 'min:1000'],
+        ]);
+
+        $caps = $this->aiService->updateCaps(
+            user: $request->user(),
+            requests: $validated['requests'],
+            tokens: $validated['tokens'],
+        );
+
+        if ($request->inertia()) {
+            return redirect()->back();
+        }
+
+        return response()->json([
+            'cap' => $caps,
+            'message' => 'AI usage caps updated.',
+        ]);
+    }
+
     /**
      * List all AI provider keys for the authenticated user.
      */

@@ -4,6 +4,18 @@ All notable changes to `nreljed/dashboard-core` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.25] - 2026-09-07
+
+### Added
+
+- AI BYOK usage caps: `ai_usage_settings` table + `AiUsageSetting` model with per-user daily request/token caps (defaults 100 requests / 250k tokens, clamped 1..100k / 1k..1B).
+- `AiService` usage/rollup layer: `getDailyUsage()`, `getAllTimeUsage()`, `getUsageSnapshot()`, `exceedsCaps()`, `getCaps()`, `updateCaps()`, `recordError()`; error rows are excluded from request/token rolls but surfaced as the per-provider "last error".
+- `AiHttpClient` - dependency-free HTTP client for BYOK key validation (`test()`) and direct provider calls (`send()`) with per-provider payload builders and default models.
+- `AiTaskRunner` - module-facing runner for `prompt()` / `stream()` / `queue()` with per-user key injection, soft-cap enforcement, 3-attempt linear-backoff retries on `RateLimitedException`, and best-effort usage/error logging with latency.
+- `ai_usage_logs.latency_ms` + `ai_usage_logs.error` columns (migration 2026_07_13_180003).
+- `AiProviderController::usage()` (GET snapshot) + `usageCap()` (PUT caps) routes `dashboard.account.ai-keys.{usage,usage-cap}`.
+- Account → AI Keys UI: today's usage card (request/token progress vs caps with "limit reached" badges, per-provider model/latency/last-error, all-time totals) and an Edit Caps dialog; `integrations` page passes the `aiUsageSnapshot` prop.
+
 ## [0.1.24] - 2026-09-07
 
 ### Fixed

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Nreljed\DashboardCore\Ai\Models\AiProvider;
+use Nreljed\DashboardCore\Ai\Services\AiService;
 use Nreljed\DashboardCore\Http\Requests\Account\DeleteAccountRequest;
 use Nreljed\DashboardCore\Http\Requests\Account\UpdateEmailRequest;
 use Nreljed\DashboardCore\Http\Requests\Account\UpdateNotificationPreferencesRequest;
@@ -126,6 +127,7 @@ class UserAccountController extends Controller
         return Inertia::render('dashboard/account/integrations', [
             'aiProviders' => $aiProviders,
             'supportedProviders' => AiProvider::supportedProviders(),
+            'aiUsageSnapshot' => app(AiService::class)->getUsageSnapshot($user),
             'status' => session('status'),
         ]);
     }

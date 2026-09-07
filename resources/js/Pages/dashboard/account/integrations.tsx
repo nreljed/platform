@@ -10,6 +10,41 @@ import {
 import { AccountSettingsNav } from "@/Components/account/AccountSettingsNav";
 import AiKeysSection from "@/Components/account/sections/AiKeysSection";
 
+interface AiUsageSnapshot {
+  cap: { requests: number; tokens: number };
+  today: {
+    date: string;
+    providers: Record<
+      string,
+      {
+        requests: number;
+        input_tokens: number;
+        output_tokens: number;
+        last_model: string | null;
+        last_run_at: string | null;
+        last_latency_ms: number | null;
+        last_error: string | null;
+      }
+    >;
+    totals: { requests: number; tokens: number };
+  };
+  all_time: {
+    providers: Record<
+      string,
+      {
+        requests: number;
+        input_tokens: number;
+        output_tokens: number;
+        last_model: string | null;
+        last_run_at: string | null;
+        last_latency_ms: number | null;
+        last_error: string | null;
+      }
+    >;
+    totals: { requests: number; tokens: number };
+  };
+}
+
 export default function Integrations() {
   const { props } = usePage();
 
@@ -52,8 +87,10 @@ export default function Integrations() {
               }
               supportedProviders={
                 props.supportedProviders as
-                  Record<string, { name: string; models: string[] }> | undefined
+                  | Record<string, { name: string; models: string[] }>
+                  | undefined
               }
+              usageSnapshot={props.aiUsageSnapshot as AiUsageSnapshot | undefined}
             />
           </div>
         </div>

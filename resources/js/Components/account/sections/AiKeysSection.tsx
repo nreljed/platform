@@ -9,6 +9,9 @@ import {
   Loader2,
   Eye,
   EyeOff,
+  Activity,
+  Gauge,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import {
@@ -64,9 +67,33 @@ interface ProviderConfig {
   models: string[];
 }
 
+interface ProviderUsage {
+  requests: number;
+  input_tokens: number;
+  output_tokens: number;
+  last_model: string | null;
+  last_run_at: string | null;
+  last_latency_ms: number | null;
+  last_error: string | null;
+}
+
+interface AiUsageSnapshot {
+  cap: { requests: number; tokens: number };
+  today: {
+    date: string;
+    providers: Record<string, ProviderUsage>;
+    totals: { requests: number; tokens: number };
+  };
+  all_time: {
+    providers: Record<string, ProviderUsage>;
+    totals: { requests: number; tokens: number };
+  };
+}
+
 interface AiKeysSectionProps {
   providers?: AiProvider[];
   supportedProviders?: Record<string, ProviderConfig>;
+  usageSnapshot?: AiUsageSnapshot;
 }
 
 const DEFAULT_SUPPORTED_PROVIDERS: Record<string, ProviderConfig> = {
@@ -94,6 +121,7 @@ const DEFAULT_SUPPORTED_PROVIDERS: Record<string, ProviderConfig> = {
 export default function AiKeysSection({
   providers: providersProp,
   supportedProviders: supportedProp,
+  usageSnapshot,
 }: AiKeysSectionProps) {
   const providers = providersProp ?? [];
   const supportedProviders = supportedProp ?? DEFAULT_SUPPORTED_PROVIDERS;
@@ -108,6 +136,11 @@ export default function AiKeysSection({
   const [saving, setSaving] = useState(false);
 
   const [deleteProviderId, setDeleteProviderId] = useState<number | null>(null);
+
+  const [capDialogOpen, setCapDialogOpen] = useState(false);
+  const [capRequests, setCapRequests] = useState(String(usageSnapshot?.cap.requests ?? 100));
+  const [capTokens, setCapTokens] = useState(String(usageSnapshot?.cap.tokens ?? 250000));
+  const [savingCaps, setSavingCaps] = useState(false);
 
   const availableProviders = Object.entries(supportedProviders).filter(([key]) =>
     providers.every((p) => p.provider !== key),
@@ -218,6 +251,30 @@ export default function AiKeysSection({
         preserveState: true,
         onSuccess: () => toast.add({ title: "Model preference updated", type: "success" }),
         onError: () => toast.add({ title: "Failed to update model preference", type: "error" }),
+      },
+    );
+  }
+
+  function handleSaveCaps() {
+    const requests = Number(capRequests);
+    const tokens = Number(capTokens);
+    if (!Number.isFinite(requests) || requests < 1 || !Number.isFinite(tokens) || tokens < 1000) {
+      toast.add({ title: "Enter valid caps (requests ≥ 1, tokens ≥ 1000)", type: "error" });
+      return;
+    }
+    setSavingCaps(true);
+
+    router.put(
+      route("dashboard.account.ai-keys.usage-cap"),
+      { requests, tokens },
+      {
+        preserveState: true,
+        onSuccess: () => {
+          toast.add({ title: "Usage caps updated", type: "success" });
+          setCapDialogOpen(false);
+        },
+        onError: () => toast.add({ title: "Failed to update usage caps", type: "error" }),
+        onFinish: () => setSavingCaps(false),
       },
     );
   }
@@ -434,8 +491,163 @@ export default function AiKeysSection({
       </p>
     );
 
+  const cap = usageSnapshot?.cap ?? { requests: 100, tokens: 250000 };
+  const today = usageSnapshot?.today;
+  const allTime = usageSnapshot?.all_time;
+
+  const requestPct = today && cap.requests > 0 ? Math.min(100, Math.round((today.totals.requests / cap.requests) * 100)) : 0;
+  const tokenPct = today && cap.tokens > 0 ? Math.min(100, Math.round((today.totals.tokens / cap.tokens) * 100)) : 0;
+  const requestExceeded = today ? today.totals.requests >= cap.requests : false;
+  const tokenExceeded = today ? today.totals.tokens >= cap.tokens : false;
+
+  const usageCard = (
+    <div className="mt-6 border rounded-lg p-4 space-y-4">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <Activity className="h-4 w-4 text-muted-foreground" />
+          <p className="text-sm font-medium">Today's AI Usage</p>
+          {today && <span className="text-xs text-muted-foreground">{today.date}</span>}
+        </div>
+        <Button variant="outline" size="sm" onClick={() => {
+          setCapRequests(String(cap.requests));
+          setCapTokens(String(cap.tokens));
+          setCapDialogOpen(true);
+        }}>
+          <Gauge className="mr-1.5 h-3.5 w-3.5" />
+          Edit Caps
+        </Button>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground">Requests ({today?.totals.requests ?? 0}/{cap.requests})</span>
+            {requestExceeded && (
+              <span className="inline-flex items-center gap-1 text-destructive">
+                <AlertTriangle className="h-3 w-3" />
+                Limit reached
+              </span>
+            )}
+          </div>
+          <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all ${requestExceeded ? "bg-destructive" : "bg-primary"}`}
+              style={{ width: `${Math.max(requestPct, 2)}%` }}
+            />
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground">Tokens ({today ? today.totals.tokens.toLocaleString() : 0}/{cap.tokens.toLocaleString()})</span>
+            {tokenExceeded && (
+              <span className="inline-flex items-center gap-1 text-destructive">
+                <AlertTriangle className="h-3 w-3" />
+                Limit reached
+              </span>
+            )}
+          </div>
+          <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all ${tokenExceeded ? "bg-destructive" : "bg-primary"}`}
+              style={{ width: `${Math.max(tokenPct, 2)}%` }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {today && Object.keys(today.providers).length > 0 && (
+        <div className="space-y-2">
+          {Object.entries(today.providers).map(([key, p]) => {
+            const config = supportedProviders[key];
+            const providerName = config?.name ?? key;
+            const error = p.last_error;
+
+            return (
+              <div key={key} className="flex flex-col gap-1 text-xs border-t pt-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">{providerName}</span>
+                  <span className="text-muted-foreground">
+                    {p.requests} req · {(p.input_tokens + p.output_tokens).toLocaleString()} tokens
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
+                  {p.last_model && <span>Model: {p.last_model}</span>}
+                  {p.last_latency_ms != null && <span>Latency: {p.last_latency_ms}ms</span>}
+                  {error ? (
+                    <span className="inline-flex items-center gap-1 text-destructive">
+                      <XCircle className="h-3 w-3" />
+                      <span className="truncate max-w-[280px]" title={error}>
+                        {error}
+                      </span>
+                    </span>
+                  ) : p.last_run_at ? (
+                    <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                      <CheckCircle2 className="h-3 w-3" />
+                      Last run {p.last_run_at}
+                    </span>
+                  ) : null}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {allTime && (
+        <p className="text-xs text-muted-foreground border-t pt-2">
+          All-time: {allTime.totals.requests.toLocaleString()} requests ·{" "}
+          {allTime.totals.tokens.toLocaleString()} tokens
+        </p>
+      )}
+    </div>
+  );
+
+  const capDialog = (
+    <Dialog open={capDialogOpen} onOpenChange={setCapDialogOpen}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>AI Daily Usage Caps</DialogTitle>
+          <DialogDescription>
+            Set your soft daily limits. When reached, AI features will pause until the next day.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="cap-requests">Requests per day</Label>
+            <Input
+              id="cap-requests"
+              type="number"
+              min={1}
+              value={capRequests}
+              onChange={(e) => setCapRequests(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="cap-tokens">Tokens per day</Label>
+            <Input
+              id="cap-tokens"
+              type="number"
+              min={1000}
+              value={capTokens}
+              onChange={(e) => setCapTokens(e.target.value)}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setCapDialogOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={handleSaveCaps} disabled={savingCaps}>
+            {savingCaps ? "Saving..." : "Save"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
   return (
     <>
+      {capDialog}
       <AlertDialog
         open={!!deleteProviderId}
         onOpenChange={(open) => {
@@ -480,6 +692,7 @@ export default function AiKeysSection({
           {addProviderButton}
         </div>
         {providersList}
+        {usageCard}
       </SettingsAccordionItem>
     </>
   );

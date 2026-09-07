@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,6 +15,7 @@ use Laravel\Ai\Concerns\HasConversations;
 use Laravel\Sanctum\HasApiTokens;
 use Nreljed\DashboardCore\Ai\Models\AiProvider;
 use Nreljed\DashboardCore\Ai\Models\AiUsageLog;
+use Nreljed\DashboardCore\Ai\Models\AiUsageSetting;
 use Nreljed\DashboardCore\Database\Factories\UserFactory;
 use Nreljed\DashboardCore\Notifications\ResetPassword;
 use Nreljed\DashboardCore\Services\PermissionCacheService;
@@ -86,6 +88,12 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function aiUsageLogs(): HasMany
     {
         return $this->hasMany(AiUsageLog::class);
+    }
+
+    /** @return HasOne<AiUsageSetting, $this> */
+    public function aiUsageSetting(): HasOne
+    {
+        return $this->hasOne(AiUsageSetting::class);
     }
 
     public function hasRole(string|array ...$roles): bool

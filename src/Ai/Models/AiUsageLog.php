@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Nreljed\DashboardCore\Models\User;
 
 /**
- * Tracks AI usage per user for billing and analytics.
+ * Tracks AI usage per user for billing, analytics, and the Account → AI Keys
+ * usage UI.
+ *
+ * A row with a non-null {@see $error} represents a FAILED provider attempt and
+ * is excluded from request/token rollups but surfaces the latest error.
  *
  * @property int $user_id
  * @property string $agent_class
@@ -16,6 +20,8 @@ use Nreljed\DashboardCore\Models\User;
  * @property int $input_tokens
  * @property int $output_tokens
  * @property int|null $cost_cents
+ * @property int|null $latency_ms
+ * @property string|null $error
  */
 class AiUsageLog extends Model
 {
@@ -29,6 +35,8 @@ class AiUsageLog extends Model
         'input_tokens',
         'output_tokens',
         'cost_cents',
+        'latency_ms',
+        'error',
         'created_at',
     ];
 
@@ -39,6 +47,7 @@ class AiUsageLog extends Model
             'input_tokens' => 'integer',
             'output_tokens' => 'integer',
             'cost_cents' => 'integer',
+            'latency_ms' => 'integer',
             'created_at' => 'datetime',
         ];
     }
