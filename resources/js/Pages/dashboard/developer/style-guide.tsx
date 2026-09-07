@@ -4,6 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Badge } from "@/Components/ui/badge";
+import { StatusBadge, statusStyles } from "@/Components/ui/status-badge";
 import { Input } from "@/Components/ui/input";
 import { Textarea } from "@/Components/ui/textarea";
 import { Switch } from "@/Components/ui/switch";
@@ -139,6 +140,15 @@ const COLOR_TOKENS = [
   { var: "--color-border", label: "border" },
   { var: "--color-input", label: "input" },
   { var: "--color-ring", label: "ring" },
+  { var: "--color-warning", label: "warning" },
+  { var: "--color-warning-foreground", label: "warning-fg" },
+  { var: "--color-status-success", label: "status-success" },
+  { var: "--color-status-error", label: "status-error" },
+  { var: "--color-status-info", label: "status-info" },
+  { var: "--color-accent-purple", label: "accent-purple" },
+  { var: "--color-accent-rose", label: "accent-rose" },
+  { var: "--color-accent-cyan", label: "accent-cyan" },
+  { var: "--color-accent-pink", label: "accent-pink" },
   { var: "--color-sidebar", label: "sidebar" },
   { var: "--color-sidebar-foreground", label: "sidebar-fg" },
 ] as const;
@@ -883,6 +893,51 @@ export default function StyleGuide() {
                         {v.label}
                       </Badge>
                     ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="border-b border-border">
+                <CardTitle>Status Badges</CardTitle>
+                <CardDescription>
+                  Token-driven status badges — success, warning, info, critical, destructive, plus
+                  accent variants (purple, rose, cyan, pink). Read from the status/accent CSS tokens
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium">All Status Variants</h3>
+                  <p className="text-sm text-muted-foreground">
+                    The full set of StatusBadge variants on a single row
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {(Object.keys(statusStyles) as Array<keyof typeof statusStyles>).map(
+                      (variant) => (
+                        <StatusBadge key={variant} variant={variant}>
+                          {variant}
+                        </StatusBadge>
+                      ),
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-4 border-t border-border">
+                  <h3 className="text-lg font-medium">Semantic Usage</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Typical status badge usage across the app
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <StatusBadge variant="success">Active</StatusBadge>
+                    <StatusBadge variant="warning">Pending</StatusBadge>
+                    <StatusBadge variant="critical">Failed</StatusBadge>
+                    <StatusBadge variant="info">Processing</StatusBadge>
+                    <StatusBadge variant="destructive">Banned</StatusBadge>
+                    <StatusBadge variant="accentPurple">Beta</StatusBadge>
+                    <StatusBadge variant="accentRose">Promo</StatusBadge>
+                    <StatusBadge variant="accentCyan">New</StatusBadge>
+                    <StatusBadge variant="accentPink">Sale</StatusBadge>
                   </div>
                 </div>
               </CardContent>

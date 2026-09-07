@@ -4,6 +4,15 @@ All notable changes to `nreljed/dashboard-core` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.29] - 2026-09-07
+
+### Added
+
+- UI: new `StatusBadge` component (`Components/ui/status-badge.tsx`) with token-driven variants — `success`, `warning`, `info`, `critical`, `destructive`, plus accent variants `accentPurple`, `accentRose`, `accentCyan`, `accentPink`.
+- Theme: added the status/accent color token set (`--status-success/-error/-info`, `--accent-purple/-rose/-cyan/-pink`, `--warning`) to `core.css` for both light and dark mode, mapped in `@theme inline` so the new `bg-status-*` / `bg-accent-*` utilities resolve in every consuming app.
+- Settings: `SmtpSection` now matches the Project-WP nested-collapsible structure — the SMTP form is split into three collapsible groups (Sender Settings / SMTP Configuration / Advanced) rendered as nested `SettingsAccordionItem`s inside the outer accordion, with the "encrypted at rest" badge kept above the groups.
+- Style guide: badges tab gained a full `StatusBadge` showcase (all variants + semantic usage) and the Color Tokens card now swatches the warning/status/accent tokens.
+
 ## [0.1.28] - 2026-09-07
 
 ### Added
