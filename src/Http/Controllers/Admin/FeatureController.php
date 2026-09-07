@@ -1,0 +1,81 @@
+<?php
+
+namespace Nreljed\DashboardCore\Http\Controllers\Admin;
+
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Nreljed\DashboardCore\Enums\AuditAction;
+use Nreljed\DashboardCore\Http\Controllers\Controller;
+use Nreljed\DashboardCore\Services\AuditService;
+use Nreljed\DashboardCore\Services\FeatureRegistry;
+use Nreljed\DashboardCore\Services\FeatureSettingsService;
+
+/**
+ * Module-management admin page.
+ *
+ * Lists every registered feature (enabled or disabled) and lets an admin
+ * toggle each on/off. Disabling a feature:
+ *   - persists the state (settings group `core`),
+ *   - fires the provider's onDisable() so it can clean up,
+ *   - removes its nav/settings/permissions/dashboard data and, via the
+ *     provider's own route gating, its routes.
+ *
+ * These endpoints are gated by the `admin` middleware (admin role only), on
+ * top of the `manage-settings` permission group they are registered under.
+ */
+class FeatureController extends Controller
+{
+    public function index(FeatureRegistry $registry): \Inertia\Response
+    {
+        return Inertia::render('dashboard/admin/settings/modules', [
+            'modules' => $registry->getModuleList(),
+            'missingDependencies' => $registry->missingDependencies(),
+        ]);
+    }
+
+    /**
+     * Persist the provided feature on/off states and run disable cleanup.
+     *
+     * @return RedirectResponse
+     */
+    public function update(Request $request, FeatureRegistry $registry, FeatureSettingsService $settings): RedirectResponse
+    {
+        $this->authorize('manage-settings');
+
+        $states = $request->input('modules', []);
+        if (! is_array($states)) {
+            $states = [];
+        }
+
+        $bySlug = [];
+        foreach ($registry->allProviders() as $provider) {
+            $bySlug[$provider->slug()] = $provider;
+        }
+
+        $changes = [];
+
+        foreach ($bySlug as $slug => $provider) {
+            $wanted = (bool) ($states[$slug] ?? false);
+            $previous = $settings->setEnabled($slug, $wanted, true);
+
+            if ($previous !== $wanted) {
+                $changes[$slug] = [
+                    'from' => $previous,
+                    'to' => $wanted,
+                ];
+
+                // Fire cleanup only on an enable -> disable transition.
+                if ($previous === true && $wanted === false) {
+                    $provider->onDisable();
+                }
+            }
+        }
+
+        AuditService::log(AuditAction::SettingsChanged, $request->user()->id, [
+            'feature_enabled' => $changes,
+        ]);
+
+        return back()->with('status', 'Module settings saved.');
+    }
+}

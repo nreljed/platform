@@ -1,74 +1,59 @@
 import { Button } from "@/Components/ui/button";
 import { BellDot } from "lucide-react";
 
-const QUICK_BY_FEATURE: Record<
-  string,
-  { type: string; title: string; message: string; severity: string }[]
-> = {
-  core: [
-    {
-      type: "user.registered",
-      title: "New User Registered: jdoe",
-      message: "User jdoe (john@example.com) has created an account.",
-      severity: "info",
-    },
-    {
-      type: "password.changed",
-      title: "Password Changed",
-      message: "Your account password was changed successfully.",
-      severity: "warning",
-    },
-    {
-      type: "email.changed",
-      title: "Email Address Updated",
-      message: "Your account email was changed to user@example.com.",
-      severity: "warning",
-    },
-  ],
-};
-
-const FEATURE_LABELS: Record<string, string> = {
-  core: "Account",
-};
+interface NotificationType {
+  label: string;
+  description?: string;
+  default_channels?: string[];
+  default_enabled?: boolean;
+  required?: boolean;
+  group?: string;
+  severity?: string;
+}
 
 interface QuickSendSectionProps {
   sending: string | null;
   onSend: (_overrides?: Record<string, string>) => Promise<void>;
+  notificationTypes: Record<string, Record<string, NotificationType>>;
 }
 
-export function QuickSendSection({ sending, onSend }: QuickSendSectionProps) {
+export function QuickSendSection({
+  sending,
+  onSend,
+  notificationTypes,
+}: QuickSendSectionProps) {
   return (
     <div className="space-y-4">
-      {Object.entries(QUICK_BY_FEATURE).map(([featureKey, items]) => (
-        <div key={featureKey}>
+      {Object.entries(notificationTypes).map(([group, types]) => (
+        <div key={group}>
           <div className="flex items-center gap-2 mb-2">
             <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/40" />
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              {FEATURE_LABELS[featureKey] || featureKey}
+              {group}
             </span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {items.map((qt) => (
+            {Object.entries(types).map(([key, cfg]) => (
               <Button
-                key={qt.type}
+                key={key}
                 variant="outline"
                 className="justify-start h-auto py-2.5 px-3"
                 onClick={() =>
                   onSend({
-                    type: qt.type,
-                    title: qt.title,
-                    message: qt.message,
-                    severity: qt.severity,
-                    feature: featureKey,
+                    type: key,
+                    title: cfg.label ?? key,
+                    message: cfg.description ?? `A ${key} notification occurred.`,
+                    severity: cfg.severity ?? "info",
+                    module: group,
                   })
                 }
                 disabled={sending !== null}
               >
                 <BellDot className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
                 <div className="text-left min-w-0">
-                  <div className="text-xs font-medium text-foreground">{qt.type}</div>
+                  <div className="text-xs font-medium text-foreground">{key}</div>
                   <div className="text-[11px] text-muted-foreground truncate max-w-[260px]">
-                    {qt.title}
+                    {cfg.label ?? key}
                   </div>
                 </div>
               </Button>
@@ -76,6 +61,11 @@ export function QuickSendSection({ sending, onSend }: QuickSendSectionProps) {
           </div>
         </div>
       ))}
+      {Object.keys(notificationTypes).length === 0 && (
+        <p className="text-sm text-muted-foreground">
+          No notification types are registered yet.
+        </p>
+      )}
     </div>
   );
 }

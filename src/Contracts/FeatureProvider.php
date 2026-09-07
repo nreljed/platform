@@ -37,6 +37,38 @@ interface FeatureProvider
 
     public function dependencies(): array;
 
+    /**
+     * Whether this feature is currently enabled.
+     *
+     * Two-level resolution (highest precedence first), mirrored from the
+     * platform module system:
+     *  1. Persisted override (settings table, group `core`, key
+     *     `feature_enabled.<slug>`) — written by the module-management admin
+     *     page and the toggle endpoint.
+     *  2. Config default (`core.features_enabled.<slug>`) — a feature listed
+     *     in `core.features` is enabled unless this config turns it off.
+     *
+     * A feature that is disabled contributes no routes (its provider gates
+     * route loading on this), no nav, no dashboard data, no settings and no
+     * permissions to the FeatureRegistry aggregators.
+     *
+     * @return bool
+     */
+    public function enabled(): bool;
+
+    /**
+     * Called when the feature transitions from enabled to disabled through
+     * the module-management admin page.
+     *
+     * Implementations should clean up any state that must not survive while
+     * the feature is off (e.g. de-prioritise jobs, disable listeners). The
+     * default is a no-op; providers opt into cleanup. Data is intentionally
+     * NOT destroyed so the feature can be re-enabled non-destructively.
+     *
+     * @return void
+     */
+    public function onDisable(): void;
+
     public function getNavGroupLabel(): ?string;
 
     public function getNavItems(): array;

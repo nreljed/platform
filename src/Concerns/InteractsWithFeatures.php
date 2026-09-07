@@ -55,6 +55,44 @@ trait InteractsWithFeatures
         return [];
     }
 
+    public function enabled(): bool
+    {
+        try {
+            $settings = $this->featureSettingsService();
+
+            return $settings->isEnabled($this->slug(), $this->defaultEnabled());
+        } catch (\Throwable) {
+            // Registry/service unavailable (e.g. pre-boot, no settings table,
+            // seeders/console) — degrade to the config default rather than
+            // failing the whole request.
+            return $this->defaultEnabled();
+        }
+    }
+
+    /**
+     * The default enabled state for this feature when no persisted override
+     * exists. A feature listed in `core.features` is on unless the
+     * `core.features_enabled.<slug>` config explicitly disables it.
+     */
+    protected function defaultEnabled(): bool
+    {
+        $configured = config('core.features_enabled.'.$this->slug(), null);
+
+        return $configured ?? true;
+    }
+
+    protected function featureSettingsService(): \Nreljed\DashboardCore\Services\FeatureSettingsService
+    {
+        return app(\Nreljed\DashboardCore\Services\FeatureSettingsService::class);
+    }
+
+    public function onDisable(): void
+    {
+        // No-op default. Providers override to clean up state that must not
+        // survive while the feature is disabled. Data is preserved so the
+        // feature can be re-enabled non-destructively.
+    }
+
     public function getNavGroupLabel(): ?string
     {
         return null;

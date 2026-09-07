@@ -4,6 +4,23 @@ All notable changes to `nreljed/dashboard-core` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.23] - 2026-09-07
+
+### Added
+
+- Module-management admin page (`dashboard.admin.settings.modules`) — enables/disables registered features at runtime, gated by the admin role.
+- `FeatureSettingsService` — persists per-feature enabled state in the `settings` table (group `core`, key `feature_enabled.<slug>`), above the `core.features_enabled` config default.
+- `FeatureRegistry::getModuleList()` — full metadata for every registered feature (enabled or not) for the modules UI; `getAll()` now aliases it.
+- `FeatureRegistry::missingDependencies()` and a disabled-dependency check in `validate()` — surfaces features whose required dependency is disabled.
+- `FeatureProvider::enabled()` / `onDisable()` contract methods with safe trait defaults; providers now gate their own route loading on `enabled()` so a disabled feature's routes 404.
+- Core-owned notification type tier (`NotificationTypeRegistry::getCoreTypes()`) with a `required` flag that bypasses user preferences (security/account notifications always deliver).
+- Notification type surface surfaced on the notifications settings page, the notification test page, and the account notification preferences UI (required types hidden from user controls).
+
+### Changed
+
+- `FeatureRegistry` aggregators (nav, settings, permissions, shared data, dashboard data, analytics, email templates, orphan media targets, gallery/repeater/profile/meta configs) now only consider enabled providers.
+- `NotificationTypeRegistry` aggregates from core types + all feature providers with safe defaults, and core types can no longer be overridden by modules.
+
 ## [0.1.11] - Unreleased
 
 ### Added

@@ -23,6 +23,7 @@ final class FeatureProviderContractTest extends TestCase
         $expected = [
             'dependencies',
             'description',
+            'enabled',
             'getAnalyticsSeries',
             'getComposerPackage',
             'getDashboardData',
@@ -41,6 +42,7 @@ final class FeatureProviderContractTest extends TestCase
             'getSharedData',
             'hasSettings',
             'name',
+            'onDisable',
             'onUserDelete',
             'permissions',
             'slug',

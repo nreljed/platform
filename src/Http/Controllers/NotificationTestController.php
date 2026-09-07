@@ -29,24 +29,38 @@ class NotificationTestController extends Controller
         $fromName = $emailOptions['from_name'] ?? '';
 
         $registry = app(NotificationTypeRegistry::class);
-        $templates = [];
-        foreach ($registry->all() as $key => $type) {
-            if (! empty($type['email_template'])) {
-                $templates[] = [
-                    'value' => $type['email_template'],
-                    'label' => $type['label'],
-                    'group' => $type['group'] ?? 'General',
-                ];
-            }
-        }
 
         return Inertia::render('dashboard/notifications/test', [
             'emailConfigured' => $fromEmail !== '',
             'fromEmail' => $fromEmail,
             'fromName' => $fromName,
             'notificationTableExists' => Schema::hasTable('notifications'),
-            'emailTemplates' => $templates,
+            'emailTemplates' => $this->emailTemplateOptions($registry),
+            'notificationTypes' => $registry->groups(),
         ]);
+    }
+
+    /**
+     * Flat option list (value/label/group) of every unique email template
+     * referenced by a registered notification type.
+     *
+     * @return array<int, array{value: string, label: string, group: string}>
+     */
+    protected function emailTemplateOptions(NotificationTypeRegistry $registry): array
+    {
+        $templates = [];
+        foreach ($registry->all() as $key => $type) {
+            if (empty($type['email_template'])) {
+                continue;
+            }
+            $templates[] = [
+                'value' => $type['email_template'],
+                'label' => $type['label'],
+                'group' => $type['group'] ?? 'General',
+            ];
+        }
+
+        return $templates;
     }
 
     public function sendTest(SendTestNotificationRequest $request): JsonResponse

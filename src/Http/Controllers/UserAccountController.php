@@ -79,7 +79,16 @@ class UserAccountController extends Controller
 
         try {
             $typeRegistry = app(NotificationTypeRegistry::class);
-            $notificationTypes = $typeRegistry->groups();
+
+            // Required (core/security/account) notifications are never
+            // configurable — drop them from the preference UI so users can
+            // only toggle module-contributed types.
+            $notificationTypes = collect($typeRegistry->groups())
+                ->map(fn ($types) => collect($types)
+                    ->reject(fn ($config) => ! empty($config['required']))
+                    ->all())
+                ->reject(fn ($types) => empty($types))
+                ->all();
         } catch (\Exception) {
             $notificationTypes = [];
         }

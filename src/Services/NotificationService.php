@@ -43,24 +43,38 @@ class NotificationService
 
         $channels ??= $typeConfig['default_channels'] ?? ['in_app'];
         $defaultEnabled = $typeConfig['default_enabled'] ?? true;
-
-        $prefs = NotificationPreference::where('user_id', $notifiable->id)
-            ->where('type', $type)
-            ->whereIn('channel', $channels)
-            ->get()
-            ->keyBy('channel');
+        $required = (bool) ($typeConfig['required'] ?? false);
 
         $allowedChannels = [];
 
-        foreach ($channels as $channel) {
-            $pref = $prefs[$channel] ?? null;
-
-            if ($pref === null) {
-                if ($defaultEnabled) {
+        if ($required) {
+            // Required (core/security/account) notifications cannot be muted:
+            // they deliver via their default channels regardless of user
+            // preferences, mirroring Project-WP's NotificationPreferences
+            // bypass. The explicit channel override still applies so callers
+            // can narrow delivery, but never widen it beyond the defaults.
+            foreach ($channels as $channel) {
+                if (in_array($channel, $typeConfig['default_channels'] ?? ['in_app'], true)) {
                     $allowedChannels[] = $channel;
                 }
-            } elseif ($pref->enabled) {
-                $allowedChannels[] = $channel;
+            }
+        } else {
+            $prefs = NotificationPreference::where('user_id', $notifiable->id)
+                ->where('type', $type)
+                ->whereIn('channel', $channels)
+                ->get()
+                ->keyBy('channel');
+
+            foreach ($channels as $channel) {
+                $pref = $prefs[$channel] ?? null;
+
+                if ($pref === null) {
+                    if ($defaultEnabled) {
+                        $allowedChannels[] = $channel;
+                    }
+                } elseif ($pref->enabled) {
+                    $allowedChannels[] = $channel;
+                }
             }
         }
 

@@ -63,12 +63,68 @@ class FeatureRegistry
         return $provider;
     }
 
+    /**
+     * Feature providers that are currently enabled.
+     *
+     * A disabled provider contributes nothing to the aggregators — no nav,
+     * dashboard data, analytics, shared data, settings, email templates,
+     * notification types or permissions.
+     *
+     * @return list<FeatureProvider>
+     */
+    protected function enabledProviders(): array
+    {
+        return array_values(array_filter(
+            $this->providers,
+            fn (FeatureProvider $provider) => $provider->enabled()
+        ));
+    }
+
+    /**
+     * Whether every feature dependency of every enabled provider is also
+     * enabled. Mirrors the platform module loader's hard dependency check.
+     */
+    public function missingDependencies(): array
+    {
+        $bySlug = [];
+        foreach (array_values($this->providers) as $provider) {
+            $bySlug[$provider->slug()] = $provider;
+        }
+
+        $missing = [];
+
+        foreach ($this->providers as $provider) {
+            if (! $provider->enabled()) {
+                continue;
+            }
+
+            foreach ($provider->dependencies() as $dependency) {
+                $dep = $bySlug[$dependency] ?? null;
+                if ($dep === null) {
+                    $missing[] = [
+                        'provider' => $provider->slug(),
+                        'dependency' => $dependency,
+                        'reason' => 'No registered feature provides this slug.',
+                    ];
+                } elseif (! $dep->enabled()) {
+                    $missing[] = [
+                        'provider' => $provider->slug(),
+                        'dependency' => $dependency,
+                        'reason' => "The dependency [{$dependency}] is disabled.",
+                    ];
+                }
+            }
+        }
+
+        return $missing;
+    }
+
     public function getAllNavItems(): array
     {
         return $this->remember('nav_items', function () {
             $items = [];
 
-            foreach ($this->providers as $provider) {
+            foreach ($this->enabledProviders() as $provider) {
                 $groupLabel = $provider->getNavGroupLabel();
 
                 foreach ($provider->getNavItems() as $item) {
@@ -89,7 +145,7 @@ class FeatureRegistry
     public function getAllSharedData(): array
     {
         return array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getSharedData(), array_values($this->providers))
+            ...array_map(fn (FeatureProvider $provider) => $provider->getSharedData(), $this->enabledProviders())
         );
     }
 
@@ -97,7 +153,7 @@ class FeatureRegistry
     {
         $data = [];
 
-        foreach ($this->providers as $provider) {
+        foreach ($this->enabledProviders() as $provider) {
             $featureData = $provider->getDashboardData();
 
             if (! empty($featureData)) {
@@ -144,7 +200,7 @@ class FeatureRegistry
     {
         $series = [];
 
-        foreach ($this->providers as $provider) {
+        foreach ($this->enabledProviders() as $provider) {
             $series = array_merge($series, $provider->getAnalyticsSeries());
         }
 
@@ -154,63 +210,63 @@ class FeatureRegistry
     public function getAllNotificationTypes(): array
     {
         return array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getNotificationTypes(), array_values($this->providers))
+            ...array_map(fn (FeatureProvider $provider) => $provider->getNotificationTypes(), $this->enabledProviders())
         );
     }
 
     public function getAllEmailTemplates(): array
     {
         return array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getEmailTemplates(), array_values($this->providers))
+            ...array_map(fn (FeatureProvider $provider) => $provider->getEmailTemplates(), $this->enabledProviders())
         );
     }
 
     public function getAllOrphanMediaTargets(): array
     {
         return array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getOrphanMediaTargets(), array_values($this->providers))
+            ...array_map(fn (FeatureProvider $provider) => $provider->getOrphanMediaTargets(), $this->enabledProviders())
         );
     }
 
     public function getAllSettingsGroups(): array
     {
         return array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getSettingsGroups(), array_values($this->providers))
+            ...array_map(fn (FeatureProvider $provider) => $provider->getSettingsGroups(), $this->enabledProviders())
         );
     }
 
     public function getAllGalleryConfigs(): array
     {
         return array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getGalleryConfig(), array_values($this->providers))
+            ...array_map(fn (FeatureProvider $provider) => $provider->getGalleryConfig(), $this->enabledProviders())
         );
     }
 
     public function getAllMetaFormattingConfigs(): array
     {
         return array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getMetaFormattingConfig(), array_values($this->providers))
+            ...array_map(fn (FeatureProvider $provider) => $provider->getMetaFormattingConfig(), $this->enabledProviders())
         );
     }
 
     public function getAllRepeaterConfigs(): array
     {
         return array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getRepeaterConfig(), array_values($this->providers))
+            ...array_map(fn (FeatureProvider $provider) => $provider->getRepeaterConfig(), $this->enabledProviders())
         );
     }
 
     public function getAllProfileFieldConfigs(): array
     {
         return array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getProfileFieldsConfig(), array_values($this->providers))
+            ...array_map(fn (FeatureProvider $provider) => $provider->getProfileFieldsConfig(), $this->enabledProviders())
         );
     }
 
     public function getAllProfileSections(): array
     {
         return array_values(array_unique(array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getProfileSections(), array_values($this->providers))
+            ...array_map(fn (FeatureProvider $provider) => $provider->getProfileSections(), $this->enabledProviders())
         )));
     }
 
@@ -218,7 +274,7 @@ class FeatureRegistry
     {
         return $this->remember('settings_routes', fn () => array_filter(array_map(
             fn (FeatureProvider $provider) => $this->resolveSettingsUrl($provider->getSettingsRoute()),
-            array_values($this->providers),
+            $this->enabledProviders(),
         )));
     }
 
@@ -233,7 +289,7 @@ class FeatureRegistry
         return $this->remember('settings_nav', function () {
             $nav = [];
 
-            foreach ($this->providers as $provider) {
+            foreach ($this->enabledProviders() as $provider) {
                 if (! $provider->hasSettings()) {
                     continue;
                 }
@@ -260,7 +316,7 @@ class FeatureRegistry
     {
         return $this->remember('has_settings', fn () => array_filter(array_map(
             fn (FeatureProvider $provider) => $provider->hasSettings(),
-            array_values($this->providers),
+            $this->enabledProviders(),
         )));
     }
 
@@ -269,7 +325,7 @@ class FeatureRegistry
         return $this->remember('permissions', function () {
             $permissions = [];
 
-            foreach ($this->providers as $provider) {
+            foreach ($this->enabledProviders() as $provider) {
                 $group = $provider->name();
 
                 foreach ($provider->permissions() as $permission) {
@@ -293,22 +349,37 @@ class FeatureRegistry
         return array_values($this->providers);
     }
 
-    public function getAll(): array
+    /**
+     * Metadata for EVERY registered feature (enabled or not), used by the
+     * module-management admin page so admins can see and toggle features that
+     * are currently off. Contrast with the aggregators, which only consider
+     * enabled providers.
+     */
+    public function getModuleList(): array
     {
-        return $this->remember('modules', fn () => array_map(
-            fn (FeatureProvider $provider) => array_filter([
-                'name' => $provider->name(),
+        return $this->remember('module_list', fn () => array_map(
+            fn (FeatureProvider $provider) => [
                 'slug' => $provider->slug(),
+                'name' => $provider->name(),
                 'description' => $provider->description(),
                 'version' => $provider->version(),
                 'package' => $provider->getComposerPackage(),
                 'dependencies' => $provider->dependencies(),
-                'enabled' => true,
+                'enabled' => $provider->enabled(),
                 'has_settings' => $provider->hasSettings(),
                 'settings_route' => $this->resolveSettingsUrl($provider->getSettingsRoute()),
-            ], fn ($v) => $v !== null && $v !== [] && $v !== false),
+            ],
             array_values($this->providers),
         ));
+    }
+
+    /**
+     * @deprecated Use getModuleList() — kept as an alias so existing callers
+     *             get the full, correctly-flavoured metadata.
+     */
+    public function getAll(): array
+    {
+        return $this->getModuleList();
     }
 
     public function cleanupUserData(int $userId): void
@@ -357,6 +428,12 @@ class FeatureRegistry
                         'severity' => 'high',
                         'provider' => $slug,
                         'message' => "Declares dependency [{$dependency}] but no registered feature provides that slug.",
+                    ];
+                } elseif ($provider->enabled() && ! $bySlug[$dependency]->enabled()) {
+                    $issues[] = [
+                        'severity' => 'high',
+                        'provider' => $slug,
+                        'message' => "Declares dependency [{$dependency}] which is currently disabled.",
                     ];
                 }
             }

@@ -9,12 +9,29 @@ import {
 } from "@/Components/ui/breadcrumb";
 import { AdminSettingsNav } from "@/Components/settings/AdminSettingsNav";
 import { NotificationSection } from "@/Components/settings/sections/NotificationSection";
+import { DevelopmentNotificationTest } from "@/Components/settings/sections/DevelopmentNotificationTest";
+
+interface NotificationType {
+  label: string;
+  description?: string;
+  default_channels?: string[];
+  default_enabled?: boolean;
+  required?: boolean;
+  group?: string;
+  severity?: string;
+}
 
 interface NotificationsProps {
   settings?: Record<string, string>;
+  notificationTableExists?: boolean;
+  notificationTypes?: Record<string, Record<string, NotificationType>>;
 }
 
-export default function NotificationsSettings({ settings = {} }: NotificationsProps) {
+export default function NotificationsSettings({
+  settings = {},
+  notificationTableExists = false,
+  notificationTypes = {},
+}: NotificationsProps) {
   return (
     <AdminLayout title="Settings">
       <Head title="Notification Settings" />
@@ -39,6 +56,10 @@ export default function NotificationsSettings({ settings = {} }: NotificationsPr
           <AdminSettingsNav />
           <div className="flex-1 min-w-0 space-y-6">
             <NotificationSection settings={settings} asAccordion />
+            <DevelopmentNotificationTest
+              notificationTableExists={notificationTableExists}
+              notificationTypes={notificationTypes}
+            />
           </div>
         </div>
       </div>

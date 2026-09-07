@@ -19,6 +19,7 @@ use Nreljed\DashboardCore\Models\IpAccessRule;
 use Nreljed\DashboardCore\Models\Role;
 use Nreljed\DashboardCore\Services\AuditService;
 use Nreljed\DashboardCore\Services\DatabaseMaintenanceService;
+use Nreljed\DashboardCore\Services\NotificationTypeRegistry;
 use Nreljed\DashboardCore\Services\SettingsService;
 
 class SettingsController extends Controller
@@ -66,8 +67,16 @@ class SettingsController extends Controller
 
     public function notifications(): Response
     {
+        try {
+            $notificationTypes = app(NotificationTypeRegistry::class)->groups();
+        } catch (\Exception) {
+            $notificationTypes = [];
+        }
+
         return $this->renderPage('dashboard/admin/settings/notifications', [
             'settings' => Schema::hasTable('settings') ? SettingsService::getGroup('notifications') : new \stdClass,
+            'notificationTableExists' => Schema::hasTable('notifications'),
+            'notificationTypes' => $notificationTypes,
         ]);
     }
 

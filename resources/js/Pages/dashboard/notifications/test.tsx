@@ -43,12 +43,15 @@ interface TestResult {
   type: string;
 }
 
-const TYPE_OPTIONS = [
-  { value: "test", label: "Test (generic)" },
-  { value: "user.registered", label: "User Registered" },
-  { value: "password.changed", label: "Password Changed" },
-  { value: "email.changed", label: "Email Changed" },
-];
+interface NotificationType {
+  label: string;
+  description?: string;
+  default_channels?: string[];
+  default_enabled?: boolean;
+  required?: boolean;
+  group?: string;
+  severity?: string;
+}
 
 const SEVERITY_OPTIONS = [
   { value: "info", label: "Info" },
@@ -65,6 +68,7 @@ export default function NotificationsTest() {
       fromName: string;
       notificationTableExists: boolean;
       emailTemplates: { value: string; label: string; group: string }[];
+      notificationTypes: Record<string, Record<string, NotificationType>>;
     }>
   >();
 
@@ -74,7 +78,22 @@ export default function NotificationsTest() {
     fromName = "",
     notificationTableExists = false,
     emailTemplates = [],
+    notificationTypes = {},
   } = props;
+
+  // Registered core + module types flattened into select options, with a
+  // generic "test" entry for ad-hoc sends unrelated to a registered event.
+  const typeOptions = useMemo(() => {
+    const options: { value: string; label: string; group: string }[] = [
+      { value: "test", label: "Test (generic)", group: "System" },
+    ];
+    for (const [group, types] of Object.entries(notificationTypes)) {
+      for (const [key, cfg] of Object.entries(types)) {
+        options.push({ value: key, label: cfg.label ?? key, group });
+      }
+    }
+    return options;
+  }, [notificationTypes]);
 
   const [type, setType] = useState("test");
   const [title, setTitle] = useState("Test Notification");
@@ -364,7 +383,7 @@ export default function NotificationsTest() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {TYPE_OPTIONS.map((o) => (
+                          {typeOptions.map((o) => (
                             <SelectItem key={o.value} value={o.value}>
                               {o.label}
                             </SelectItem>
@@ -541,7 +560,13 @@ export default function NotificationsTest() {
               icon: BellDot,
               title: "Quick Send by Module",
               description: "One-click buttons to send realistic notifications grouped by module.",
-              content: <QuickSendSection sending={sending} onSend={sendToMe} />,
+              content: (
+                <QuickSendSection
+                  sending={sending}
+                  onSend={sendToMe}
+                  notificationTypes={notificationTypes}
+                />
+              ),
             },
           ]}
         />

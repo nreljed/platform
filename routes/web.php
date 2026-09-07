@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Nreljed\DashboardCore\Http\Controllers\Admin\AuditLogController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\BulkUserController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\DatabaseMaintenanceController;
+use Nreljed\DashboardCore\Http\Controllers\Admin\FeatureController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\ImpersonationController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\IpAccessRuleController;
 use Nreljed\DashboardCore\Http\Controllers\Admin\PermissionController;
@@ -278,6 +279,12 @@ Route::middleware(['auth', 'maintenance', 'throttle:60,1'])->prefix('dashboard/a
         Route::post('/notifications/test', [NotificationTestController::class, 'sendTest'])->name('notifications.test-send');
         Route::post('/notifications/test/send-to-all', [NotificationTestController::class, 'sendToAll'])->name('notifications.test-send-all');
         Route::delete('/notifications/test/clear', [NotificationTestController::class, 'clearAll'])->name('notifications.test-clear');
+    });
+
+    // Module management (admin role only) — enable/disable features
+    Route::middleware(['admin', 'permission:manage-settings'])->prefix('/settings')->name('settings.')->group(function () {
+        Route::get('/modules', [FeatureController::class, 'index'])->name('modules.index');
+        Route::put('/modules', [FeatureController::class, 'update'])->name('modules.update');
     });
 });
 

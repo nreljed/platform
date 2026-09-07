@@ -26,6 +26,10 @@ class BlogServiceProvider extends ServiceProvider implements FeatureProvider
 
     public function boot(): void
     {
+        if (! $this->enabled()) {
+            return;
+        }
+
         $this->loadRoutes();
         $this->loadPublicRoutes();
         $this->loadMigrations();

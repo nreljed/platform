@@ -10,6 +10,7 @@ import {
   Wrench,
   Menu,
   TerminalSquare,
+  Puzzle,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -55,6 +56,12 @@ const NAV_ITEMS: NavCategory[] = [
     label: "Developer",
     items: [{ icon: TerminalSquare, label: "Developer", route: "dashboard.admin.settings.dev" }],
   },
+  {
+    label: "System",
+    items: [
+      { icon: Puzzle, label: "Modules", route: "dashboard.admin.settings.modules.index" },
+    ],
+  },
 ];
 
 interface FeatureSettingsLink {
@@ -85,6 +92,7 @@ function getActiveRoute(url: string, featureLinks: FeatureSettingsLink[]): strin
   if (url.includes("/settings/maintenance")) return "dashboard.admin.settings.maintenance";
   if (url.includes("/settings/ip-access")) return "dashboard.admin.settings.ip-access";
   if (url.includes("/settings/dev")) return "dashboard.admin.settings.dev";
+  if (url.includes("/settings/modules")) return "dashboard.admin.settings.modules.index";
 
   const currentPathname = pathnameOf(url);
 
