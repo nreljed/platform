@@ -4,7 +4,14 @@ All notable changes to `nreljed/dashboard-core` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [0.1.23] - 2026-09-07
+## [0.1.24] - 2026-09-07
+
+### Fixed
+
+- `FeatureController::update()` no longer disables every feature when the save payload is missing or partial. It now reads the nested `modules` map, only toggles the slugs explicitly present in the request (unknown slugs are ignored), and looks providers up via the registry's `allProviders()` map instead of a nonexistent `get()` method.
+- Modules settings page now sends its toggle state as a nested `{ modules: {...} }` payload so the backend can apply it correctly; the switches update the nested `modules` form key.
+
+
 
 ### Added
 

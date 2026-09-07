@@ -53,10 +53,18 @@ class FeatureController extends Controller
             $bySlug[$provider->slug()] = $provider;
         }
 
+        // Only toggle providers explicitly present in the request payload;
+        // anything omitted keeps its current state (defensive against partial
+        // or differently-shaped payloads).
         $changes = [];
 
-        foreach ($bySlug as $slug => $provider) {
-            $wanted = (bool) ($states[$slug] ?? false);
+        foreach ($states as $slug => $wanted) {
+            $provider = $bySlug[$slug] ?? null;
+            if (! $provider) {
+                continue;
+            }
+
+            $wanted = (bool) $wanted;
             $previous = $settings->setEnabled($slug, $wanted, true);
 
             if ($previous !== $wanted) {

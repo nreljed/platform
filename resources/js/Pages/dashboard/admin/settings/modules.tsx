@@ -42,9 +42,9 @@ export default function ModulesSettings({
   modules,
   missingDependencies,
 }: ModulesSettingsProps) {
-  const { data, setData, put, processing, errors } = useForm<Record<string, boolean>>(
-    Object.fromEntries((modules ?? []).map((m) => [m.slug, m.enabled])),
-  );
+  const { data, setData, put, processing, errors } = useForm<{ modules: Record<string, boolean> }>({
+    modules: Object.fromEntries((modules ?? []).map((m) => [m.slug, m.enabled])),
+  });
 
   const save = () => {
     put(route("dashboard.admin.settings.modules.update"), {
@@ -149,8 +149,10 @@ export default function ModulesSettings({
                       </div>
                       <Switch
                         id={`module-${mod.slug}`}
-                        checked={data[mod.slug] ?? false}
-                        onCheckedChange={(checked) => setData(mod.slug, checked)}
+                        checked={data.modules[mod.slug] ?? false}
+                        onCheckedChange={(checked) =>
+                          setData("modules", { ...data.modules, [mod.slug]: checked })
+                        }
                         disabled={processing}
                       />
                     </div>
