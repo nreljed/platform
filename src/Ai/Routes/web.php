@@ -17,8 +17,8 @@ use Nreljed\DashboardCore\Ai\Controllers\AiProviderController;
 
 Route::get('/ai-keys', [AiProviderController::class, 'index'])->name('index');
 Route::post('/ai-keys', [AiProviderController::class, 'store'])->name('store');
-Route::put('/ai-keys/{aiProvider}', [AiProviderController::class, 'update'])->name('update');
-Route::delete('/ai-keys/{aiProvider}', [AiProviderController::class, 'destroy'])->name('destroy');
 Route::post('/ai-keys/test', [AiProviderController::class, 'test'])->name('test');
 Route::get('/ai-keys/usage', [AiProviderController::class, 'usage'])->name('usage');
 Route::put('/ai-keys/usage-cap', [AiProviderController::class, 'usageCap'])->name('usage-cap');
+Route::put('/ai-keys/{aiProvider}', [AiProviderController::class, 'update'])->name('update');
+Route::delete('/ai-keys/{aiProvider}', [AiProviderController::class, 'destroy'])->name('destroy');

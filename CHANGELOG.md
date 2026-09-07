@@ -4,6 +4,12 @@ All notable changes to `nreljed/dashboard-core` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.27] - 2026-09-07
+
+### Fixed
+
+- AI keys routes: static routes (`/ai-keys/test`, `/ai-keys/usage`, `/ai-keys/usage-cap`) are now registered before the parameterised `{aiProvider}` update/destroy routes, so `PUT /dashboard/account/ai-keys/usage-cap` no longer falls through to model binding (`404`).
+
 ## [0.1.26] - 2026-09-07
 
 ### Fixed
