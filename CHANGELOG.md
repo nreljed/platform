@@ -4,6 +4,12 @@ All notable changes to `nreljed/dashboard-core` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.26] - 2026-09-07
+
+### Fixed
+
+- `AiProvider::$fillable` now includes `api_key`, so the `setApiKeyAttribute()` mutator runs on mass assignment (e.g. `AiProvider::create(['api_key' => ...])`) instead of silently dropping the raw key and failing on the `api_key_encrypted` NOT NULL column.
+
 ## [0.1.25] - 2026-09-07
 
 ### Added
