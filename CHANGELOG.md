@@ -4,6 +4,13 @@ All notable changes to `nreljed/dashboard-core` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.31] - 2026-09-08
+
+### Changed
+
+- UI: normalized focus-ring widths — `ring-3` → `ring-[3px]` across the core ui kit (accordion, bubble, button, checkbox, combobox, input-group, input-otp, input, native-select, navigation-menu, radio-group, select, switch, textarea) for consistent focus-visible/invalid rings under Tailwind v4.
+- Peer deps: dropped the now-unused `vaul` (drawer migrated to `@base-ui/react/drawer`).
+
 ## [0.1.29] - 2026-09-07
 
 ### Added
