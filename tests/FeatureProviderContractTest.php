@@ -40,6 +40,7 @@ final class FeatureProviderContractTest extends TestCase
             'getSettingsGroups',
             'getSettingsRoute',
             'getSharedData',
+            'getSitemapUrls',
             'hasSettings',
             'name',
             'onDisable',
