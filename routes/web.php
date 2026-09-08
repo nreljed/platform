@@ -163,8 +163,11 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
 
     // Media uploads (auth + verified)
     Route::prefix('/dashboard')->group(function () {
+        Route::get('/media', [MediaController::class, 'index'])->name('dashboard.media.index');
         Route::post('/media', [MediaController::class, 'upload'])->name('dashboard.media.upload');
         Route::delete('/media', [MediaController::class, 'destroy'])->name('dashboard.media.destroy');
+        Route::post('/media/scan', [MediaController::class, 'scan'])->name('dashboard.media.scan');
+        Route::post('/media/cleanup', [MediaController::class, 'cleanup'])->name('dashboard.media.cleanup');
     });
 });
 

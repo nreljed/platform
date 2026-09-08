@@ -1,8 +1,9 @@
 import * as React from "react";
-import { X, Image as ImageIcon, Loader2, AlertCircle } from "lucide-react";
+import { X, Image as ImageIcon, Loader2, AlertCircle, Images } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { Progress } from "@/Components/ui/progress";
 import { toast } from "@/Components/ui/toast";
+import { MediaPickerDialog } from "@/Components/shared/media-library/MediaPickerDialog";
 import { useImageUpload } from "@/hooks/use-image-upload";
 
 interface FeaturedImageSelectorProps {
@@ -13,6 +14,8 @@ interface FeaturedImageSelectorProps {
   uploadUrl?: string;
   deleteUrl?: string;
   compress?: boolean;
+  /** Media library folder scope for the "From Library" picker (e.g. "posts"). */
+  subdirectory?: string;
 }
 
 const FeaturedImageSelector = ({
@@ -23,11 +26,13 @@ const FeaturedImageSelector = ({
   uploadUrl,
   deleteUrl,
   compress = true,
+  subdirectory = "posts",
 }: FeaturedImageSelectorProps) => {
   const [preview, setPreview] = React.useState(value);
   const [isDragging, setIsDragging] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
   const [error, setError] = React.useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const { upload, remove } = useImageUpload({
     uploadUrl: uploadUrl || "",
@@ -159,12 +164,41 @@ const FeaturedImageSelector = ({
         </div>
       )}
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleInputChange}
+      <div className="flex items-center gap-2">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleInputChange}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <ImageIcon className="mr-2 h-4 w-4" />
+          Upload
+        </Button>
+        <Button type="button" variant="outline" size="sm" onClick={() => setPickerOpen(true)}>
+          <Images className="mr-2 h-4 w-4" />
+          From Library
+        </Button>
+      </div>
+
+      <MediaPickerDialog
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+        onSelect={(items) => {
+          const first = items[0];
+          if (!first) return;
+          setPreview(first.url);
+          setError(null);
+          onChange(first.url);
+          toast.add({ title: "Featured image selected", type: "success" });
+        }}
+        subdirectory={subdirectory}
       />
     </div>
   );

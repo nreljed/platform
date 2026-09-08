@@ -12,7 +12,7 @@ class PermissionGroups
      *
      * @var list<string>
      */
-    private const array GROUP_ORDER = ['General', 'Blog', 'Testing', 'Administration'];
+    private const array GROUP_ORDER = ['General', 'Posts', 'Testing', 'Administration'];
 
     /**
      * Build permission groups from the core config catalog and registered

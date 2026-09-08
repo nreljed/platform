@@ -3,8 +3,8 @@
 namespace Nreljed\DashboardCore\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Nreljed\DashboardCore\Blog\Models\Post;
 use Nreljed\DashboardCore\Models\User;
+use Nreljed\DashboardCore\Posts\Models\Post;
 
 class PostPolicy
 {

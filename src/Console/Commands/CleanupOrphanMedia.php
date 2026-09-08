@@ -7,7 +7,7 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Nreljed\DashboardCore\Blog\Models\Post;
+use Nreljed\DashboardCore\Posts\Models\Post;
 use Nreljed\DashboardCore\Services\FeatureRegistry;
 
 #[Signature('core:cleanup-orphan-media {--dry-run : List orphan files without deleting them}')]

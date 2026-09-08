@@ -4,8 +4,8 @@ namespace Nreljed\DashboardCore\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use Nreljed\DashboardCore\Blog\Models\Post;
 use Nreljed\DashboardCore\Models\User;
+use Nreljed\DashboardCore\Posts\Models\Post;
 
 /**
  * @extends Factory<Post>

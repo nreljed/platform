@@ -4,7 +4,7 @@ namespace Nreljed\DashboardCore\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use Nreljed\DashboardCore\Blog\Models\PostCategory;
+use Nreljed\DashboardCore\Posts\Models\PostCategory;
 
 /**
  * @extends Factory<PostCategory>

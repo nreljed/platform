@@ -4,7 +4,7 @@ namespace Nreljed\DashboardCore\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use Nreljed\DashboardCore\Blog\Models\PostTag;
+use Nreljed\DashboardCore\Posts\Models\PostTag;
 
 /**
  * @extends Factory<PostTag>

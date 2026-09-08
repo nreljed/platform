@@ -8,8 +8,8 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 use Nreljed\DashboardCore\Ai\Agents\SeoAgent;
 use Nreljed\DashboardCore\Ai\Exceptions\MissingAiProviderException;
-use Nreljed\DashboardCore\Blog\Models\Post;
 use Nreljed\DashboardCore\Models\User;
+use Nreljed\DashboardCore\Posts\Models\Post;
 
 class GenerateSeoForPost implements ShouldQueue
 {

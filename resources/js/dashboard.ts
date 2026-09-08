@@ -8,7 +8,7 @@ export type PageImport = () => Promise<{ default: ComponentType<unknown> }>;
  * NOT here — they live in the starter theme (`registerStarterThemePages()`
  * from `../themes/starter`) or in the project. Feature pages are NOT here
  * either — each feature module ships its own `register{Name}Pages()` export
- * (e.g. `registerBlogPages()` from the Blog module) that consuming apps
+ * (e.g. `registerPostsPages()` from the Posts module) that consuming apps
  * import explicitly into their pageConfig.
  *
  * Consuming apps decide which pages they use by spreading this (and the

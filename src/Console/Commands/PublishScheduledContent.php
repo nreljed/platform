@@ -3,7 +3,7 @@
 namespace Nreljed\DashboardCore\Console\Commands;
 
 use Illuminate\Console\Command;
-use Nreljed\DashboardCore\Blog\Models\Post;
+use Nreljed\DashboardCore\Posts\Models\Post;
 
 class PublishScheduledContent extends Command
 {

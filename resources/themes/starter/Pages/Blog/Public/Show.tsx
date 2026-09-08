@@ -1,6 +1,6 @@
 import { Head, Link, usePage } from "@inertiajs/react";
 import { useEffect } from "react";
-import { Pencil } from "lucide-react";
+import { Eye, Pencil } from "lucide-react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Badge } from "@/Components/ui/badge";
 import ProseContent from "@/Components/blog/ProseContent";
@@ -43,9 +43,10 @@ interface Post {
 
 interface BlogShowProps {
   post: Post;
+  preview?: boolean;
 }
 
-export default function BlogShow({ post }: BlogShowProps) {
+export default function BlogShow({ post, preview = false }: BlogShowProps) {
   const pageProps = usePage().props as Record<string, unknown>;
   const appUrl = (pageProps.app_url as string) || "";
   const cspNonce = (pageProps.csp_nonce as string) || undefined;
@@ -101,8 +102,24 @@ export default function BlogShow({ post }: BlogShowProps) {
       </Head>
 
       <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+        {preview && (
+          <div className="mb-8 flex items-center justify-between gap-2 rounded-lg border border-amber-300/60 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <span className="flex items-center gap-2 font-medium">
+              <Eye className="h-4 w-4" />
+              Draft preview — this post is not publicly visible yet.
+            </span>
+            <Link
+              href={route("dashboard.posts.edit", post.id)}
+              className="inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-background px-2.5 py-1 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-amber-100"
+            >
+              <Pencil className="h-3 w-3" />
+              Edit
+            </Link>
+          </div>
+        )}
+
         <header className="relative mb-8">
-          {canEdit && (
+          {!preview && canEdit && (
             <Link
               href={route("dashboard.posts.edit", post.id)}
               className="absolute right-0 top-0 inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"

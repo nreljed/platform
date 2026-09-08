@@ -28,7 +28,7 @@ return [
     | UI can never drift from the engine.
     |
     | Each entry carries an optional "group" key used by the UI to bucket
-    | permissions (General, Blog, Administration). Entries without a group fall
+    | permissions (General, Posts, Administration). Entries without a group fall
     | back to "Administration". Feature providers may set "group" on their own
     | permissions; if absent it defaults to the provider's name().
     |
@@ -49,6 +49,7 @@ return [
         ['name' => 'View System Health', 'slug' => 'view-system-health', 'description' => 'View system diagnostics', 'group' => 'Administration'],
         ['name' => 'Manage Options', 'slug' => 'manage-options', 'description' => 'Feature-level settings and system operations (admin only)', 'group' => 'Administration'],
         ['name' => 'Manage Audit Logs', 'slug' => 'manage-audit-logs', 'description' => 'View system audit logs', 'group' => 'Administration'],
+        ['name' => 'Manage Media', 'slug' => 'media.manage', 'description' => 'View and delete media uploaded by any user', 'group' => 'Administration'],
         ['name' => 'Export Audit Logs', 'slug' => 'export-audit-logs', 'description' => 'Export audit log data as CSV', 'group' => 'Administration'],
         ['name' => 'Manage Email Settings', 'slug' => 'manage-email-settings', 'description' => 'Configure email settings', 'group' => 'Administration'],
     ],

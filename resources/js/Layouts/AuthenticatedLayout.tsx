@@ -52,7 +52,10 @@ export default function AuthenticatedLayout({
         >
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-[orientation=vertical]:h-4 data-[orientation=vertical]:self-center"
+            />
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>

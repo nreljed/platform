@@ -2,7 +2,7 @@
 
 namespace Nreljed\DashboardCore\Observers;
 
-use Nreljed\DashboardCore\Blog\Models\Post;
+use Nreljed\DashboardCore\Posts\Models\Post;
 use Nreljed\DashboardCore\Services\DashboardService;
 
 /**
