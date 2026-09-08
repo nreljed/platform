@@ -214,6 +214,25 @@ class FeatureRegistry
         );
     }
 
+    /**
+     * Collect sitemap URL entries from every enabled feature provider. The
+     * SitemapController prefixes these relative paths with the site base URL.
+     *
+     * @return array<int, array{loc: string, changefreq: string, priority: string, lastmod?: string|null}>
+     */
+    public function getAllSitemapUrls(): array
+    {
+        $urls = [];
+
+        foreach ($this->enabledProviders() as $provider) {
+            foreach ($provider->getSitemapUrls() as $entry) {
+                $urls[] = $entry;
+            }
+        }
+
+        return $urls;
+    }
+
     public function getAllEmailTemplates(): array
     {
         return array_merge(

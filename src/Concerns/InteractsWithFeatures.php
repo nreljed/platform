@@ -178,5 +178,10 @@ trait InteractsWithFeatures
         return [];
     }
 
+    public function getSitemapUrls(): array
+    {
+        return [];
+    }
+
     public function onUserDelete(int $userId): void {}
 }

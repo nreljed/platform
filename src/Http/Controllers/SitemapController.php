@@ -3,9 +3,10 @@
 namespace Nreljed\DashboardCore\Http\Controllers;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Nreljed\DashboardCore\Blog\Models\Post;
-use Nreljed\DashboardCore\Blog\Models\PostCategory;
-use Nreljed\DashboardCore\Blog\Models\PostTag;
+use Nreljed\DashboardCore\Posts\Models\Post;
+use Nreljed\DashboardCore\Posts\Models\PostCategory;
+use Nreljed\DashboardCore\Posts\Models\PostTag;
+use Nreljed\DashboardCore\Services\FeatureRegistry;
 use Nreljed\DashboardCore\Services\SettingsService;
 
 class SitemapController extends Controller
@@ -63,11 +64,42 @@ class SitemapController extends Controller
             $urls[] = $this->url($baseUrl.'/blog?tag='.$tag->slug, 'weekly', '0.4');
         }
 
+        foreach ($this->getFeatureSitemapUrls($baseUrl) as $entry) {
+            $urls[] = $entry;
+        }
+
         $xml = $this->buildXml($urls);
 
         return app(ResponseFactory::class)->make($xml, 200, [
             'Content-Type' => 'application/xml; charset=UTF-8',
         ]);
+    }
+
+    /**
+     * Merge sitemap entries contributed by enabled feature providers. Entries
+     * return a relative `loc`; the site base URL is prefixed here so providers
+     * don't need to know their deployment URL.
+     *
+     * @return list<array<string, string|null>>
+     */
+    protected function getFeatureSitemapUrls(string $baseUrl): array
+    {
+        $flat = [];
+
+        foreach (app(FeatureRegistry::class)->getAllSitemapUrls() as $entry) {
+            $loc = isset($entry['loc']) && str_starts_with($entry['loc'], '/')
+                ? $baseUrl.$entry['loc']
+                : $baseUrl.'/'.$entry['loc'];
+
+            $flat[] = $this->url(
+                rtrim($loc, '/') ?: $baseUrl.'/',
+                $entry['changefreq'] ?? 'weekly',
+                $entry['priority'] ?? '0.5',
+                $entry['lastmod'] ?? null,
+            );
+        }
+
+        return $flat;
     }
 
     /**

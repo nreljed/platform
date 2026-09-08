@@ -133,5 +133,17 @@ interface FeatureProvider
 
     public function permissions(): array;
 
+    /**
+     * Return sitemap URL entries this feature wants included in the shared
+     * `/sitemap.xml`. Each entry is a map with `loc`, `changefreq`, `priority`
+     * and optional `lastmod` (an ISO date string), matching the base
+     * SitemapController's `url()` shape. The controller prefixes each `loc`
+     * with the site base URL, so return a relative path (e.g. `/store`,
+     * `/store/my-product`).
+     *
+     * @return array<int, array{loc: string, changefreq: string, priority: string, lastmod?: string|null}>
+     */
+    public function getSitemapUrls(): array;
+
     public function onUserDelete(int $userId): void;
 }
