@@ -189,4 +189,16 @@ class PostsServiceProvider extends ServiceProvider implements FeatureProvider
             $post->delete();
         });
     }
+
+    public function getMediaSubdirectory(): ?string
+    {
+        return 'posts';
+    }
+
+    public function getHealthChecks(): array
+    {
+        return [
+            'posts_table' => Schema::hasTable('posts'),
+        ];
+    }
 }

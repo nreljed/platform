@@ -120,4 +120,23 @@ class UploadProfiles
             'variants' => MediaService::RESPONSIVE_WIDTHS,
         ];
     }
+
+    /**
+     * Shop product image upload profile.
+     */
+    public static function products(int $userId = 0): array
+    {
+        return [
+            'folder' => 'products',
+            'maxFileSize' => 10 * 1024 * 1024, // 10MB
+            'allowedMimes' => MediaService::IMAGE_MIMES,
+            'outputExtension' => 'webp',
+            'outputMimeType' => 'image/webp',
+            'outputQuality' => 85,
+            'filenamePrefix' => 'product_'.$userId,
+            'title' => 'Product image',
+            'organizeByMonth' => true,
+            'variants' => MediaService::RESPONSIVE_WIDTHS,
+        ];
+    }
 }

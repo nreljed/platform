@@ -2,6 +2,9 @@
 
 namespace Nreljed\DashboardCore\Contracts;
 
+use Nreljed\DashboardCore\Support\ContentDescription;
+use Nreljed\DashboardCore\Support\SettingsSection;
+
 /**
  * Contract for self-contained feature providers discovered by the
  * FeatureRegistry.
@@ -51,8 +54,6 @@ interface FeatureProvider
      * A feature that is disabled contributes no routes (its provider gates
      * route loading on this), no nav, no dashboard data, no settings and no
      * permissions to the FeatureRegistry aggregators.
-     *
-     * @return bool
      */
     public function enabled(): bool;
 
@@ -64,8 +65,6 @@ interface FeatureProvider
      * the feature is off (e.g. de-prioritise jobs, disable listeners). The
      * default is a no-op; providers opt into cleanup. Data is intentionally
      * NOT destroyed so the feature can be re-enabled non-destructively.
-     *
-     * @return void
      */
     public function onDisable(): void;
 
@@ -146,4 +145,58 @@ interface FeatureProvider
     public function getSitemapUrls(): array;
 
     public function onUserDelete(int $userId): void;
+
+    /**
+     * Return the storage subdirectory this feature uses for media uploads,
+     * e.g. "posts" or "products". Used by the shared media library to scope
+     * queries and by the orphan scanner to reconcile disk contents.
+     *
+     * Return null when the feature does not upload media (e.g. AI, PublicSite).
+     */
+    public function getMediaSubdirectory(): ?string;
+
+    /**
+     * Return a declarative content-type description that the shared content
+     * pipeline can consume, or null when the feature does not expose a
+     * content type. The ContentDescription value object captures the model
+     * class, label, feature flags, taxonomy declarations, SEO meta config,
+     * and media settings so a single generic pipeline can serve CRUD,
+     * editor, upload, taxonomy, and notification wiring.
+     */
+    public function getContentDescription(): ?ContentDescription;
+
+    /**
+     * Return a map of health-check names to booleans. The system-health
+     * page aggregates these from every enabled provider so admins can see
+     * per-feature runtime probes (e.g. "posts_table" => true).
+     *
+     * @return array<string, bool>
+     */
+    public function getHealthChecks(): array;
+
+    /**
+     * Return the scheduled tasks this feature registers. Each entry is an
+     * associative array with at least "command" (the artisan class) and
+     * "frequency" (e.g. "daily", "hourly", "every:60"). Used by the
+     * system-health page and enables automatic unscheduling on disable.
+     *
+     * @return array<int, array{command: string, frequency: string, description?: string}>
+     */
+    public function getScheduledTasks(): array;
+
+    /**
+     * Return a declarative settings-section definition for the unified
+     * admin settings page, or null when the feature has no settings. The
+     * SettingsSection value object captures the tab, label, icon, Inertia
+     * component, submit URL, and nonce key so the settings page can render
+     * the feature's settings without a dedicated route.
+     */
+    public function getSettingsSection(): ?SettingsSection;
+
+    /**
+     * Return an HTML notice displayed to admins on the module-management
+     * page when this feature is disabled. Useful for explaining what
+     * functionality is unavailable. Return null for no notice.
+     */
+    public function getDeactivationNotice(): ?string;
 }
