@@ -341,11 +341,13 @@ class MediaService
      *
      * @param  array<string, mixed>  $result  output of upload()
      */
-    public function recordMedium(int $userId, string $folder, array $result): Media
+    public function recordMedium(int $userId, string $folder, array $result, ?string $parentType = null, ?int $parentId = null): Media
     {
         return Media::create([
             'user_id' => $userId,
             'folder' => $folder,
+            'parent_type' => $parentType,
+            'parent_id' => $parentId,
             'path' => $result['path'],
             'url' => $result['url'],
             'filename' => $result['filename'],

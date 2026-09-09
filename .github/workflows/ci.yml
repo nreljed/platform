@@ -36,5 +36,18 @@ jobs:
       - name: Create GitHub Release
         shell: bash
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: gh release create "${{ github.ref_name }}" --title "dashboard-core ${{ github.ref_name }}" --generate-notes -R nreljed/dashboard-core
+
+      - name: Notify consumers (core-updated)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          for repo in nreljed/laravel nreljed/laravel.shop nreljed/laravel.booking; do
+            gh api -X POST "repos/$repo/dispatches" \
+              -f event_type=core-updated \
+              -f client_payload[version]="${{ github.ref_name }}" \
+              -f client_payload[repo]=nreljed/dashboard-core \
+              || echo "dispatch to $repo failed (continuing)"
+          done

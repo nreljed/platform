@@ -2,7 +2,10 @@
 
 namespace Nreljed\DashboardCore\Concerns;
 
+use Nreljed\DashboardCore\Services\FeatureSettingsService;
 use Nreljed\DashboardCore\Services\PackageVersionService;
+use Nreljed\DashboardCore\Support\ContentDescription;
+use Nreljed\DashboardCore\Support\SettingsSection;
 
 /**
  * Safe no-op defaults for the optional capability methods of the
@@ -78,12 +81,12 @@ trait InteractsWithFeatures
     {
         $configured = config('core.features_enabled.'.$this->slug(), null);
 
-        return $configured ?? true;
+        return $configured ?? false;
     }
 
-    protected function featureSettingsService(): \Nreljed\DashboardCore\Services\FeatureSettingsService
+    protected function featureSettingsService(): FeatureSettingsService
     {
-        return app(\Nreljed\DashboardCore\Services\FeatureSettingsService::class);
+        return app(FeatureSettingsService::class);
     }
 
     public function onDisable(): void
@@ -184,4 +187,34 @@ trait InteractsWithFeatures
     }
 
     public function onUserDelete(int $userId): void {}
+
+    public function getMediaSubdirectory(): ?string
+    {
+        return null;
+    }
+
+    public function getContentDescription(): ?ContentDescription
+    {
+        return null;
+    }
+
+    public function getHealthChecks(): array
+    {
+        return [];
+    }
+
+    public function getScheduledTasks(): array
+    {
+        return [];
+    }
+
+    public function getSettingsSection(): ?SettingsSection
+    {
+        return null;
+    }
+
+    public function getDeactivationNotice(): ?string
+    {
+        return null;
+    }
 }

@@ -35,6 +35,7 @@ use Nreljed\DashboardCore\Observers\UserObserver;
 use Nreljed\DashboardCore\Policies\PostPolicy;
 use Nreljed\DashboardCore\Policies\RolePolicy;
 use Nreljed\DashboardCore\Posts\Models\Post;
+use Nreljed\DashboardCore\Services\ContentRegistry;
 use Nreljed\DashboardCore\Services\FeatureRegistry;
 use Nreljed\DashboardCore\Services\FormattingService;
 use Nreljed\DashboardCore\Services\MailerConfigurator;
@@ -53,6 +54,7 @@ class DashboardCoreServiceProvider extends ServiceProvider
 
         $this->app->singleton(FormattingService::class);
         $this->app->singleton(FeatureRegistry::class);
+        $this->app->singleton(ContentRegistry::class);
     }
 
     public function boot(): void

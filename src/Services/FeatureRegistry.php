@@ -284,9 +284,110 @@ class FeatureRegistry
 
     public function getAllProfileSections(): array
     {
-        return array_values(array_unique(array_merge(
+        return $this->remember('profile_sections', fn () => array_values(array_unique(array_merge(
             ...array_map(fn (FeatureProvider $provider) => $provider->getProfileSections(), $this->enabledProviders())
-        )));
+        ))));
+    }
+
+    public function getAllContentDescriptions(): array
+    {
+        return $this->remember('content_descriptions', function () {
+            $map = [];
+
+            foreach ($this->enabledProviders() as $provider) {
+                $description = $provider->getContentDescription();
+
+                if ($description !== null && $description->getSlug() !== '') {
+                    $map[$description->getSlug()] = $description;
+                }
+            }
+
+            return $map;
+        });
+    }
+
+    public function getAllMediaSubdirectories(): array
+    {
+        return $this->remember('media_subdirectories', function () {
+            $map = [];
+
+            foreach ($this->enabledProviders() as $provider) {
+                $subdir = $provider->getMediaSubdirectory();
+
+                if ($subdir !== null && $subdir !== '') {
+                    $map[$provider->slug()] = $subdir;
+                }
+            }
+
+            return $map;
+        });
+    }
+
+    public function getAllHealthChecks(): array
+    {
+        $checks = [];
+
+        foreach ($this->enabledProviders() as $provider) {
+            foreach ($provider->getHealthChecks() as $name => $passed) {
+                $checks[$provider->slug().':'.$name] = [
+                    'provider' => $provider->slug(),
+                    'check' => $name,
+                    'passed' => $passed,
+                ];
+            }
+        }
+
+        return $checks;
+    }
+
+    public function getAllScheduledTasks(): array
+    {
+        $tasks = [];
+
+        foreach ($this->enabledProviders() as $provider) {
+            foreach ($provider->getScheduledTasks() as $task) {
+                $task['provider'] = $provider->slug();
+                $tasks[] = $task;
+            }
+        }
+
+        return $tasks;
+    }
+
+    public function getAllSettingsSections(): array
+    {
+        return $this->remember('settings_sections', function () {
+            $sections = [];
+
+            foreach ($this->enabledProviders() as $provider) {
+                $section = $provider->getSettingsSection();
+
+                if ($section !== null) {
+                    $sections[$provider->slug()] = $section;
+                }
+            }
+
+            return $sections;
+        });
+    }
+
+    public function getAllDeactivationNotices(): array
+    {
+        $notices = [];
+
+        foreach ($this->allProviders() as $provider) {
+            if ($provider->enabled()) {
+                continue;
+            }
+
+            $notice = $provider->getDeactivationNotice();
+
+            if ($notice !== null) {
+                $notices[$provider->slug()] = $notice;
+            }
+        }
+
+        return $notices;
     }
 
     public function getAllSettingsRoutes(): array
