@@ -54,7 +54,7 @@ export default function AuthenticatedLayout({
             <SidebarTrigger className="-ml-1" />
             <Separator
               orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4 data-[orientation=vertical]:self-center"
+              className="data-[orientation=vertical]:h-4 data-[orientation=vertical]:self-center"
             />
             <Breadcrumb>
               <BreadcrumbList>
