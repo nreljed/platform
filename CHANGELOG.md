@@ -4,6 +4,12 @@ All notable changes to `nreljed/dashboard-core` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.34] - 2026-09-10
+
+### Changed
+
+- Release housekeeping: realigned `package.json` version (`0.1.22` → `0.1.34`) with `composer.json` after several composer-only bumps left them drifting. Consumer `check:core-deps` parity guards validate both are bumped together on every release; this release restores that invariant.
+
 ## [0.1.31] - 2026-09-08
 
 ### Changed
