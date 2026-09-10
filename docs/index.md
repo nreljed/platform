@@ -35,20 +35,35 @@ features, custom dashboard pages).
 3. `php artisan vendor:publish --tag=core-config` to publish config.
 4. Wire the frontend: `@dashboard` alias in `vite.config.js` + `tsconfig.json`, Tailwind
    `@source`, and `registerCoreTemplates()` in the app's `app.tsx` (see [Frontend](frontend.md)).
-5. Register feature providers in `config('core.features')`, then
+5. Register feature providers in `config/features.php` `providers`, then
    `php artisan permissions:sync`.
 
-## Config (`config/core.php`)
+## Config
+
+The package ships three publishable config files (`php artisan vendor:publish --tag=core-config`),
+split by concern so consuming apps only override what they need:
+
+**`config/core.php` — engine gates:**
 
 | Key                       | Default                                | Purpose                                                     |
 | ------------------------- | -------------------------------------- | ----------------------------------------------------------- |
 | `core.load_migrations`    | `true`                                 | `false` when the app already ships equivalent migrations    |
 | `core.github_repo`        | `nreljed/dashboard-core`               | Repo used by system health + core version checks            |
 | `core.inertia_middleware` | `HandleInertiaRequests::class`         | Override to add project-specific shared props               |
-| `core.features`           | `[BlogServiceProvider::class]`         | Feature providers discovered by the registry                |
-| `core.orphan_media`       | `posts`, `avatars`                     | Folder → model pairs scanned by `core:cleanup-orphan-media` |
 | `core.settings.groups`    | `[]`                                   | Extra settings groups (base groups always included)         |
-| `core.notification_types` | `database.maintenance`, `user.welcome` | Core notification types                                     |
+
+**`config/features.php` — feature registry**
+
+| Key                        | Default                              | Purpose                                            |
+| -------------------------- | ------------------------------------ | -------------------------------------------------- |
+| `features.providers`       | `[PublicSite, Posts, Ai]`            | Feature providers discovered by the registry       |
+| `features.enabled.<slug>`  | `true` per shipped feature           | Per-feature default state (below persisted settings) |
+
+**`config/media.php` — media targets**
+
+| Key                       | Default                | Purpose                                                     |
+| ------------------------- | ---------------------- | ----------------------------------------------------------- |
+| `media.orphan_media`      | `posts`, `avatars`     | Folder → model pairs scanned by `core:cleanup-orphan-media` |
 
 Deploy settings live in `config/deploy.php` → [Deploy](deploy.md). Roles/permissions defaults
 live in `config/roles.php` and `config/admin.php`.

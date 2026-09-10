@@ -1,7 +1,7 @@
 # Blog Feature
 
 `Nreljed\DashboardCore\Blog` is the in-core example of a self-contained feature provider —
-registered in `config('core.features')` by default. Use it as the reference for building a
+registered in `config/features.php` `providers` by default. Use it as the reference for building a
 new feature (see [Feature Provider](feature-provider.md)).
 
 ## Models

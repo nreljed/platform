@@ -12,7 +12,7 @@ use Nreljed\DashboardCore\Models\Setting;
  *
  * State lives in the `settings` table under the `core` group, keyed
  * `feature_enabled.<slug>` with a `"1"`/`"0"` value. This sits ABOVE the
- * `core.features_enabled` config default so admins can enable/disable a
+ * `features.enabled.<slug>` config default so admins can enable/disable a
  * feature at runtime without touching config, and it can be reverted by
  * deleting the row.
  */
@@ -30,7 +30,7 @@ class FeatureSettingsService
      *
      * Precedence:
      *  1. Persisted settings row (`feature_enabled.<slug>`) if present.
-     *  2. The declared default (usually `core.features_enabled.<slug>`,
+     *  2. The declared default (usually `features.enabled.<slug>`,
      *     falling back to enabled).
      *
      * When the settings table is unavailable (pre-migration, seeders, console)

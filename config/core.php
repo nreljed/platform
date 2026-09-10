@@ -1,11 +1,6 @@
 <?php
 
-use Nreljed\DashboardCore\Ai\AiServiceProvider;
 use Nreljed\DashboardCore\Http\Middleware\HandleInertiaRequests;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Posts\PostsServiceProvider;
-use Nreljed\DashboardCore\PublicSite\PublicSiteServiceProvider;
 
 return [
 
@@ -48,40 +43,6 @@ return [
     */
 
     'inertia_middleware' => HandleInertiaRequests::class,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Feature Service Providers
-    |--------------------------------------------------------------------------
-    |
-    | The self-contained feature providers discovered by the FeatureRegistry.
-    | Each entry must be a registered service provider implementing the shared
-    | feature contract (slug(), getNavItems(), getSharedData(), permissions(),
-    | and the optional getDashboardData()/getAnalyticsSeries() hooks).
-    |
-    */
-
-    'features' => [
-        PublicSiteServiceProvider::class,
-        PostsServiceProvider::class,
-        AiServiceProvider::class,
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Orphan Media Targets
-    |--------------------------------------------------------------------------
-    |
-    | Folder => model class pairs scanned by the core:cleanup-orphan-media
-    | command. Each model class must expose a getReferencedPaths() method that
-    | returns the storage paths it references.
-    |
-    */
-
-    'orphan_media' => [
-        'posts' => Post::class,
-        'avatars' => User::class,
-    ],
 
     /*
     |--------------------------------------------------------------------------

@@ -18,7 +18,7 @@ class CleanupOrphanMedia extends Command
     {
         $dryRun = $this->option('dry-run');
 
-        $configTargets = config('core.orphan_media', [
+        $configTargets = config('media.orphan_media', [
             'posts' => Post::class,
         ]);
 

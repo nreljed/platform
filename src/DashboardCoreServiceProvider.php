@@ -51,6 +51,8 @@ class DashboardCoreServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/database-maintenance.php', 'database_maintenance');
         $this->mergeConfigFrom(__DIR__.'/../config/admin.php', 'admin');
         $this->mergeConfigFrom(__DIR__.'/../config/deploy.php', 'deploy');
+        $this->mergeConfigFrom(__DIR__.'/../config/features.php', 'features');
+        $this->mergeConfigFrom(__DIR__.'/../config/media.php', 'media');
 
         $this->app->singleton(FormattingService::class);
         $this->app->singleton(FeatureRegistry::class);
@@ -108,6 +110,8 @@ class DashboardCoreServiceProvider extends ServiceProvider
                 __DIR__.'/../config/database-maintenance.php' => config_path('database-maintenance.php'),
                 __DIR__.'/../config/admin.php' => config_path('admin.php'),
                 __DIR__.'/../config/deploy.php' => config_path('deploy.php'),
+                __DIR__.'/../config/features.php' => config_path('features.php'),
+                __DIR__.'/../config/media.php' => config_path('media.php'),
             ], 'core-config');
 
             $this->publishes([

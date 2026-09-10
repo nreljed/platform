@@ -1,0 +1,142 @@
+# Shared consumer validation pipeline (workflow_call only).
+#
+# Consuming apps (nreljed/laravel, nreljed/laravel.shop, nreljed/laravel.booking)
+# call this via a thin redirect in their own `ci.yml`:
+#
+#   jobs:
+#     validate:
+#       uses: nreljed/dashboard-core/.github/workflows/consumer-ci.yml@main
+#       with:
+#         skip-php-tests: false
+#         skip-npm-tests: false
+#         php-tests-parallel: false
+#         pass-with-no-tests: false
+#       secrets: inherit
+#
+# The called workflow executes inside the CALLING repo (its checkout, lockfiles,
+# secrets, self-hosted runner labels) using the callers' GH_TOKEN-based
+# COMPOSER_AUTH for the private dashboard-core vcs install.
+#
+# Cross-repo access: dashboard-core must list the consumer repos under
+# Settings → Actions → General → "Accessible from repositories" (private repos
+# cannot reuse workflows from another private repo otherwise).
+#
+# This is the single source of truth for the consumer validation pipeline.
+# Do not fork it into consumer repos — change it here and all consumers inherit.
+name: Consumer CI Validation
+
+on:
+  workflow_call:
+    inputs:
+      skip-php-tests:
+        description: "Skip PHP tests and Pint"
+        type: boolean
+        default: false
+      skip-npm-tests:
+        description: "Skip npm lint, typecheck, format, test, and build"
+        type: boolean
+        default: false
+      php-tests-parallel:
+        description: "Run PHP tests with --parallel (paratest)"
+        type: boolean
+        default: false
+      pass-with-no-tests:
+        description: "Pass when no frontend test files exist"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash
+    env:
+      COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: fileinfo, gd, mbstring, pdo_mysql, pdo_sqlite, intl, bcmath, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "26"
+          cache: "npm"
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v6
+        with:
+          path: vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v6
+        with:
+          path: node_modules
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
+
+      - name: Create .env + SQLite database
+        run: |
+          cp .env.example .env
+          touch database/database.sqlite
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-scripts
+
+      - name: Composer audit
+        run: composer audit --no-interaction
+
+      - name: Foundation boundary check
+        run: php scripts/foundation-check.php
+
+      - name: Generate application key + migrate
+        run: php artisan key:generate && php artisan migrate --force
+
+      - name: Install npm dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Check core dependency parity
+        run: npm run check:core-deps
+
+      - name: npm audit
+        run: npm audit --audit-level=high
+
+      - name: ESLint
+        if: ${{ !inputs.skip-npm-tests }}
+        run: npm run lint
+
+      - name: TypeScript check
+        if: ${{ !inputs.skip-npm-tests }}
+        run: npm run typecheck
+
+      - name: Prettier check
+        if: ${{ !inputs.skip-npm-tests }}
+        run: npm run format:check
+
+      - name: Frontend tests
+        if: ${{ !inputs.skip-npm-tests }}
+        run: ${{ inputs.pass-with-no-tests && 'npm run test -- --passWithNoTests' || 'npm run test' }}
+
+      - name: Build frontend assets
+        if: ${{ !inputs.skip-npm-tests }}
+        run: npm run build
+
+      - name: PHP tests
+        if: ${{ !inputs.skip-php-tests }}
+        run: ${{ inputs.php-tests-parallel && 'php -d memory_limit=512M artisan test --parallel --compact' || 'php -d memory_limit=512M artisan test --compact' }}
+
+      - name: Laravel Pint
+        if: ${{ !inputs.skip-php-tests }}
+        run: vendor/bin/pint --test

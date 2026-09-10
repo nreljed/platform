@@ -19,6 +19,8 @@
     "config/admin.php",
     "config/core.php",
     "config/deploy.php",
+    "config/features.php",
+    "config/media.php",
     "config/roles.php"
   ]
 }

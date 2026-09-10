@@ -10,7 +10,7 @@ use Nreljed\DashboardCore\Support\SettingsSection;
  * FeatureRegistry.
  *
  * Implement this interface on a service provider and register the class in
- * the `core.features` config. A provider that does not implement the
+ * the `features.providers` config. A provider that does not implement the
  * interface fails loudly at boot instead of breaking at request time.
  *
  * Providers should combine this interface with the
@@ -48,8 +48,8 @@ interface FeatureProvider
      *  1. Persisted override (settings table, group `core`, key
      *     `feature_enabled.<slug>`) — written by the module-management admin
      *     page and the toggle endpoint.
-     *  2. Config default (`core.features_enabled.<slug>`) — a feature listed
-     *     in `core.features` is enabled unless this config turns it off.
+     *  2. Config default (`features.enabled.<slug>`) — a feature listed
+     *     in `features.providers` is enabled unless this config turns it off.
      *
      * A feature that is disabled contributes no routes (its provider gates
      * route loading on this), no nav, no dashboard data, no settings and no
@@ -115,7 +115,7 @@ interface FeatureProvider
      * Return a map of storage folder => model class that this feature wants
      * scanned by the `core:cleanup-orphan-media` command, e.g.
      * `['products' => Product::class]`. Aggregated alongside the host
-     * `core.orphan_media` config.
+     * `media.orphan_media` config.
      *
      * @return array<string, class-string>
      */

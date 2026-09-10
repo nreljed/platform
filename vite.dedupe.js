@@ -71,7 +71,6 @@ export const packageDedupes = [
     'shiki',
     'tailwind-merge',
     'tw-animate-css',
-    'vaul',
     'ziggy-js',
     'zod',
 ];

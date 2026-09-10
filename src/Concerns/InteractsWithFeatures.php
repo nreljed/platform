@@ -74,12 +74,12 @@ trait InteractsWithFeatures
 
     /**
      * The default enabled state for this feature when no persisted override
-     * exists. A feature listed in `core.features` is on unless the
-     * `core.features_enabled.<slug>` config explicitly disables it.
+     * exists. A feature listed in `features.providers` is on unless the
+     * `features.enabled.<slug>` config explicitly disables it.
      */
     protected function defaultEnabled(): bool
     {
-        $configured = config('core.features_enabled.'.$this->slug(), null);
+        $configured = config('features.enabled.'.$this->slug(), null);
 
         return $configured ?? false;
     }

@@ -2,7 +2,7 @@
 
 Self-contained features (Blog in-core, Shop as a separate package) are discovered through a
 single contract aggregated by the `FeatureRegistry`. Adding a feature requires **no core
-edits** — just register its service provider in `config('core.features')`.
+edits** — just register its service provider in `config/features.php` `providers`.
 
 ## Contract
 
@@ -35,7 +35,7 @@ method). Only `name()` and `slug()` are mandatory to implement yourself.
 
 ## FeatureRegistry
 
-`Nreljed\DashboardCore\Services\FeatureRegistry` (singleton) reads `config('core.features')`
+`Nreljed\DashboardCore\Services\FeatureRegistry` (singleton) reads `config('features.providers')`
 and exposes:
 
 - `all()` / `get(string $slug)` — feature lookup
@@ -62,7 +62,7 @@ a mirror in the host):
 4. `getSettingsRoute()` returns a **route name**, not a URL.
 5. **Permission slugs are scoped** to the feature prefix (e.g. `shop.orders.view`). Generic
    admin permissions (no dot) are reserved for core.
-6. Register the provider class in `config('core.features')` and run
+6. Register the provider class in `config/features.php` `providers` and run
    `php artisan permissions:sync`.
 7. Self-load own routes + migrations from the provider's `boot()` (see `BlogServiceProvider`).
 

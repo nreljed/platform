@@ -40,7 +40,7 @@ class FeatureRegistry
      */
     protected function configuredProviders(): array
     {
-        return config('core.features', []);
+        return config('features.providers', []);
     }
 
     /**
