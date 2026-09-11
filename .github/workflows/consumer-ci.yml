@@ -23,6 +23,12 @@
 #
 # This is the single source of truth for the consumer validation pipeline.
 # Do not fork it into consumer repos — change it here and all consumers inherit.
+#
+# Runner switch (self-hosted ⇄ GitHub-hosted): `runs-on` reads the CALLING
+# repo's RUNNER_CI variable (workflow_call vars resolve from the caller).
+#   self-hosted    → local persistent runner (no cache steps — upload stall trap)
+#   ubuntu-latest  → GitHub-hosted Linux (cache steps re-enabled below)
+# RUNNER_PACKAGE exists for Windows-bound build jobs (deploy package) — not used here.
 name: Consumer CI Validation
 
 on:
@@ -50,7 +56,7 @@ permissions:
 
 jobs:
   validate:
-    runs-on: self-hosted
+    runs-on: ${{ vars.RUNNER_CI || 'self-hosted' }}
     defaults:
       run:
         shell: bash
@@ -71,6 +77,23 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: "26"
+          cache: ${{ vars.RUNNER_CI != 'self-hosted' && 'npm' || '' }}
+
+      - name: Cache Composer dependencies (GitHub-hosted only)
+        if: vars.RUNNER_CI != 'self-hosted'
+        uses: actions/cache@v6
+        with:
+          path: vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Cache npm dependencies (GitHub-hosted only)
+        if: vars.RUNNER_CI != 'self-hosted'
+        uses: actions/cache@v6
+        with:
+          path: node_modules
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
 
       - name: Create .env + SQLite database
         run: |

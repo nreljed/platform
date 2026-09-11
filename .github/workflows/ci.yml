@@ -8,7 +8,7 @@ on:
 
 jobs:
   validate:
-    runs-on: [self-hosted, local]
+    runs-on: ${{ vars.RUNNER_CI || 'self-hosted' }}
     defaults:
       run:
         shell: bash
@@ -32,7 +32,7 @@ jobs:
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: validate
-    runs-on: [self-hosted, local]
+    runs-on: ${{ vars.RUNNER_CI || 'self-hosted' }}
     permissions:
       contents: write
     steps:
