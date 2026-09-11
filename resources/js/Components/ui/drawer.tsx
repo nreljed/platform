@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer";
 
@@ -38,7 +40,7 @@ function Drawer({
   );
 
   return (
-    <DrawerContext value={contextValue}>
+    <DrawerContext.Provider value={contextValue}>
       <DrawerPrimitive.Root
         data-slot="drawer"
         modal={modal}
@@ -46,7 +48,7 @@ function Drawer({
         swipeDirection={swipeDirection}
         {...props}
       />
-    </DrawerContext>
+    </DrawerContext.Provider>
   );
 }
 

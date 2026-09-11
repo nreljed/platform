@@ -1,8 +1,9 @@
 import * as React from "react";
 
+import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
+
 import { cn } from "cn";
 import { Button } from "@/Components/ui/button";
-import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
@@ -40,7 +41,7 @@ function PaginationLink({ className, isActive, size = "icon", ...props }: Pagina
     <Button
       variant={isActive ? "outline" : "ghost"}
       size={size}
-      className={cn(className)}
+      className={cn("", className)}
       nativeButton={false}
       render={
         <a
@@ -66,7 +67,7 @@ function PaginationPrevious({
       className={cn("pl-2!", className)}
       {...props}
     >
-      <ChevronLeftIcon data-icon="inline-start" />
+      <ChevronLeftIcon className="cn-rtl-flip" />
       <span className="hidden sm:block">{text}</span>
     </PaginationLink>
   );
@@ -85,7 +86,7 @@ function PaginationNext({
       {...props}
     >
       <span className="hidden sm:block">{text}</span>
-      <ChevronRightIcon data-icon="inline-end" />
+      <ChevronRightIcon className="cn-rtl-flip" />
     </PaginationLink>
   );
 }

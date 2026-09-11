@@ -1,3 +1,5 @@
+import { CheckIcon, SearchIcon } from "lucide-react";
+
 import * as React from "react";
 import { Command as CommandPrimitive } from "cmdk";
 
@@ -10,7 +12,6 @@ import {
   DialogTitle,
 } from "@/Components/ui/dialog";
 import { InputGroup, InputGroupAddon } from "@/Components/ui/input-group";
-import { SearchIcon, CheckIcon } from "lucide-react";
 
 function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
@@ -49,7 +50,9 @@ function CommandDialog({
         className={cn("top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0", className)}
         showCloseButton={showCloseButton}
       >
-        {children}
+        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium">
+          {children}
+        </Command>
       </DialogContent>
     </Dialog>
   );

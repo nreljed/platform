@@ -1,9 +1,10 @@
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+
 import * as React from "react";
 import { DayPicker, getDefaultClassNames, type DayButton, type Locale } from "react-day-picker";
 
 import { cn } from "cn";
 import { Button, buttonVariants } from "@/Components/ui/button";
-import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "lucide-react";
 
 function Calendar({
   className,
@@ -20,7 +21,6 @@ function Calendar({
 }) {
   const defaultClassNames = getDefaultClassNames();
 
-  /* eslint-disable @eslint-react/no-nested-component-definitions -- react-day-picker's components API requires inline render components */
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -62,13 +62,16 @@ function Calendar({
           "flex h-(--cell-size) w-full items-center justify-center gap-1.5 text-sm font-medium",
           defaultClassNames.dropdowns,
         ),
-        dropdown_root: cn("relative rounded-(--cell-radius)", defaultClassNames.dropdown_root),
+        dropdown_root: cn(
+          "cn-calendar-dropdown-root relative rounded-(--cell-radius)",
+          defaultClassNames.dropdown_root,
+        ),
         dropdown: cn("absolute inset-0 bg-popover opacity-0", defaultClassNames.dropdown),
         caption_label: cn(
           "font-medium select-none",
           captionLayout === "label"
-            ? "text-sm"
-            : "flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground",
+            ? "cn-calendar-caption text-sm"
+            : "cn-calendar-caption-label flex items-center gap-1 rounded-(--cell-radius) text-sm [&>svg]:size-3.5 [&>svg]:text-muted-foreground",
           defaultClassNames.caption_label,
         ),
         month_grid: cn("w-full border-collapse", defaultClassNames.month_grid),
@@ -117,11 +120,11 @@ function Calendar({
         },
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
-            return <ChevronLeftIcon className={cn("size-4", className)} {...props} />;
+            return <ChevronLeftIcon className={cn("cn-rtl-flip size-4", className)} {...props} />;
           }
 
           if (orientation === "right") {
-            return <ChevronRightIcon className={cn("size-4", className)} {...props} />;
+            return <ChevronRightIcon className={cn("cn-rtl-flip size-4", className)} {...props} />;
           }
 
           return <ChevronDownIcon className={cn("size-4", className)} {...props} />;
@@ -141,7 +144,6 @@ function Calendar({
       {...props}
     />
   );
-  /* eslint-enable @eslint-react/no-nested-component-definitions -- react-day-picker's components API requires inline render components */
 }
 
 function CalendarDayButton({

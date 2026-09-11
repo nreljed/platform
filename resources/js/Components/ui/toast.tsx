@@ -1,16 +1,16 @@
-import * as React from "react";
+import {
+  CircleCheckIcon,
+  InfoIcon,
+  Loader2Icon,
+  OctagonXIcon,
+  TriangleAlertIcon,
+  XIcon,
+} from "lucide-react";
+
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
 
 import { cn } from "cn";
 import { Button } from "@/Components/ui/button";
-import {
-  XIcon,
-  CircleCheckIcon,
-  InfoIcon,
-  TriangleAlertIcon,
-  OctagonXIcon,
-  Loader2Icon,
-} from "lucide-react";
 
 const toast = ToastPrimitive.createToastManager();
 
@@ -132,29 +132,67 @@ function ToastClose({
   );
 }
 
-const TOAST_ICONS: Record<string, React.ReactNode> = {
-  success: <CircleCheckIcon aria-hidden="true" />,
-  info: <InfoIcon aria-hidden="true" />,
-  warning: <TriangleAlertIcon aria-hidden="true" />,
-  error: <OctagonXIcon className="text-destructive" aria-hidden="true" />,
-  loading: <Loader2Icon className="animate-spin" aria-hidden="true" />,
-};
-
 function ToastIcon({ type }: { type: string | undefined }) {
-  const icon = type !== undefined ? TOAST_ICONS[type] : undefined;
-
-  if (!icon) {
+  if (!type) {
     return null;
   }
 
-  return (
-    <span
-      data-slot="toast-icon"
-      className="shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"
-    >
-      {icon}
-    </span>
-  );
+  if (type === "success") {
+    return (
+      <span
+        data-slot="toast-icon"
+        className="shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"
+      >
+        <CircleCheckIcon aria-hidden="true" />
+      </span>
+    );
+  }
+
+  if (type === "info") {
+    return (
+      <span
+        data-slot="toast-icon"
+        className="shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"
+      >
+        <InfoIcon aria-hidden="true" />
+      </span>
+    );
+  }
+
+  if (type === "warning") {
+    return (
+      <span
+        data-slot="toast-icon"
+        className="shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"
+      >
+        <TriangleAlertIcon aria-hidden="true" />
+      </span>
+    );
+  }
+
+  if (type === "error") {
+    return (
+      <span
+        data-slot="toast-icon"
+        className="shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"
+      >
+        <OctagonXIcon className="text-destructive" aria-hidden="true" />
+      </span>
+    );
+  }
+
+  if (type === "loading") {
+    return (
+      <span
+        data-slot="toast-icon"
+        className="shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"
+      >
+        <Loader2Icon className="animate-spin" aria-hidden="true" />
+      </span>
+    );
+  }
+
+  return null;
 }
 
 function ToastList() {

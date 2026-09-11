@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 import type { TooltipValueType } from "recharts";
@@ -284,7 +286,7 @@ function ChartLegendContent({
                 "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground",
               )}
             >
-              {!hideIcon && itemConfig?.icon ? (
+              {itemConfig?.icon && !hideIcon ? (
                 <itemConfig.icon />
               ) : (
                 <div

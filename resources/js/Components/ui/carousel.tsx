@@ -1,9 +1,12 @@
+"use client";
+
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+
 import * as React from "react";
 import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react";
 
 import { cn } from "cn";
 import { Button } from "@/Components/ui/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -93,14 +96,16 @@ function Carousel({
     if (!api) return;
     api.on("reInit", onSelect);
     api.on("select", onSelect);
+    queueMicrotask(() => onSelect(api));
 
     return () => {
-      api?.off("select", onSelect);
+      api.off("select", onSelect);
+      api.off("reInit", onSelect);
     };
   }, [api, onSelect]);
 
   return (
-    <CarouselContext
+    <CarouselContext.Provider
       value={{
         carouselRef,
         api: api,
@@ -122,7 +127,7 @@ function Carousel({
       >
         {children}
       </div>
-    </CarouselContext>
+    </CarouselContext.Provider>
   );
 }
 
@@ -181,8 +186,8 @@ function CarouselPrevious({
       onClick={scrollPrev}
       {...props}
     >
-      <ChevronLeftIcon />
-      <span className="sr-only">Previous slide</span>
+      <ChevronLeftIcon className="cn-rtl-flip" />
+      <span className="sr-only text-foreground">Previous slide</span>
     </Button>
   );
 }
@@ -211,8 +216,8 @@ function CarouselNext({
       onClick={scrollNext}
       {...props}
     >
-      <ChevronRightIcon />
-      <span className="sr-only">Next slide</span>
+      <ChevronRightIcon className="cn-rtl-flip" />
+      <span className="sr-only text-foreground">Next slide</span>
     </Button>
   );
 }
