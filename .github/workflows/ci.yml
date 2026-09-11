@@ -9,6 +9,11 @@ on:
 jobs:
   validate:
     runs-on: [self-hosted, local]
+    defaults:
+      run:
+        shell: bash
+    env:
+      COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
     steps:
       - uses: actions/checkout@v7
 
