@@ -62,7 +62,7 @@ export default function PostTagsIndex() {
     });
   }, []);
 
-  const handleBulkDelete = useCallback((ids: number[]) => {
+  const handleBulkDelete = useCallback((ids: (number | string)[]) => {
     router.post(
       route("dashboard.posts.tags.bulk"),
       { action: "delete", ids },

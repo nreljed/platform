@@ -17,6 +17,7 @@
 export const packageDedupes = [
     '@atlaskit/pragmatic-drag-and-drop',
     '@base-ui/react',
+    'cn',
     '@dnd-kit/core',
     '@dnd-kit/sortable',
     '@dnd-kit/utilities',
@@ -46,7 +47,6 @@ export const packageDedupes = [
     '@zxcvbn-ts/language-common',
     '@zxcvbn-ts/language-en',
     'class-variance-authority',
-    'clsx',
     'cmdk',
     'date-fns',
     'embla-carousel-react',
@@ -69,7 +69,6 @@ export const packageDedupes = [
     'react-resizable-panels',
     'recharts',
     'shiki',
-    'tailwind-merge',
     'tw-animate-css',
     'ziggy-js',
     'zod',

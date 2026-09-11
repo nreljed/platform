@@ -1,28 +1,15 @@
 import * as React from "react";
 import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog";
 
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { Button } from "@/Components/ui/button";
 
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />;
 }
 
-function AlertDialogTrigger({
-  asChild = false,
-  children,
-  ...props
-}: AlertDialogPrimitive.Trigger.Props & { asChild?: boolean }) {
-  if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
-      ...props,
-    });
-  }
-  return (
-    <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props}>
-      {children}
-    </AlertDialogPrimitive.Trigger>
-  );
+function AlertDialogTrigger(props: AlertDialogPrimitive.Trigger.Props) {
+  return <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />;
 }
 
 function AlertDialogPortal({ ...props }: AlertDialogPrimitive.Portal.Props) {

@@ -21,6 +21,8 @@ import {
 import { DataTablePagination } from "@/Components/ui/data-table-pagination";
 import { DataTableToolbar } from "@/Components/ui/data-table-toolbar";
 import { Button } from "@/Components/ui/button";
+import { Checkbox } from "@/Components/ui/checkbox";
+import { Skeleton } from "@/Components/ui/skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,7 +40,6 @@ import {
   AlertDialogTitle,
 } from "@/Components/ui/alert-dialog";
 import { AlertTriangleIcon, ChevronDownIcon } from "lucide-react";
-import { Checkbox } from "@/Components/ui/checkbox";
 
 interface BulkAction {
   label: string;
@@ -58,11 +59,16 @@ interface DataTableProps<TData extends RowData> {
   filterOptions?: { label: string; value: string }[];
   filterKey?: string;
   filterTitle?: string;
-  pageSize?: number;
+  defaultPageSize?: number;
+  pageSizeOptions?: number[];
   bulkActions?: BulkAction[];
-  onBulkAction?: (_action: string, _ids: number[]) => void;
+  onBulkAction?: (_action: string, _ids: (number | string)[]) => void;
   emptyState?: React.ReactNode;
+  loading?: boolean;
+  toolbarRight?: React.ReactNode;
 }
+
+const SKELETON_ROWS = 5;
 
 export function DataTable<TData extends RowData>({
   columns,
@@ -72,10 +78,13 @@ export function DataTable<TData extends RowData>({
   filterOptions,
   filterKey,
   filterTitle,
-  pageSize = 10,
+  defaultPageSize = 10,
+  pageSizeOptions = [10, 20, 50, 100],
   bulkActions,
   onBulkAction,
   emptyState,
+  loading = false,
+  toolbarRight,
 }: DataTableProps<TData>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({});
@@ -83,11 +92,10 @@ export function DataTable<TData extends RowData>({
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [confirmAction, setConfirmAction] = React.useState<{
     action: BulkAction;
-    ids: number[];
+    ids: (number | string)[];
   } | null>(null);
 
   const tableColumns = React.useMemo<ColumnDef<AppTableFeatures, TData, CellData>[]>(() => {
-    if (!bulkActions) return columns;
     const selectCol: ColumnDef<AppTableFeatures, TData, CellData> = {
       id: "select",
       header: ({ table }) => (
@@ -109,7 +117,7 @@ export function DataTable<TData extends RowData>({
       enableHiding: false,
     };
     return [selectCol, ...columns];
-  }, [columns, bulkActions]);
+  }, [columns]);
 
   const table = useTable({
     features: tableFeaturesConfig,
@@ -129,10 +137,32 @@ export function DataTable<TData extends RowData>({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize,
+        pageSize: defaultPageSize,
       },
     },
   });
+
+  const selectedRows = table.getFilteredSelectedRowModel().rows;
+  const selectedRowsCount = selectedRows.length;
+
+  const selectedStatuses = React.useMemo(
+    () =>
+      selectedRows
+        .map((r) => (r.original as { status?: string }).status ?? "")
+        .filter((s): s is string => s !== ""),
+    [selectedRows],
+  );
+
+  const effectiveBulkActions = React.useMemo(() => {
+    if (bulkActions) return bulkActions;
+    const hasDraftable = selectedStatuses.some((s) => ["publish", "future"].includes(s));
+    const hasPublishable = selectedStatuses.some((s) => ["draft", "pending", "future"].includes(s));
+    const defaults: BulkAction[] = [];
+    if (hasPublishable) defaults.push({ label: "Publish", value: "publish" });
+    if (hasDraftable) defaults.push({ label: "Move to Draft", value: "draft" });
+    defaults.push({ label: "Delete", value: "delete", destructive: true });
+    return defaults;
+  }, [bulkActions, selectedStatuses]);
 
   return (
     <div data-slot="data-table" className="space-y-4">
@@ -143,30 +173,28 @@ export function DataTable<TData extends RowData>({
         filterOptions={filterOptions}
         filterKey={filterKey}
         filterTitle={filterTitle}
+        loading={loading}
+        toolbarRight={toolbarRight}
       />
-      {bulkActions && onBulkAction && table.getFilteredSelectedRowModel().rows.length > 0 && (
+      {selectedRowsCount > 0 && onBulkAction && (
         <div className="flex items-center gap-2 px-2 py-1">
           <span className="text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} selected
+            {selectedRowsCount} selected
           </span>
           <DropdownMenu>
             <DropdownMenuTrigger render={<Button variant="outline" size="sm" />}>
               Bulk Actions <ChevronDownIcon />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              {bulkActions.map((action) => {
-                const selectedStatuses = table
-                  .getFilteredSelectedRowModel()
-                  .rows.map((r) => (r.original as { status?: string }).status ?? "");
-                if (action.show && !action.show(selectedStatuses)) return null;
-                return (
+              {effectiveBulkActions
+                .filter((action) => !action.show || action.show(selectedStatuses))
+                .map((action) => (
                   <DropdownMenuItem
                     key={action.value}
                     onClick={() => {
-                      const ids = table
-                        .getFilteredSelectedRowModel()
-                        .rows.map((r) => (r.original as Record<string, unknown>).id as number)
-                        .filter((id): id is number => id != null);
+                      const ids = selectedRows
+                        .map((r) => (r.original as Record<string, unknown>).id as number | string)
+                        .filter((id): id is number | string => id != null);
                       if (action.destructive) {
                         setConfirmAction({ action, ids });
                       } else {
@@ -176,8 +204,7 @@ export function DataTable<TData extends RowData>({
                   >
                     {action.label}
                   </DropdownMenuItem>
-                );
-              })}
+                ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -187,25 +214,48 @@ export function DataTable<TData extends RowData>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
+                {headerGroup.headers.map((header) => {
+                  const columnMeta = header.column.columnDef.meta as
+                    | undefined
+                    | { className?: string };
+                  return (
+                    <TableHead key={header.id} colSpan={header.colSpan} className={columnMeta?.className}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() ? "selected" : undefined}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            {loading ? (
+              Array.from({ length: SKELETON_ROWS }).map((_, index) => (
+                <TableRow key={`skeleton-${index}`}>
+                  <TableCell>
+                    <Skeleton className="h-4 w-4" />
+                  </TableCell>
+                  {columns.map((_, colIndex) => (
+                    <TableCell key={colIndex}>
+                      <Skeleton className="h-6 w-full" />
                     </TableCell>
                   ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() ? "selected" : undefined}>
+                  {row.getVisibleCells().map((cell) => {
+                    const columnMeta = cell.column.columnDef.meta as
+                      | undefined
+                      | { className?: string };
+                    return (
+                      <TableCell key={cell.id} className={columnMeta?.className}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))
             ) : (
@@ -218,7 +268,7 @@ export function DataTable<TData extends RowData>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} pageSizeOptions={pageSizeOptions} />
       <AlertDialog
         open={!!confirmAction}
         onOpenChange={(open) => {

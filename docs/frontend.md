@@ -1,8 +1,8 @@
 # Frontend
 
 The core frontend ships as **TypeScript source** in `resources/js/` — React 19 + Inertia 3 +
-Vite + Tailwind CSS v4 + shadcn/ui (Radix + Lucide). Apps consume it via the `@dashboard`
-alias; core never auto-registers pages.
+Vite + Tailwind CSS v4 + shadcn/ui (Base UI + Lucide, base-vega style). Apps consume it via
+the `@dashboard` alias; core never auto-registers pages.
 
 ## Consuming in a Host App
 
@@ -83,11 +83,15 @@ resources/js/
   `core.inertia_middleware`.
 - **Component imports**: `@/Components/...` (NOT `@/components/...`) — Windows
   case-insensitive filesystem workaround.
-- **No ShadCN `asChild`**: avoid `Slot`; use plain `<Link>`.
+- **Composition**: Base UI primitives accept a `render` prop instead of Radix `asChild`
+  (removed). `<Button asChild><Link/></Button>` becomes
+  `<Button render={<Link/>}>label</Button>`; triggers such as
+  `<DialogTrigger render={<Button/>}>label</DialogTrigger>`.
 - **Forms**: Inertia `useForm` (server-side validation) + optional Zod client-side.
 - **Routes**: Ziggy `route()` helper — no hardcoded URLs.
 - **Dark mode**: `next-themes` `<ThemeProvider>`; theme toggle in nav-user.
-- **Toasts**: `sonner` `toast()` for flash messages.
+- **Toasts**: `toast` from `@/Components/ui/toast` — `toast.add({ title, type })`
+  (`success | error | info | warning`), rendered by the app's `<Toaster />`.
 - **Editor**: Lexical-based `rich-text-editor.tsx` with a full plugin ecosystem
   (`editor/plugins/*`, `editor/toolbar/*`, `editor/floating/*`).
 

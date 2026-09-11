@@ -2,7 +2,7 @@ import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon, EyeOffIcon } from "luci
 import type { CellData, Column, RowData } from "@tanstack/react-table";
 
 import { AppTableFeatures } from "@/lib/table-features";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { Button } from "@/Components/ui/button";
 import {
   DropdownMenu,

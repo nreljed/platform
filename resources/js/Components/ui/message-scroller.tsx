@@ -1,7 +1,7 @@
-﻿import * as React from "react";
+import * as React from "react";
 import { MessageScroller as MessageScrollerPrimitive } from "@shadcn/react/message-scroller";
 
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 import { Button } from "@/Components/ui/button";
 import { ArrowDownIcon } from "lucide-react";
 

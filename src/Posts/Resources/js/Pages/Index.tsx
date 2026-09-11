@@ -212,15 +212,15 @@ export default function BlogIndex({ posts, categories }: BlogIndexProps) {
           <div className="flex items-center justify-end gap-1">
             {row.original.preview_url && (
               <Button
-                asChild
+                render={
+                  <Link href={row.original.preview_url} target="_blank" rel="noreferrer" />
+                }
                 variant="ghost"
                 size="icon-sm"
                 title="Preview draft"
                 aria-label={`Preview ${row.original.title}`}
               >
-                <Link href={row.original.preview_url} target="_blank" rel="noreferrer">
-                  <Eye className="h-4 w-4" />
-                </Link>
+                <Eye className="h-4 w-4" />
               </Button>
             )}
             <ActionCell
@@ -244,7 +244,7 @@ export default function BlogIndex({ posts, categories }: BlogIndexProps) {
     });
   }, [posts, categoryFilter]);
 
-  const handleBulkAction = async (action: string, ids: number[]) => {
+  const handleBulkAction = async (action: string, ids: (number | string)[]) => {
     if (action === "seo") {
       try {
         const res = await fetch(route("dashboard.posts.seo.bulk") as string, {

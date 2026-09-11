@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Badge } from "@/Components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 const statusStyles = {
   success: "bg-status-success/10 text-status-success border-status-success/30",

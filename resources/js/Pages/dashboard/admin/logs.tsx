@@ -225,10 +225,14 @@ export default function LogViewer({
               )}
             </Button>
             {selected && (
-              <Button asChild variant="outline" size="sm">
-                <a href={route("dashboard.admin.logs.download", { file: selected })}>
-                  <Download className="mr-1.5 h-3.5 w-3.5" /> Download
-                </a>
+              <Button
+                render={
+                  <a href={route("dashboard.admin.logs.download", { file: selected })} />
+                }
+                variant="outline"
+                size="sm"
+              >
+                <Download className="mr-1.5 h-3.5 w-3.5" /> Download
               </Button>
             )}
           </div>

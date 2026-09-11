@@ -67,10 +67,8 @@ function PostEditorToolbar({
   return (
     <div className="sticky top-16 z-20 flex h-12 shrink-0 items-center justify-between gap-2 border-b bg-background -mx-4 px-4">
       <div className="flex items-center gap-2 min-w-0">
-        <Button variant="ghost" size="icon-sm" asChild aria-label="Back to posts">
-          <Link href={backUrl}>
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
+        <Button render={<Link href={backUrl} />} variant="ghost" size="icon-sm" aria-label="Back to posts">
+          <ArrowLeft className="h-4 w-4" />
         </Button>
         <Separator
           orientation="vertical"
@@ -137,13 +135,15 @@ function PostEditorToolbar({
             <Tooltip>
               <TooltipTrigger
                 render={
-                  <Button variant="ghost" size="sm" asChild>
-                    <a href={previewUrl} target="_blank" rel="noopener noreferrer">
-                      <span className="text-xs font-medium">Preview</span>
-                    </a>
-                  </Button>
+                  <Button
+                    render={<a href={previewUrl} target="_blank" rel="noopener noreferrer" />}
+                    variant="ghost"
+                    size="sm"
+                  />
                 }
-              />
+              >
+                <span className="text-xs font-medium">Preview</span>
+              </TooltipTrigger>
               <TooltipContent>Open preview</TooltipContent>
             </Tooltip>
           </TooltipProvider>

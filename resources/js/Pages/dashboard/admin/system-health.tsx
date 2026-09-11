@@ -1459,11 +1459,13 @@ export default function SystemHealth(props: SystemHealthProps) {
                     <p className="text-xs font-medium text-muted-foreground">
                       Log Files ({props.logs.files.length})
                     </p>
-                    <Button asChild variant="outline" size="sm">
-                      <Link href={route("dashboard.admin.logs")}>
-                        <FileText className="mr-1.5 h-3.5 w-3.5" />
-                        Open Log Viewer
-                      </Link>
+                    <Button
+                      render={<Link href={route("dashboard.admin.logs")} />}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <FileText className="mr-1.5 h-3.5 w-3.5" />
+                      Open Log Viewer
                     </Button>
                   </div>
                   <div className="space-y-2">
@@ -1478,11 +1480,16 @@ export default function SystemHealth(props: SystemHealthProps) {
                             {f.size} — {f.modified}
                           </p>
                         </div>
-                        <Button asChild variant="outline" size="sm" className="shrink-0">
-                          <Link href={route("dashboard.admin.logs", { file: f.name })}>
-                            <FileText className="mr-1.5 h-3.5 w-3.5" />
-                            View
-                          </Link>
+                        <Button
+                          render={
+                            <Link href={route("dashboard.admin.logs", { file: f.name })} />
+                          }
+                          variant="outline"
+                          size="sm"
+                          className="shrink-0"
+                        >
+                          <FileText className="mr-1.5 h-3.5 w-3.5" />
+                          View
                         </Button>
                       </div>
                     ))}

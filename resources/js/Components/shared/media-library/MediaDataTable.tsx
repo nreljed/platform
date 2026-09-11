@@ -229,7 +229,7 @@ export function MediaDataTable({
 }: MediaDataTableProps) {
   const columns = React.useMemo(() => getColumns(onDelete), [onDelete]);
 
-  const handleBulkAction = async (action: string, ids: number[]): Promise<void> => {
+  const handleBulkAction = async (action: string, ids: (number | string)[]): Promise<void> => {
     if (action !== "delete") return;
     const targets = items.filter((i) => ids.includes(i.id));
     await onBulkDelete(targets);

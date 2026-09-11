@@ -286,7 +286,7 @@ export default function AdminUsersIndex() {
           data={users}
           searchKey="name"
           searchPlaceholder="Search by name..."
-          pageSize={20}
+          defaultPageSize={20}
           bulkActions={[
             {
               label: "Delete",
