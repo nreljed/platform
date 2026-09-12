@@ -1,13 +1,13 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Auth;
+namespace Nreljed\Platform\Http\Controllers\Auth;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Http\Requests\Auth\UpdatePasswordRequest;
-use Nreljed\DashboardCore\Services\AuditService;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Requests\Auth\UpdatePasswordRequest;
+use Nreljed\Platform\Services\AuditService;
 
 class PasswordController extends Controller
 {

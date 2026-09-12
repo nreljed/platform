@@ -6,7 +6,7 @@ edits** — just register its service provider in `config/features.php` `provide
 
 ## Contract
 
-`Nreljed\DashboardCore\Contracts\FeatureProvider` — every provider implements it and combines
+`Nreljed\Platform\Contracts\FeatureProvider` — every provider implements it and combines
 it with the `InteractsWithFeatures` trait (supplies safe no-op defaults for every capability
 method). Only `name()` and `slug()` are mandatory to implement yourself.
 
@@ -35,7 +35,7 @@ method). Only `name()` and `slug()` are mandatory to implement yourself.
 
 ## FeatureRegistry
 
-`Nreljed\DashboardCore\Services\FeatureRegistry` (singleton) reads `config('features.providers')`
+`Nreljed\Platform\Services\FeatureRegistry` (singleton) reads `config('features.providers')`
 and exposes:
 
 - `all()` / `get(string $slug)` — feature lookup
@@ -68,7 +68,7 @@ a mirror in the host):
 
 ## Routes
 
-Core routes are loaded by `DashboardCoreServiceProvider::loadRoutes()` (web) + the host loads
+Core routes are loaded by `PlatformServiceProvider::loadRoutes()` (web) + the host loads
 its own. Feature providers self-load their routes from their own `Routes/` directory:
 
 - Blog: `BlogServiceProvider::boot()` → `loadRoutesFrom(__DIR__.'/Routes/web.php')` (prefix

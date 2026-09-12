@@ -1,15 +1,15 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Admin;
+namespace Nreljed\Platform\Http\Controllers\Admin;
 
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Password;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Http\Requests\User\BulkActionRequest;
-use Nreljed\DashboardCore\Http\Requests\User\BulkDeleteRequest;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Services\AccountService;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Requests\User\BulkActionRequest;
+use Nreljed\Platform\Http\Requests\User\BulkDeleteRequest;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Services\AccountService;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BulkUserController extends Controller

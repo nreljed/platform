@@ -1,12 +1,12 @@
 <?php
 
-namespace Nreljed\DashboardCore\Console\Commands;
+namespace Nreljed\Platform\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
-use Nreljed\DashboardCore\Models\Permission;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Services\PermissionCacheService;
+use Nreljed\Platform\Models\Permission;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Services\PermissionCacheService;
 
 class CreateRole extends Command
 {

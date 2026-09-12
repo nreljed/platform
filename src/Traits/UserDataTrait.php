@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Traits;
+namespace Nreljed\Platform\Traits;
 
 use Illuminate\Support\Facades\Storage;
 

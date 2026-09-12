@@ -46,7 +46,7 @@ export const SEVERITY_LABELS: Record<Severity, string> = {
 
 export function normalizeNotificationType(type: string): string {
   return type
-    .replace("Nreljed\\DashboardCore\\Notifications\\", "")
+    .replace("Nreljed\\Platform\\Notifications\\", "")
     .replace("App\\Notifications\\", "")
     .replace("Notification", "")
     .replaceAll(/([a-z])([A-Z])/g, "$1.$2")

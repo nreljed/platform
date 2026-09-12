@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Models\User;
 
 class DashboardService
 {

@@ -5,7 +5,7 @@
          colors="true"
 >
     <testsuites>
-        <testsuite name="DashboardCore">
+        <testsuite name="Platform">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

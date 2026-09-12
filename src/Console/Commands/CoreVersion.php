@@ -1,16 +1,16 @@
 <?php
 
-namespace Nreljed\DashboardCore\Console\Commands;
+namespace Nreljed\Platform\Console\Commands;
 
 use Illuminate\Console\Command;
-use Nreljed\DashboardCore\Services\CoreVersionService;
+use Nreljed\Platform\Services\CoreVersionService;
 
 class CoreVersion extends Command
 {
     protected $signature = 'core:version
         {--format=table : Output format: table or json}';
 
-    protected $description = 'Show the installed dashboard-core package name, version, and commit';
+    protected $description = 'Show the installed platform package name, version, and commit';
 
     public function handle(CoreVersionService $core): int
     {

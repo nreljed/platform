@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Auth;
+namespace Nreljed\Platform\Http\Controllers\Auth;
 
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
@@ -11,10 +11,10 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Http\Requests\Auth\NewPasswordRequest;
-use Nreljed\DashboardCore\Services\AuditService;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Requests\Auth\NewPasswordRequest;
+use Nreljed\Platform\Services\AuditService;
 
 class NewPasswordController extends Controller
 {

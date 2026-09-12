@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
-use Nreljed\DashboardCore\Models\PushSubscription;
-use Nreljed\DashboardCore\Models\Setting;
+use Nreljed\Platform\Models\PushSubscription;
+use Nreljed\Platform\Models\Setting;
 
 class PushNotificationService
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore;
+namespace Nreljed\Platform;
 
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -18,30 +18,30 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Nreljed\DashboardCore\Http\Middleware\AdminMiddleware;
-use Nreljed\DashboardCore\Http\Middleware\CheckIpAccess;
-use Nreljed\DashboardCore\Http\Middleware\CheckMaintenanceMode;
-use Nreljed\DashboardCore\Http\Middleware\CheckPermission;
-use Nreljed\DashboardCore\Http\Middleware\CheckRole;
-use Nreljed\DashboardCore\Http\Middleware\ConfigureSessionLifetime;
-use Nreljed\DashboardCore\Http\Middleware\ContentSecurityPolicy;
-use Nreljed\DashboardCore\Http\Middleware\HandleInertiaRequests;
-use Nreljed\DashboardCore\Models\Notification;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Notifications\ResetPassword as CustomResetPassword;
-use Nreljed\DashboardCore\Notifications\VerifyEmail as CustomVerifyEmail;
-use Nreljed\DashboardCore\Observers\UserObserver;
-use Nreljed\DashboardCore\Policies\PostPolicy;
-use Nreljed\DashboardCore\Policies\RolePolicy;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Services\ContentRegistry;
-use Nreljed\DashboardCore\Services\FeatureRegistry;
-use Nreljed\DashboardCore\Services\FormattingService;
-use Nreljed\DashboardCore\Services\MailerConfigurator;
-use Nreljed\DashboardCore\Services\NotificationService;
+use Nreljed\Platform\Http\Middleware\AdminMiddleware;
+use Nreljed\Platform\Http\Middleware\CheckIpAccess;
+use Nreljed\Platform\Http\Middleware\CheckMaintenanceMode;
+use Nreljed\Platform\Http\Middleware\CheckPermission;
+use Nreljed\Platform\Http\Middleware\CheckRole;
+use Nreljed\Platform\Http\Middleware\ConfigureSessionLifetime;
+use Nreljed\Platform\Http\Middleware\ContentSecurityPolicy;
+use Nreljed\Platform\Http\Middleware\HandleInertiaRequests;
+use Nreljed\Platform\Models\Notification;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Notifications\ResetPassword as CustomResetPassword;
+use Nreljed\Platform\Notifications\VerifyEmail as CustomVerifyEmail;
+use Nreljed\Platform\Observers\UserObserver;
+use Nreljed\Platform\Policies\PostPolicy;
+use Nreljed\Platform\Policies\RolePolicy;
+use Nreljed\Platform\Posts\Models\Post;
+use Nreljed\Platform\Services\ContentRegistry;
+use Nreljed\Platform\Services\FeatureRegistry;
+use Nreljed\Platform\Services\FormattingService;
+use Nreljed\Platform\Services\MailerConfigurator;
+use Nreljed\Platform\Services\NotificationService;
 
-class DashboardCoreServiceProvider extends ServiceProvider
+class PlatformServiceProvider extends ServiceProvider
 {
     #[\Override]
     public function register(): void

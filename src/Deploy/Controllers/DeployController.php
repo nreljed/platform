@@ -1,14 +1,14 @@
 <?php
 
-namespace Nreljed\DashboardCore\Deploy\Controllers;
+namespace Nreljed\Platform\Deploy\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
-use Nreljed\DashboardCore\Deploy\Services\DeployService;
-use Nreljed\DashboardCore\Exceptions\DatabaseMaintenanceException;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Services\DatabaseMaintenanceService;
+use Nreljed\Platform\Deploy\Services\DeployService;
+use Nreljed\Platform\Exceptions\DatabaseMaintenanceException;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Services\DatabaseMaintenanceService;
 
 class DeployController extends Controller
 {

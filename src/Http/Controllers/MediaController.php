@@ -1,12 +1,12 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers;
+namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Nreljed\DashboardCore\Models\Media;
-use Nreljed\DashboardCore\Services\MediaService;
-use Nreljed\DashboardCore\Services\UploadProfiles;
+use Nreljed\Platform\Models\Media;
+use Nreljed\Platform\Services\MediaService;
+use Nreljed\Platform\Services\UploadProfiles;
 
 class MediaController extends Controller
 {

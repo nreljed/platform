@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Console\Commands;
+namespace Nreljed\Platform\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -62,8 +62,8 @@ class MakeFeature extends Command
 
         namespace {$namespace};
 
-        use Nreljed\\DashboardCore\\Contracts\\FeatureProvider;
-        use Nreljed\\DashboardCore\\Concerns\\InteractsWithFeatures;
+        use Nreljed\\Platform\\Contracts\\FeatureProvider;
+        use Nreljed\\Platform\\Concerns\\InteractsWithFeatures;
 
         class {$className} extends \Illuminate\Support\ServiceProvider implements FeatureProvider
         {

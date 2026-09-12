@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Database\Factories;
+namespace Nreljed\Platform\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Posts\Models\Post;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Posts\Models\Post;
 
 /**
  * @extends Factory<Post>

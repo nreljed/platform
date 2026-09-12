@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Console\Commands;
+namespace Nreljed\Platform\Console\Commands;
 
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use Nreljed\DashboardCore\Deploy\Services\DeployService;
+use Nreljed\Platform\Deploy\Services\DeployService;
 
 #[Signature('deploy:auto')]
 #[Description('Check GitHub for a newer release and self-deploy from the server (CI fallback)')]

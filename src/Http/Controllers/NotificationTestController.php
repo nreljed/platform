@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers;
+namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Http\Requests\Notification\SendTestNotificationRequest;
-use Nreljed\DashboardCore\Http\Requests\Notification\SendToAllRequest;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Notifications\AppNotification;
-use Nreljed\DashboardCore\Services\NotificationService;
-use Nreljed\DashboardCore\Services\NotificationTypeRegistry;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Http\Requests\Notification\SendTestNotificationRequest;
+use Nreljed\Platform\Http\Requests\Notification\SendToAllRequest;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Notifications\AppNotification;
+use Nreljed\Platform\Services\NotificationService;
+use Nreljed\Platform\Services\NotificationTypeRegistry;
+use Nreljed\Platform\Services\SettingsService;
 
 class NotificationTestController extends Controller
 {

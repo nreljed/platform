@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Models;
+namespace Nreljed\Platform\Models;
 
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
@@ -13,13 +13,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Ai\Concerns\HasConversations;
 use Laravel\Sanctum\HasApiTokens;
-use Nreljed\DashboardCore\Ai\Models\AiProvider;
-use Nreljed\DashboardCore\Ai\Models\AiUsageLog;
-use Nreljed\DashboardCore\Ai\Models\AiUsageSetting;
-use Nreljed\DashboardCore\Database\Factories\UserFactory;
-use Nreljed\DashboardCore\Notifications\ResetPassword;
-use Nreljed\DashboardCore\Services\PermissionCacheService;
-use Nreljed\DashboardCore\Traits\UserDataTrait;
+use Nreljed\Platform\Ai\Models\AiProvider;
+use Nreljed\Platform\Ai\Models\AiUsageLog;
+use Nreljed\Platform\Ai\Models\AiUsageSetting;
+use Nreljed\Platform\Database\Factories\UserFactory;
+use Nreljed\Platform\Notifications\ResetPassword;
+use Nreljed\Platform\Services\PermissionCacheService;
+use Nreljed\Platform\Traits\UserDataTrait;
 
 class User extends Authenticatable implements MustVerifyEmailContract
 {

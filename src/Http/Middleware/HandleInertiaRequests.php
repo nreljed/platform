@@ -1,21 +1,21 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Middleware;
+namespace Nreljed\Platform\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\AlwaysProp;
 use Inertia\Middleware;
-use Nreljed\DashboardCore\Http\Controllers\EmailSettingsController;
-use Nreljed\DashboardCore\Models\Notification;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Services\DatabaseMaintenanceService;
-use Nreljed\DashboardCore\Services\EmailSettingsService;
-use Nreljed\DashboardCore\Services\FeatureRegistry;
-use Nreljed\DashboardCore\Services\NotificationService;
-use Nreljed\DashboardCore\Services\PermissionCacheService;
-use Nreljed\DashboardCore\Services\SettingsService;
-use Nreljed\DashboardCore\Support\RoleCatalog;
-use Nreljed\DashboardCore\Traits\RelativeTime;
+use Nreljed\Platform\Http\Controllers\EmailSettingsController;
+use Nreljed\Platform\Models\Notification;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Services\DatabaseMaintenanceService;
+use Nreljed\Platform\Services\EmailSettingsService;
+use Nreljed\Platform\Services\FeatureRegistry;
+use Nreljed\Platform\Services\NotificationService;
+use Nreljed\Platform\Services\PermissionCacheService;
+use Nreljed\Platform\Services\SettingsService;
+use Nreljed\Platform\Support\RoleCatalog;
+use Nreljed\Platform\Traits\RelativeTime;
 use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware

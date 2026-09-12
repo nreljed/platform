@@ -1,12 +1,12 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Auth;
+namespace Nreljed\Platform\Http\Controllers\Auth;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Controllers\Controller;
 
 class EmailVerificationPromptController extends Controller
 {

@@ -6,7 +6,7 @@ caches per group.
 
 ## Service
 
-`Nreljed\DashboardCore\Services\SettingsService` (singleton):
+`Nreljed\Platform\Services\SettingsService` (singleton):
 
 | Method                                             | Purpose                                                         |
 | -------------------------------------------------- | --------------------------------------------------------------- |

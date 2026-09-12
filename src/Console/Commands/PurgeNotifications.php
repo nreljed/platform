@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Console\Commands;
+namespace Nreljed\Platform\Console\Commands;
 
 use Illuminate\Console\Command;
-use Nreljed\DashboardCore\Services\NotificationService;
+use Nreljed\Platform\Services\NotificationService;
 
 class PurgeNotifications extends Command
 {

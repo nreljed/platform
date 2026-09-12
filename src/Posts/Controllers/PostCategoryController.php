@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts\Controllers;
+namespace Nreljed\Platform\Posts\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Posts\Models\PostCategory;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Posts\Models\PostCategory;
 
 class PostCategoryController extends Controller
 {

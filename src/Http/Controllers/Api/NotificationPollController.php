@@ -1,15 +1,15 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Api;
+namespace Nreljed\Platform\Http\Controllers\Api;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Http\Requests\Api\BulkNotificationRequest;
-use Nreljed\DashboardCore\Http\Requests\Api\MarkReadRequest;
-use Nreljed\DashboardCore\Models\Notification;
-use Nreljed\DashboardCore\Services\NotificationService;
-use Nreljed\DashboardCore\Traits\RelativeTime;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Requests\Api\BulkNotificationRequest;
+use Nreljed\Platform\Http\Requests\Api\MarkReadRequest;
+use Nreljed\Platform\Models\Notification;
+use Nreljed\Platform\Services\NotificationService;
+use Nreljed\Platform\Traits\RelativeTime;
 
 class NotificationPollController extends Controller
 {

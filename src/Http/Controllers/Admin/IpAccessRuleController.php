@@ -1,14 +1,14 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Admin;
+namespace Nreljed\Platform\Http\Controllers\Admin;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Models\IpAccessRule;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Models\IpAccessRule;
 
 class IpAccessRuleController extends Controller
 {

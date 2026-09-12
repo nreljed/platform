@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Artisan;
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Process;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Models\User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -557,10 +557,10 @@ class SystemHealthService
             && version_compare(ltrim((string) $coreInstalled, 'v'), ltrim((string) $coreLatest['version'], 'v'), '<')) {
             $recommendations[] = [
                 'severity' => 'info',
-                'title' => 'New dashboard-core version available',
+                'title' => 'New platform version available',
                 'message' => 'Installed core '.$coreInstalled
                     .' is behind latest release '.$coreLatest['version'].'.',
-                'fix' => 'Run composer update nreljed/dashboard-core and redeploy.',
+                'fix' => 'Run composer update nreljed/platform and redeploy.',
             ];
         }
 
@@ -684,7 +684,7 @@ class SystemHealthService
         $commands = Artisan::all();
         $namespaces = [
             trim(app()->getNamespace(), '\\'),
-            'Nreljed\\DashboardCore',
+            'Nreljed\\Platform',
         ];
         $scheduled = [];
 
@@ -1059,7 +1059,7 @@ class SystemHealthService
     }
 
     /**
-     * Latest release of the dashboard-core package repo, so the health page
+     * Latest release of the platform package repo, so the health page
      * can report whether the installed core is up to date.
      */
     protected function getCoreLatestVersion(): array
@@ -1121,7 +1121,7 @@ class SystemHealthService
         return Http::withHeaders([
             'Accept' => 'application/vnd.github+json',
             'Authorization' => 'Bearer '.$token,
-            'User-Agent' => 'DashboardCore',
+            'User-Agent' => 'Platform',
         ])
             ->timeout(5)
             ->get($url);
@@ -1172,7 +1172,7 @@ class SystemHealthService
     }
 
     /**
-     * Resolve the installed dashboard-core package commit and version.
+     * Resolve the installed platform package commit and version.
      *
      * Delegates to CoreVersionService, which prefers the build-time recorded
      * storage/app/core.json and falls back to the legacy core.sha marker.
@@ -1187,8 +1187,8 @@ class SystemHealthService
         $sha = $info['sha'];
         $version = $info['version'];
 
-        $vendorVersion = $this->composerJsonVersion(base_path('vendor/nreljed/dashboard-core/composer.json'));
-        $sourceVersion = $this->composerJsonVersion(base_path('packages/dashboard-core/composer.json'));
+        $vendorVersion = $this->composerJsonVersion(base_path('vendor/nreljed/platform/composer.json'));
+        $sourceVersion = $this->composerJsonVersion(base_path('packages/platform/composer.json'));
 
         return [
             'name' => $info['name'],
@@ -1239,7 +1239,7 @@ class SystemHealthService
 
         $meta = json_decode((string) file_get_contents($path), true);
 
-        return is_array($meta) ? ($meta['require']['nreljed/dashboard-core'] ?? null) : null;
+        return is_array($meta) ? ($meta['require']['nreljed/platform'] ?? null) : null;
     }
 
     protected function composerJsonVersion(string $path): ?string

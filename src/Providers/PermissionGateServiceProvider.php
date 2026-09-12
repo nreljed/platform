@@ -1,12 +1,12 @@
 <?php
 
-namespace Nreljed\DashboardCore\Providers;
+namespace Nreljed\Platform\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Services\FeatureRegistry;
-use Nreljed\DashboardCore\Services\PermissionCacheService;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Services\FeatureRegistry;
+use Nreljed\Platform\Services\PermissionCacheService;
 
 class PermissionGateServiceProvider extends ServiceProvider
 {

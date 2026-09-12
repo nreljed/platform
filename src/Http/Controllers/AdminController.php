@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers;
+namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
-use Nreljed\DashboardCore\Services\SystemHealthService;
+use Nreljed\Platform\Services\SystemHealthService;
 
 class AdminController extends Controller
 {

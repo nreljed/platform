@@ -1,12 +1,12 @@
 <?php
 
-namespace Nreljed\DashboardCore\Jobs;
+namespace Nreljed\Platform\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Nreljed\DashboardCore\Mail\DynamicMailable;
+use Nreljed\Platform\Mail\DynamicMailable;
 
 class SendEmail implements ShouldQueue
 {

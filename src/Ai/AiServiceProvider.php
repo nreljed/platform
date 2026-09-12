@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Nreljed\DashboardCore\Ai;
+namespace Nreljed\Platform\Ai;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Nreljed\DashboardCore\Ai\Models\AiProvider;
-use Nreljed\DashboardCore\Ai\Policies\AiProviderPolicy;
-use Nreljed\DashboardCore\Concerns\InteractsWithFeatures;
-use Nreljed\DashboardCore\Contracts\FeatureProvider;
+use Nreljed\Platform\Ai\Models\AiProvider;
+use Nreljed\Platform\Ai\Policies\AiProviderPolicy;
+use Nreljed\Platform\Concerns\InteractsWithFeatures;
+use Nreljed\Platform\Contracts\FeatureProvider;
 
 /**
  * AI feature module — bring-your-own-key provider management (Account → AI Keys).

@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Nreljed\DashboardCore\Jobs\SendEmail;
-use Nreljed\DashboardCore\Mail\DynamicMailable;
+use Nreljed\Platform\Jobs\SendEmail;
+use Nreljed\Platform\Mail\DynamicMailable;
 
 class MailService
 {

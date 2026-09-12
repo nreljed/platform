@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers;
+namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Services\AuditService;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Services\AuditService;
 
 class AvatarController extends Controller
 {

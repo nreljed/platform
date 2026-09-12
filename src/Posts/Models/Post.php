@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts\Models;
+namespace Nreljed\Platform\Posts\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Nreljed\DashboardCore\Database\Factories\PostFactory;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Services\HtmlSanitizer;
-use Nreljed\DashboardCore\Services\MediaService;
+use Nreljed\Platform\Database\Factories\PostFactory;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Services\HtmlSanitizer;
+use Nreljed\Platform\Services\MediaService;
 
 /**
  * @property int $id

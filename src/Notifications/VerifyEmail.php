@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Notifications;
+namespace Nreljed\Platform\Notifications;
 
 use Illuminate\Auth\Notifications\VerifyEmail as BaseVerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Services\SettingsService;
 
 class VerifyEmail extends BaseVerifyEmail
 {

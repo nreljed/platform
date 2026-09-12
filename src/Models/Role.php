@@ -1,14 +1,14 @@
 <?php
 
-namespace Nreljed\DashboardCore\Models;
+namespace Nreljed\Platform\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
-use Nreljed\DashboardCore\Database\Factories\RoleFactory;
-use Nreljed\DashboardCore\Support\RoleCatalog;
+use Nreljed\Platform\Database\Factories\RoleFactory;
+use Nreljed\Platform\Support\RoleCatalog;
 
 /**
  * @property int $id

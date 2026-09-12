@@ -2,7 +2,7 @@
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
-use Nreljed\DashboardCore\PublicSite\Controllers\PublicController;
+use Nreljed\Platform\PublicSite\Controllers\PublicController;
 
 /*
 |--------------------------------------------------------------------------

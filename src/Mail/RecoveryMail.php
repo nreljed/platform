@@ -1,13 +1,13 @@
 <?php
 
-namespace Nreljed\DashboardCore\Mail;
+namespace Nreljed\Platform\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Nreljed\DashboardCore\Models\RecoveryToken;
+use Nreljed\Platform\Models\RecoveryToken;
 
 class RecoveryMail extends Mailable
 {

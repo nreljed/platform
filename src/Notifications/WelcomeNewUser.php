@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Notifications;
+namespace Nreljed\Platform\Notifications;
 
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Services\SettingsService;
 
 class WelcomeNewUser extends Notification
 {

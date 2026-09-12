@@ -1,7 +1,7 @@
 <?php
 
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Posts\Models\Post;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Posts\Models\Post;
 
 return [
 

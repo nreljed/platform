@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
-use Nreljed\DashboardCore\Models\Setting;
+use Nreljed\Platform\Models\Setting;
 
 class EmailSettingsService
 {

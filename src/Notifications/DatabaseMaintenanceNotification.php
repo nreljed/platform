@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Notifications;
+namespace Nreljed\Platform\Notifications;
 
 /**
  * Critical alert broadcast to all admins after a database maintenance run.

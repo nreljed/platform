@@ -1,15 +1,15 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers;
+namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Nreljed\DashboardCore\Http\Requests\Email\SendTestEmailRequest;
-use Nreljed\DashboardCore\Http\Requests\Email\UpdateEmailSettingsRequest;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Services\EmailSettingsService;
-use Nreljed\DashboardCore\Services\EmailTemplateService;
-use Nreljed\DashboardCore\Services\FeatureRegistry;
-use Nreljed\DashboardCore\Services\MailService;
+use Nreljed\Platform\Http\Requests\Email\SendTestEmailRequest;
+use Nreljed\Platform\Http\Requests\Email\UpdateEmailSettingsRequest;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Services\EmailSettingsService;
+use Nreljed\Platform\Services\EmailTemplateService;
+use Nreljed\Platform\Services\FeatureRegistry;
+use Nreljed\Platform\Services\MailService;
 
 class EmailSettingsController extends Controller
 {

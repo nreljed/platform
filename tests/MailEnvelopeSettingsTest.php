@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Tests;
+namespace Nreljed\Platform\Tests;
 
-use Nreljed\DashboardCore\Services\EmailSettingsService;
-use Nreljed\DashboardCore\Services\MailerConfigurator;
+use Nreljed\Platform\Services\EmailSettingsService;
+use Nreljed\Platform\Services\MailerConfigurator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Email;
 

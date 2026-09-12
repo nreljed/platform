@@ -1,21 +1,21 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers;
+namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Nreljed\DashboardCore\Ai\Models\AiProvider;
-use Nreljed\DashboardCore\Ai\Services\AiService;
-use Nreljed\DashboardCore\Http\Requests\Account\DeleteAccountRequest;
-use Nreljed\DashboardCore\Http\Requests\Account\UpdateEmailRequest;
-use Nreljed\DashboardCore\Http\Requests\Account\UpdateNotificationPreferencesRequest;
-use Nreljed\DashboardCore\Http\Requests\Account\UpdatePasswordRequest;
-use Nreljed\DashboardCore\Http\Requests\Account\VerifyDeletePasswordRequest;
-use Nreljed\DashboardCore\Models\NotificationPreference;
-use Nreljed\DashboardCore\Services\AccountService;
-use Nreljed\DashboardCore\Services\NotificationTypeRegistry;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Ai\Models\AiProvider;
+use Nreljed\Platform\Ai\Services\AiService;
+use Nreljed\Platform\Http\Requests\Account\DeleteAccountRequest;
+use Nreljed\Platform\Http\Requests\Account\UpdateEmailRequest;
+use Nreljed\Platform\Http\Requests\Account\UpdateNotificationPreferencesRequest;
+use Nreljed\Platform\Http\Requests\Account\UpdatePasswordRequest;
+use Nreljed\Platform\Http\Requests\Account\VerifyDeletePasswordRequest;
+use Nreljed\Platform\Models\NotificationPreference;
+use Nreljed\Platform\Services\AccountService;
+use Nreljed\Platform\Services\NotificationTypeRegistry;
+use Nreljed\Platform\Services\SettingsService;
 
 class UserAccountController extends Controller
 {

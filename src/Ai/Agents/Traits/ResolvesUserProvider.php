@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Agents\Traits;
+namespace Nreljed\Platform\Ai\Agents\Traits;
 
-use Nreljed\DashboardCore\Ai\Exceptions\MissingAiProviderException;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Ai\Exceptions\MissingAiProviderException;
+use Nreljed\Platform\Models\User;
 
 trait ResolvesUserProvider
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Observers;
+namespace Nreljed\Platform\Observers;
 
 use Illuminate\Support\Facades\Log;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Posts\Services\PostNotificationService;
-use Nreljed\DashboardCore\Services\DashboardService;
+use Nreljed\Platform\Posts\Models\Post;
+use Nreljed\Platform\Posts\Services\PostNotificationService;
+use Nreljed\Platform\Services\DashboardService;
 
 /**
  * Keeps dashboard aggregate stats fresh when posts change and dispatches the

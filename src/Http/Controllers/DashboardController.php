@@ -1,12 +1,12 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers;
+namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Models\Notification;
-use Nreljed\DashboardCore\Services\DashboardService;
+use Nreljed\Platform\Models\Notification;
+use Nreljed\Platform\Services\DashboardService;
 
 class DashboardController extends Controller
 {

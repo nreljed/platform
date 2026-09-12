@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Contracts;
+namespace Nreljed\Platform\Contracts;
 
-use Nreljed\DashboardCore\Support\ContentDescription;
-use Nreljed\DashboardCore\Support\SettingsSection;
+use Nreljed\Platform\Support\ContentDescription;
+use Nreljed\Platform\Support\SettingsSection;
 
 /**
  * Contract for self-contained feature providers discovered by the

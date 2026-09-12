@@ -1,13 +1,13 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Requests\Auth;
+namespace Nreljed\Platform\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Rules\MinPasswordLength;
-use Nreljed\DashboardCore\Rules\PasswordComplexity;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Rules\MinPasswordLength;
+use Nreljed\Platform\Rules\PasswordComplexity;
 
 class RegisterRequest extends FormRequest
 {

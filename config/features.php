@@ -1,8 +1,8 @@
 <?php
 
-use Nreljed\DashboardCore\Ai\AiServiceProvider;
-use Nreljed\DashboardCore\Posts\PostsServiceProvider;
-use Nreljed\DashboardCore\PublicSite\PublicSiteServiceProvider;
+use Nreljed\Platform\Ai\AiServiceProvider;
+use Nreljed\Platform\Posts\PostsServiceProvider;
+use Nreljed\Platform\PublicSite\PublicSiteServiceProvider;
 
 return [
 

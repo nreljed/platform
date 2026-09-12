@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Notifications;
+namespace Nreljed\Platform\Notifications;
 
 use Illuminate\Notifications\Notification;
 

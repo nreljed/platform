@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Support\Facades\Cache;
-use Nreljed\DashboardCore\Models\Permission;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Models\Permission;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Models\User;
 
 class PermissionCacheService
 {

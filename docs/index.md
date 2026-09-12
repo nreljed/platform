@@ -1,14 +1,14 @@
-# dashboard-core
+# platform
 
-Shared dashboard platform for Laravel applications (master app, Shop, Booking). Owns the
+Shared dashboard platform for Laravel applications (Cost Breaker, Shop, Booking). Owns the
 dashboard, admin panel, auth, account, notifications, settings, email, blog, AI (BYOK), and
 the unified deploy pipeline. Consuming apps keep only domain code on top (public pages, domain
 features, custom dashboard pages).
 
-- **Namespace:** `Nreljed\DashboardCore`
-- **Package:** `nreljed/dashboard-core`
-- **Source:** [`nreljed/dashboard-core`](https://github.com/nreljed/dashboard-core)
-- **Features:** Blog (`Nreljed\DashboardCore\Blog`) ships in-core; the Shop feature is a
+- **Namespace:** `Nreljed\Platform`
+- **Package:** `nreljed/platform`
+- **Source:** [`nreljed/platform`](https://github.com/nreljed/platform)
+- **Features:** Blog (`Nreljed\Platform\Blog`) ships in-core; the Shop feature is a
   separate package (`nreljed/shop-module`, see its own `docs/`)
 
 ## Modules
@@ -29,8 +29,8 @@ features, custom dashboard pages).
 
 ## Quick Install (host app)
 
-1. `composer require nreljed/dashboard-core` (path repo in development; see the
-   [README](https://github.com/nreljed/dashboard-core#readme) for both setups).
+1. `composer require nreljed/platform` (path repo in development; see the
+   [README](https://github.com/nreljed/platform#readme) for both setups).
 2. Provider is auto-discovered via `extra.laravel.providers`.
 3. `php artisan vendor:publish --tag=core-config` to publish config.
 4. Wire the frontend: `@dashboard` alias in `vite.config.js` + `tsconfig.json`, Tailwind
@@ -48,7 +48,7 @@ split by concern so consuming apps only override what they need:
 | Key                       | Default                                | Purpose                                                     |
 | ------------------------- | -------------------------------------- | ----------------------------------------------------------- |
 | `core.load_migrations`    | `true`                                 | `false` when the app already ships equivalent migrations    |
-| `core.github_repo`        | `nreljed/dashboard-core`               | Repo used by system health + core version checks            |
+| `core.github_repo`        | `nreljed/platform`                     | Repo used by system health + core version checks            |
 | `core.inertia_middleware` | `HandleInertiaRequests::class`         | Override to add project-specific shared props               |
 | `core.settings.groups`    | `[]`                                   | Extra settings groups (base groups always included)         |
 
@@ -77,7 +77,7 @@ live in `config/roles.php` and `config/admin.php`.
 ## Tests
 
 ```bash
-vendor/bin/phpunit -c packages/dashboard-core/phpunit.xml.dist
+vendor/bin/phpunit
 ```
 
 Runs `FeatureProviderContractTest` (contract conformance for all registered features) and

@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Policies;
+namespace Nreljed\Platform\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Posts\Models\Post;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Posts\Models\Post;
 
 class PostPolicy
 {

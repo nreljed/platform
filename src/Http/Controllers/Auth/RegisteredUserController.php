@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Auth;
+namespace Nreljed\Platform\Http\Controllers\Auth;
 
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Http\Requests\Auth\RegisterRequest;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Requests\Auth\RegisterRequest;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Services\SettingsService;
 
 class RegisteredUserController extends Controller
 {

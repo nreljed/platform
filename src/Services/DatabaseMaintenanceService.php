@@ -1,17 +1,17 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Closure;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Exceptions\DatabaseMaintenanceException;
-use Nreljed\DashboardCore\Models\AuditLog;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Notifications\DatabaseMaintenanceNotification;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Exceptions\DatabaseMaintenanceException;
+use Nreljed\Platform\Models\AuditLog;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Notifications\DatabaseMaintenanceNotification;
 
 /**
  * Centralizes destructive database operations (reset + reseed) behind a single

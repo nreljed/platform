@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Exceptions;
+namespace Nreljed\Platform\Ai\Exceptions;
 
 use RuntimeException;
 

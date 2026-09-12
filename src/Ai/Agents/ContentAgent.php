@@ -1,15 +1,15 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Agents;
+namespace Nreljed\Platform\Ai\Agents;
 
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\HasStructuredOutput;
 use Laravel\Ai\Promptable;
 use Laravel\Ai\Responses\StructuredAgentResponse;
-use Nreljed\DashboardCore\Ai\Agents\Traits\ResolvesUserProvider;
-use Nreljed\DashboardCore\Ai\Concerns\LogsAiUsage;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Ai\Agents\Traits\ResolvesUserProvider;
+use Nreljed\Platform\Ai\Concerns\LogsAiUsage;
+use Nreljed\Platform\Models\User;
 
 class ContentAgent implements Agent, HasStructuredOutput
 {

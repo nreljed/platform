@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Exceptions;
+namespace Nreljed\Platform\Exceptions;
 
 use RuntimeException;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
-use Nreljed\DashboardCore\Models\Permission;
-use Nreljed\DashboardCore\Support\RoleCatalog;
+use Nreljed\Platform\Models\Permission;
+use Nreljed\Platform\Support\RoleCatalog;
 
 class PermissionGroups
 {

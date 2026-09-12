@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts\Models;
+namespace Nreljed\Platform\Posts\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Nreljed\DashboardCore\Database\Factories\PostCategoryFactory;
+use Nreljed\Platform\Database\Factories\PostCategoryFactory;
 
 /**
  * @property int $id

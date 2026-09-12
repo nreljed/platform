@@ -2,15 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Nreljed\DashboardCore\Http\Controllers\Auth\AuthenticatedSessionController;
-use Nreljed\DashboardCore\Http\Controllers\Auth\ConfirmablePasswordController;
-use Nreljed\DashboardCore\Http\Controllers\Auth\EmailVerificationNotificationController;
-use Nreljed\DashboardCore\Http\Controllers\Auth\EmailVerificationPromptController;
-use Nreljed\DashboardCore\Http\Controllers\Auth\NewPasswordController;
-use Nreljed\DashboardCore\Http\Controllers\Auth\PasswordController;
-use Nreljed\DashboardCore\Http\Controllers\Auth\PasswordResetLinkController;
-use Nreljed\DashboardCore\Http\Controllers\Auth\RegisteredUserController;
-use Nreljed\DashboardCore\Http\Controllers\Auth\VerifyEmailController;
+use Nreljed\Platform\Http\Controllers\Auth\AuthenticatedSessionController;
+use Nreljed\Platform\Http\Controllers\Auth\ConfirmablePasswordController;
+use Nreljed\Platform\Http\Controllers\Auth\EmailVerificationNotificationController;
+use Nreljed\Platform\Http\Controllers\Auth\EmailVerificationPromptController;
+use Nreljed\Platform\Http\Controllers\Auth\NewPasswordController;
+use Nreljed\Platform\Http\Controllers\Auth\PasswordController;
+use Nreljed\Platform\Http\Controllers\Auth\PasswordResetLinkController;
+use Nreljed\Platform\Http\Controllers\Auth\RegisteredUserController;
+use Nreljed\Platform\Http\Controllers\Auth\VerifyEmailController;
 
 Route::get('register/check-availability', [RegisteredUserController::class, 'checkAvailability'])
     ->middleware(['throttle:10,1', 'maintenance'])

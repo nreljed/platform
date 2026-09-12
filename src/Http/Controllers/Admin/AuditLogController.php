@@ -1,16 +1,16 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Admin;
+namespace Nreljed\Platform\Http\Controllers\Admin;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Models\AuditLog;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Models\AuditLog;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Services\SettingsService;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AuditLogController extends Controller

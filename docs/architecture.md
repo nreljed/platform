@@ -1,7 +1,7 @@
 # Architecture
 
 ```
-packages/dashboard-core/
+platform/ (vcs install root, composer nreljed/platform)
 ├── config/                 # core, roles, admin, deploy, database-maintenance
 ├── database/migrations/    # users, roles, permissions, settings, notifications, audit logs, ...
 ├── resources/
@@ -12,7 +12,7 @@ packages/dashboard-core/
 │   ├── web.php             # dashboard, admin, deploy, maintenance, sitemap (requires auth.php)
 │   └── auth.php            # Breeze-style auth + account routes
 ├── src/
-│   ├── DashboardCoreServiceProvider.php  # boot: routes, schedules, middleware, rate limits, policies
+│   ├── PlatformServiceProvider.php  # boot: routes, schedules, middleware, rate limits, policies
 │   ├── Ai/                 # AI agents (BYOK) + provider models
 │   ├── Blog/               # Blog feature (self-contained feature provider)
 │   ├── Concerns/           # InteractsWithFeatures, UserDataTrait
@@ -36,7 +36,7 @@ packages/dashboard-core/
 └── tests/                  # FeatureProviderContractTest, NamespaceIntegrityTest
 ```
 
-## Boot Sequence (`DashboardCoreServiceProvider`)
+## Boot Sequence (`PlatformServiceProvider`)
 
 `register()`: merges the 5 config files, registers singletons (`FormattingService`,
 `FeatureRegistry`).
@@ -90,7 +90,7 @@ controllers. Highlights: `SettingsService` (DB-backed config), `MailService` +
 
 ## Cross-App Concerns
 
-- **Shared User model** — `Nreljed\DashboardCore\Models\User` is the single user model across
+- **Shared User model** — `Nreljed\Platform\Models\User` is the single user model across
   apps. Features query it directly (e.g. Shop's `Order::distinct('user_id')`); a host that
   needs custom user logic subclasses or extends via the model's interfaces.
 - **Policies registered in core** — `PostPolicy`, `RolePolicy`, `AiProviderPolicy` +

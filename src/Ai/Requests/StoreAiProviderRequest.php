@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Requests;
+namespace Nreljed\Platform\Ai\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Nreljed\DashboardCore\Ai\Models\AiProvider;
+use Nreljed\Platform\Ai\Models\AiProvider;
 
 class StoreAiProviderRequest extends FormRequest
 {

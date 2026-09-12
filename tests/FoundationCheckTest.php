@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Tests;
+namespace Nreljed\Platform\Tests;
 
 use FilesystemIterator;
-use Nreljed\DashboardCore\Support\FoundationCheck;
+use Nreljed\Platform\Support\FoundationCheck;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -18,7 +18,7 @@ final class FoundationCheckTest extends TestCase
 
         $this->tmp = sys_get_temp_dir().'/foundation-check-'.bin2hex(random_bytes(6));
 
-        mkdir($this->tmp.'/vendor/nreljed/dashboard-core', 0777, true);
+        mkdir($this->tmp.'/vendor/nreljed/platform', 0777, true);
         mkdir($this->tmp.'/bootstrap', 0777, true);
         mkdir($this->tmp.'/routes', 0777, true);
     }
@@ -34,7 +34,7 @@ final class FoundationCheckTest extends TestCase
     {
         $this->writeManifest([
             'app_owned_files' => [
-                'bootstrap/app.php' => ['marker' => 'wired by Nreljed\\DashboardCore\\DashboardCoreServiceProvider'],
+                'bootstrap/app.php' => ['marker' => 'wired by Nreljed\\Platform\\PlatformServiceProvider'],
                 'routes/web.php' => ['marker' => 'reserved for project-specific routes'],
             ],
             'forbidden_project_paths' => [
@@ -42,7 +42,7 @@ final class FoundationCheckTest extends TestCase
             ],
         ]);
 
-        $this->write('bootstrap/app.php', "<?php\n\nwired by Nreljed\\DashboardCore\\DashboardCoreServiceProvider\n");
+        $this->write('bootstrap/app.php', "<?php\n\nwired by Nreljed\\Platform\\PlatformServiceProvider\n");
         $this->write('routes/web.php', "<?php\n\n// reserved for project-specific routes\n");
 
         $result = (new FoundationCheck($this->tmp))->run();
@@ -61,7 +61,7 @@ final class FoundationCheckTest extends TestCase
 
     public function test_unreadable_manifest_reported(): void
     {
-        $this->write('vendor/nreljed/dashboard-core/core-manifest.json', 'not-json{');
+        $this->write('vendor/nreljed/platform/core-manifest.json', 'not-json{');
 
         $result = (new FoundationCheck($this->tmp))->run();
 
@@ -140,7 +140,7 @@ final class FoundationCheckTest extends TestCase
      */
     private function writeManifest(array $manifest): void
     {
-        $this->write('vendor/nreljed/dashboard-core/core-manifest.json', (string) json_encode($manifest));
+        $this->write('vendor/nreljed/platform/core-manifest.json', (string) json_encode($manifest));
     }
 
     private function write(string $rel, string $content): void

@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Concerns;
+namespace Nreljed\Platform\Concerns;
 
-use Nreljed\DashboardCore\Services\FeatureSettingsService;
-use Nreljed\DashboardCore\Services\PackageVersionService;
-use Nreljed\DashboardCore\Support\ContentDescription;
-use Nreljed\DashboardCore\Support\SettingsSection;
+use Nreljed\Platform\Services\FeatureSettingsService;
+use Nreljed\Platform\Services\PackageVersionService;
+use Nreljed\Platform\Support\ContentDescription;
+use Nreljed\Platform\Support\SettingsSection;
 
 /**
  * Safe no-op defaults for the optional capability methods of the
@@ -46,7 +46,7 @@ trait InteractsWithFeatures
      * e.g. "nreljed/shop-module". Used by the system-health page to display
      * the *installed* (Composer-resolved) version rather than the declared
      * version(). Returns null for features bundled inside another package
-     * (Blog ships inside dashboard-core).
+     * (Blog ships inside platform).
      */
     public function getComposerPackage(): ?string
     {

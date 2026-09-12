@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts\Models;
+namespace Nreljed\Platform\Posts\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Nreljed\DashboardCore\Database\Factories\PostTagFactory;
+use Nreljed\Platform\Database\Factories\PostTagFactory;
 
 /**
  * @property int $id

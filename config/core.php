@@ -1,6 +1,6 @@
 <?php
 
-use Nreljed\DashboardCore\Http\Middleware\HandleInertiaRequests;
+use Nreljed\Platform\Http\Middleware\HandleInertiaRequests;
 
 return [
 
@@ -23,13 +23,13 @@ return [
     | Dashboard Core GitHub Repo
     |--------------------------------------------------------------------------
     |
-    | GitHub repository that hosts the dashboard-core distribution source
-    | (https://github.com/nreljed/dashboard-core). Used by the system health
+    | GitHub repository that hosts the platform distribution source
+    | (https://github.com/nreljed/platform). Used by the system health
     | page to link recorded core commits and to check the latest core release.
     |
     */
 
-    'github_repo' => env('CORE_GITHUB_REPO', 'nreljed/dashboard-core'),
+    'github_repo' => env('CORE_GITHUB_REPO', 'nreljed/platform'),
 
     /*
     |--------------------------------------------------------------------------

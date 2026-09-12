@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 /**
  * Aggregates every notification type in the system from two ownership tiers:

@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Observers;
+namespace Nreljed\Platform\Observers;
 
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Services\DashboardService;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Services\DashboardService;
 
 /**
  * Keeps dashboard aggregate stats fresh when users change.

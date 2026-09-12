@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Policies;
+namespace Nreljed\Platform\Ai\Policies;
 
-use Nreljed\DashboardCore\Ai\Models\AiProvider;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Ai\Models\AiProvider;
+use Nreljed\Platform\Models\User;
 
 /**
  * Authorization policy for AI provider keys.

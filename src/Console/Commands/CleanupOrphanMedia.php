@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Console\Commands;
+namespace Nreljed\Platform\Console\Commands;
 
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -8,8 +8,8 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Services\FeatureRegistry;
+use Nreljed\Platform\Posts\Models\Post;
+use Nreljed\Platform\Services\FeatureRegistry;
 
 #[Signature('core:cleanup-orphan-media {--dry-run : List orphan files without deleting them}')]
 #[Description('Scan storage and remove media files not referenced by any model.')]

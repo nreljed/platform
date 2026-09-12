@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Models;
+namespace Nreljed\Platform\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

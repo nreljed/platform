@@ -1,13 +1,13 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Admin;
+namespace Nreljed\Platform\Http\Controllers\Admin;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Models\User;
 
 class SessionController extends Controller
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Auth;
+namespace Nreljed\Platform\Http\Controllers\Auth;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Password;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Http\Requests\Auth\ForgotPasswordRequest;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Requests\Auth\ForgotPasswordRequest;
 
 class PasswordResetLinkController extends Controller
 {

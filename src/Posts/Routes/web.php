@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Nreljed\DashboardCore\Posts\Controllers\PostCategoryController;
-use Nreljed\DashboardCore\Posts\Controllers\PostController;
-use Nreljed\DashboardCore\Posts\Controllers\PostTagController;
-use Nreljed\DashboardCore\Posts\Controllers\SeoGenerationController;
+use Nreljed\Platform\Posts\Controllers\PostCategoryController;
+use Nreljed\Platform\Posts\Controllers\PostController;
+use Nreljed\Platform\Posts\Controllers\PostTagController;
+use Nreljed\Platform\Posts\Controllers\SeoGenerationController;
 
 // Posts
 Route::get('/dashboard', [PostController::class, 'dashboard'])->name('dashboard')->middleware('permission:posts.view');

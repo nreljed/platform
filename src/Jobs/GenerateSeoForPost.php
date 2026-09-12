@@ -1,16 +1,16 @@
 <?php
 
-namespace Nreljed\DashboardCore\Jobs;
+namespace Nreljed\Platform\Jobs;
 
 use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
-use Nreljed\DashboardCore\Ai\Agents\SeoAgent;
-use Nreljed\DashboardCore\Ai\Exceptions\MissingAiProviderException;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Posts\Services\SeoSuggestionResolver;
+use Nreljed\Platform\Ai\Agents\SeoAgent;
+use Nreljed\Platform\Ai\Exceptions\MissingAiProviderException;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Posts\Models\Post;
+use Nreljed\Platform\Posts\Services\SeoSuggestionResolver;
 
 class GenerateSeoForPost implements ShouldQueue
 {

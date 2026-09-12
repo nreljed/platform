@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Controllers;
+namespace Nreljed\Platform\Ai\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Laravel\Ai\Ai;
 use Laravel\Ai\Exceptions\AiException;
-use Nreljed\DashboardCore\Ai\Models\AiProvider;
-use Nreljed\DashboardCore\Ai\Requests\StoreAiProviderRequest;
-use Nreljed\DashboardCore\Ai\Requests\TestAiProviderRequest;
-use Nreljed\DashboardCore\Ai\Services\AiService;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
+use Nreljed\Platform\Ai\Models\AiProvider;
+use Nreljed\Platform\Ai\Requests\StoreAiProviderRequest;
+use Nreljed\Platform\Ai\Requests\TestAiProviderRequest;
+use Nreljed\Platform\Ai\Services\AiService;
+use Nreljed\Platform\Http\Controllers\Controller;
 
 use function Laravel\Ai\agent;
 

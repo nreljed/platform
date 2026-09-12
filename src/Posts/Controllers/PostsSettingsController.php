@@ -1,17 +1,17 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts\Controllers;
+namespace Nreljed\Platform\Posts\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Services\AuditService;
-use Nreljed\DashboardCore\Services\SettingsSanitizer;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Services\AuditService;
+use Nreljed\Platform\Services\SettingsSanitizer;
+use Nreljed\Platform\Services\SettingsService;
 
 /**
  * Posts feature settings surfaced on the unified admin settings page at

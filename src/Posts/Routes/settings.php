@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Nreljed\DashboardCore\Posts\Controllers\PostsSettingsController;
+use Nreljed\Platform\Posts\Controllers\PostsSettingsController;
 
 // Posts feature settings (unified admin settings page).
 Route::get('/', [PostsSettingsController::class, 'index'])->name('index')->middleware('permission:manage-settings');

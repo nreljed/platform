@@ -1,12 +1,12 @@
 <?php
 
-namespace Nreljed\DashboardCore\Console\Commands;
+namespace Nreljed\Platform\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Models\User;
 
 class CreateAdmin extends Command
 {

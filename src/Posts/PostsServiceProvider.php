@@ -1,18 +1,18 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts;
+namespace Nreljed\Platform\Posts;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Nreljed\DashboardCore\Concerns\InteractsWithFeatures;
-use Nreljed\DashboardCore\Console\Commands\PublishScheduledContent;
-use Nreljed\DashboardCore\Contracts\FeatureProvider;
-use Nreljed\DashboardCore\Observers\PostObserver;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Services\SettingsService;
-use Nreljed\DashboardCore\Support\ContentDescription;
-use Nreljed\DashboardCore\Support\SettingsSection;
+use Nreljed\Platform\Concerns\InteractsWithFeatures;
+use Nreljed\Platform\Console\Commands\PublishScheduledContent;
+use Nreljed\Platform\Contracts\FeatureProvider;
+use Nreljed\Platform\Observers\PostObserver;
+use Nreljed\Platform\Posts\Models\Post;
+use Nreljed\Platform\Services\SettingsService;
+use Nreljed\Platform\Support\ContentDescription;
+use Nreljed\Platform\Support\SettingsSection;
 
 class PostsServiceProvider extends ServiceProvider implements FeatureProvider
 {

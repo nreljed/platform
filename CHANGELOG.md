@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `nreljed/dashboard-core` will be documented in this file.
+All notable changes to `nreljed/platform` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
@@ -159,7 +159,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ### Added
 
-- Publish dashboard-core as standalone VCS repo.
+- Publish platform as standalone VCS repo.
 
 ## [0.1.0] - 2026-07-25
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts\Controllers;
+namespace Nreljed\Platform\Posts\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -8,14 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Posts\Models\PostCategory;
-use Nreljed\DashboardCore\Posts\Models\PostTag;
-use Nreljed\DashboardCore\Posts\Requests\BulkActionRequest;
-use Nreljed\DashboardCore\Services\HtmlSanitizer;
-use Nreljed\DashboardCore\Services\MediaService;
-use Nreljed\DashboardCore\Services\UploadProfiles;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Posts\Models\Post;
+use Nreljed\Platform\Posts\Models\PostCategory;
+use Nreljed\Platform\Posts\Models\PostTag;
+use Nreljed\Platform\Posts\Requests\BulkActionRequest;
+use Nreljed\Platform\Services\HtmlSanitizer;
+use Nreljed\Platform\Services\MediaService;
+use Nreljed\Platform\Services\UploadProfiles;
 
 class PostController extends Controller
 {

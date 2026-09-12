@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Requests\Auth;
+namespace Nreljed\Platform\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
-use Nreljed\DashboardCore\Rules\MinPasswordLength;
-use Nreljed\DashboardCore\Rules\PasswordComplexity;
+use Nreljed\Platform\Rules\MinPasswordLength;
+use Nreljed\Platform\Rules\PasswordComplexity;
 
 class UpdatePasswordRequest extends FormRequest
 {

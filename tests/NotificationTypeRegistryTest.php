@@ -1,8 +1,8 @@
 <?php
 
-namespace Nreljed\DashboardCore\Tests;
+namespace Nreljed\Platform\Tests;
 
-use Nreljed\DashboardCore\Services\NotificationTypeRegistry;
+use Nreljed\Platform\Services\NotificationTypeRegistry;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 

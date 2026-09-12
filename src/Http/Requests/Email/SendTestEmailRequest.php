@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Requests\Email;
+namespace Nreljed\Platform\Http\Requests\Email;
 
 use Illuminate\Foundation\Http\FormRequest;
 

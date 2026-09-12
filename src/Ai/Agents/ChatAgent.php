@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Agents;
+namespace Nreljed\Platform\Ai\Agents;
 
 use Laravel\Ai\Concerns\RemembersConversations;
 use Laravel\Ai\Contracts\Agent;
@@ -8,9 +8,9 @@ use Laravel\Ai\Contracts\Conversational;
 use Laravel\Ai\Promptable;
 use Laravel\Ai\Responses\AgentResponse;
 use Laravel\Ai\Responses\StreamableAgentResponse;
-use Nreljed\DashboardCore\Ai\Agents\Traits\ResolvesUserProvider;
-use Nreljed\DashboardCore\Ai\Concerns\LogsAiUsage;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Ai\Agents\Traits\ResolvesUserProvider;
+use Nreljed\Platform\Ai\Concerns\LogsAiUsage;
+use Nreljed\Platform\Models\User;
 
 class ChatAgent implements Agent, Conversational
 {

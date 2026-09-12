@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Concerns;
+namespace Nreljed\Platform\Ai\Concerns;
 
-use Nreljed\DashboardCore\Ai\Services\AiService;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Ai\Services\AiService;
+use Nreljed\Platform\Models\User;
 
 /**
  * Trait for best-effort AI usage logging.

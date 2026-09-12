@@ -1,19 +1,19 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 class CoreVersionService
 {
-    public const PACKAGE_NAME = 'dashboard-core';
+    public const PACKAGE_NAME = 'platform';
 
     /**
-     * GitHub repo hosting the dashboard-core distribution source. Consuming
+     * GitHub repo hosting the platform distribution source. Consuming
      * apps install it via Composer as a vcs package from this repo.
      */
-    public const PACKAGE_REPO = 'nreljed/dashboard-core';
+    public const PACKAGE_REPO = 'nreljed/platform';
 
     /**
-     * Resolve the installed dashboard-core package identity.
+     * Resolve the installed platform package identity.
      *
      * Prefers the build-time recorded storage/app/core.json (name, version,
      * sha, repo), then falls back to the legacy storage/app/core.sha marker
@@ -86,7 +86,7 @@ class CoreVersionService
 
     protected function composerVersion(): ?string
     {
-        $path = base_path('vendor/nreljed/dashboard-core/composer.json');
+        $path = base_path('vendor/nreljed/platform/composer.json');
 
         if (! is_file($path)) {
             return null;

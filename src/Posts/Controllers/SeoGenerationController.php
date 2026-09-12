@@ -1,17 +1,17 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts\Controllers;
+namespace Nreljed\Platform\Posts\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Bus;
-use Nreljed\DashboardCore\Ai\Agents\SeoAgent;
-use Nreljed\DashboardCore\Ai\Exceptions\MissingAiProviderException;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Jobs\GenerateSeoForPost;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Posts\Requests\BulkSeoRequest;
-use Nreljed\DashboardCore\Posts\Requests\GenerateSeoRequest;
-use Nreljed\DashboardCore\Posts\Services\SeoSuggestionResolver;
+use Nreljed\Platform\Ai\Agents\SeoAgent;
+use Nreljed\Platform\Ai\Exceptions\MissingAiProviderException;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Jobs\GenerateSeoForPost;
+use Nreljed\Platform\Posts\Models\Post;
+use Nreljed\Platform\Posts\Requests\BulkSeoRequest;
+use Nreljed\Platform\Posts\Requests\GenerateSeoRequest;
+use Nreljed\Platform\Posts\Services\SeoSuggestionResolver;
 
 class SeoGenerationController extends Controller
 {

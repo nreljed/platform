@@ -1,14 +1,14 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers;
+namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Mail;
-use Nreljed\DashboardCore\Mail\RecoveryMail;
-use Nreljed\DashboardCore\Models\RecoveryToken;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Mail\RecoveryMail;
+use Nreljed\Platform\Models\RecoveryToken;
+use Nreljed\Platform\Models\User;
 
 class RecoveryController extends Controller
 {

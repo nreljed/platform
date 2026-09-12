@@ -5,7 +5,7 @@
 #
 #   jobs:
 #     validate:
-#       uses: nreljed/dashboard-core/.github/workflows/consumer-ci.yml@main
+#       uses: nreljed/platform/.github/workflows/consumer-ci.yml@main
 #       with:
 #         skip-php-tests: false
 #         skip-npm-tests: false
@@ -15,9 +15,9 @@
 #
 # The called workflow executes inside the CALLING repo (its checkout, lockfiles,
 # secrets, self-hosted runner labels) using the callers' GH_TOKEN-based
-# COMPOSER_AUTH for the private dashboard-core vcs install.
+# COMPOSER_AUTH for the private platform vcs install.
 #
-# Cross-repo access: dashboard-core must list the consumer repos under
+# Cross-repo access: platform must list the consumer repos under
 # Settings → Actions → General → "Accessible from repositories" (private repos
 # cannot reuse workflows from another private repo otherwise).
 #

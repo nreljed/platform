@@ -1,13 +1,13 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts\Controllers;
+namespace Nreljed\Platform\Posts\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Posts\Models\PostCategory;
-use Nreljed\DashboardCore\Posts\Models\PostTag;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Posts\Models\Post;
+use Nreljed\Platform\Posts\Models\PostCategory;
+use Nreljed\Platform\Posts\Models\PostTag;
 
 class BlogPublicController extends Controller
 {

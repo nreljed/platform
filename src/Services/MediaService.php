@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
@@ -11,7 +11,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Encoders\WebpEncoder;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\ImageInterface;
-use Nreljed\DashboardCore\Models\Media;
+use Nreljed\Platform\Models\Media;
 
 class MediaService
 {

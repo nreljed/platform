@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 /**
  * Core-owned resolver for the *installed* version of a Composer package.

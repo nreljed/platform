@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Rules;
+namespace Nreljed\Platform\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Services\SettingsService;
 
 class PasswordComplexity implements ValidationRule
 {

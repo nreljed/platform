@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Support;
+namespace Nreljed\Platform\Support;
 
 /**
- * Verifies that an application tree still respects the dashboard-core
+ * Verifies that an application tree still respects the platform
  * foundation boundary after a project clone sync.
  */
 class FoundationCheck
@@ -17,7 +17,7 @@ class FoundationCheck
     {
         $issues = [];
 
-        $manifestPath = $this->root.'/vendor/nreljed/dashboard-core/core-manifest.json';
+        $manifestPath = $this->root.'/vendor/nreljed/platform/core-manifest.json';
 
         if (! is_file($manifestPath)) {
             return ['clean' => false, 'issues' => ['manifest missing: '.$manifestPath.' (run composer install first)']];
@@ -47,7 +47,7 @@ class FoundationCheck
 
         foreach ($manifest['forbidden_project_paths'] ?? [] as $rel) {
             if (file_exists($this->root.'/'.$rel)) {
-                $issues[] = "forbidden project path exists: $rel (move into dashboard-core)";
+                $issues[] = "forbidden project path exists: $rel (move into platform)";
             }
         }
 

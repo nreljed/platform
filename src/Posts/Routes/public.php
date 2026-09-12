@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Nreljed\DashboardCore\Posts\Controllers\BlogPublicController;
+use Nreljed\Platform\Posts\Controllers\BlogPublicController;
 
 Route::get('/', [BlogPublicController::class, 'index'])->name('blog.index');
 Route::get('/preview/{post}', [BlogPublicController::class, 'preview'])

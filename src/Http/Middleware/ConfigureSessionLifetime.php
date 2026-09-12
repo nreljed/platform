@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Middleware;
+namespace Nreljed\Platform\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Services\SettingsService;
 use Symfony\Component\HttpFoundation\Response;
 
 class ConfigureSessionLifetime

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Tests;
+namespace Nreljed\Platform\Tests;
 
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
@@ -25,7 +25,7 @@ final class NamespaceIntegrityTest extends TestCase
         foreach ($this->phpFiles() as $file) {
             $content = file_get_contents($file);
 
-            if (preg_match('/(?<!DashboardCore)App\\\\[A-Za-z_]/', (string) $content)) {
+            if (preg_match('/(?<!Platform)App\\\\[A-Za-z_]/', (string) $content)) {
                 $violations[] = $file;
             }
         }
@@ -52,12 +52,12 @@ final class NamespaceIntegrityTest extends TestCase
                 continue;
             }
 
-            if (! preg_match('/^namespace Nreljed\\\\DashboardCore(\\\\\w+)*;/m', (string) $content)) {
+            if (! preg_match('/^namespace Nreljed\\\\Platform(\\\\\w+)*;/m', (string) $content)) {
                 $violations[] = $relative;
             }
         }
 
-        $this->assertSame([], $violations, 'Files not declaring the Nreljed\DashboardCore namespace:'.PHP_EOL.implode(PHP_EOL, $violations));
+        $this->assertSame([], $violations, 'Files not declaring the Nreljed\Platform namespace:'.PHP_EOL.implode(PHP_EOL, $violations));
     }
 
     public function test_psr4_namespace_matches_file_path(): void
@@ -72,7 +72,7 @@ final class NamespaceIntegrityTest extends TestCase
                 continue;
             }
 
-            $expectedClass = 'Nreljed\\DashboardCore\\'.str_replace('/', '\\', substr($relative, 0, -4));
+            $expectedClass = 'Nreljed\\Platform\\'.str_replace('/', '\\', substr($relative, 0, -4));
             $content = file_get_contents($file);
 
             if (! preg_match('/^namespace ([^;]+);/m', (string) $content, $matches)) {
@@ -110,8 +110,8 @@ final class NamespaceIntegrityTest extends TestCase
 
         $this->assertSame(
             'src/',
-            $composer['autoload']['psr-4']['Nreljed\\DashboardCore\\'],
-            'composer.json must map Nreljed\DashboardCore\ to src/'
+            $composer['autoload']['psr-4']['Nreljed\\Platform\\'],
+            'composer.json must map Nreljed\Platform\ to src/'
         );
     }
 

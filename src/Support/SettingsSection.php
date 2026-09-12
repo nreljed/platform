@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Support;
+namespace Nreljed\Platform\Support;
 
 /**
  * Immutable value object describing a feature's settings section for the

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Tests;
+namespace Nreljed\Platform\Tests;
 
 use PHPUnit\Framework\TestCase;
 
@@ -41,7 +41,7 @@ final class ModuleCompatContractTest extends TestCase
         $manifest = $this->manifest();
 
         $this->assertSame(1, $manifest['schema'], 'core-compat.json schema must be 1');
-        $this->assertSame('nreljed/dashboard-core', $manifest['package']);
+        $this->assertSame('nreljed/platform', $manifest['package']);
         $this->assertIsArray($manifest['modules']);
         $this->assertNotEmpty($manifest['modules'], 'at least one module must be registered in core-compat.json');
     }

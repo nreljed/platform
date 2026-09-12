@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Auth;
+namespace Nreljed\Platform\Http\Controllers\Auth;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Controllers\Controller;
 
 class EmailVerificationNotificationController extends Controller
 {

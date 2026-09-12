@@ -1,16 +1,16 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Nreljed\DashboardCore\Ai\Models\AiProvider;
-use Nreljed\DashboardCore\Ai\Models\AiUsageLog;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Models\NotificationPreference;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Ai\Models\AiProvider;
+use Nreljed\Platform\Ai\Models\AiUsageLog;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Models\NotificationPreference;
+use Nreljed\Platform\Models\User;
 
 class AccountService
 {

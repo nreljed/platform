@@ -1,16 +1,16 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Admin;
+namespace Nreljed\Platform\Http\Controllers\Admin;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Models\Permission;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Services\PermissionCacheService;
-use Nreljed\DashboardCore\Services\PermissionGroups;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Models\Permission;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Services\PermissionCacheService;
+use Nreljed\Platform\Services\PermissionGroups;
 
 class PermissionController extends Controller
 {

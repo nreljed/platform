@@ -682,7 +682,7 @@ export default function SystemHealth(props: SystemHealthProps) {
     string
   > = {
     "up-to-date": "Installed core matches the latest release.",
-    "update-available": "Run `composer update nreljed/dashboard-core`, rebuild, and deploy.",
+    "update-available": "Run `composer update nreljed/platform`, rebuild, and deploy.",
     dev: "Local path repo (@dev). Publish via `composer run core:publish`; production installs tagged releases.",
     "check-off": "Add GITHUB_TOKEN to the server .env to enable release checks.",
     "check-failed":
@@ -1001,7 +1001,7 @@ export default function SystemHealth(props: SystemHealthProps) {
                             </p>
                           ) : (
                             <p className="text-[11px] text-muted-foreground">
-                              bundled in dashboard-core
+                              bundled in platform
                             </p>
                           )}
                         </div>

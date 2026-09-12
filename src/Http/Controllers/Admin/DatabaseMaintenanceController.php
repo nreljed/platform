@@ -1,17 +1,17 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Admin;
+namespace Nreljed\Platform\Http\Controllers\Admin;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Exceptions\DatabaseMaintenanceException;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Http\Requests\DatabaseReseedRequest;
-use Nreljed\DashboardCore\Http\Requests\DatabaseResetRequest;
-use Nreljed\DashboardCore\Services\DatabaseMaintenanceService;
+use Nreljed\Platform\Exceptions\DatabaseMaintenanceException;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Requests\DatabaseReseedRequest;
+use Nreljed\Platform\Http\Requests\DatabaseResetRequest;
+use Nreljed\Platform\Services\DatabaseMaintenanceService;
 
 class DatabaseMaintenanceController extends Controller
 {

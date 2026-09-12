@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Nreljed\DashboardCore\Models\Permission;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Services\FeatureRegistry;
+use Nreljed\Platform\Models\Permission;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Services\FeatureRegistry;
 
 return new class extends Migration
 {

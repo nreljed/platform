@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Database\Factories;
+namespace Nreljed\Platform\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use Nreljed\DashboardCore\Models\Permission;
+use Nreljed\Platform\Models\Permission;
 
 /**
  * @extends Factory<Permission>

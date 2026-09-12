@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Requests\Admin;
+namespace Nreljed\Platform\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 

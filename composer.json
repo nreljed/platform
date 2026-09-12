@@ -1,6 +1,6 @@
 {
-  "name": "nreljed/dashboard-core",
-  "description": "Shared dashboard core platform for Laravel apps (dashboard, admin, auth, blog, AI, deploy).",
+  "name": "nreljed/platform",
+  "description": "SaaS platform kernel for Laravel apps (auth, RBAC, admin, settings, media, deploy, AI, notifications).",
   "version": "0.1.39",
   "type": "library",
   "license": "proprietary",
@@ -26,18 +26,18 @@
   },
   "autoload": {
     "psr-4": {
-      "Nreljed\\DashboardCore\\": "src/"
+      "Nreljed\\Platform\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Nreljed\\DashboardCore\\Tests\\": "tests/"
+      "Nreljed\\Platform\\Tests\\": "tests/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Nreljed\\DashboardCore\\DashboardCoreServiceProvider"
+        "Nreljed\\Platform\\PlatformServiceProvider"
       ]
     }
   },

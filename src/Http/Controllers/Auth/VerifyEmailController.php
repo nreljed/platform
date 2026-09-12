@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Auth;
+namespace Nreljed\Platform\Http\Controllers\Auth;
 
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Controllers\Controller;
 
 class VerifyEmailController extends Controller
 {

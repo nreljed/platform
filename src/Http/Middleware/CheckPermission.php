@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Middleware;
+namespace Nreljed\Platform\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

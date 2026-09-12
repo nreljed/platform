@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts\Services;
+namespace Nreljed\Platform\Posts\Services;
 
-use Nreljed\DashboardCore\Posts\Models\PostCategory;
-use Nreljed\DashboardCore\Posts\Models\PostTag;
+use Nreljed\Platform\Posts\Models\PostCategory;
+use Nreljed\Platform\Posts\Models\PostTag;
 
 /**
  * Enriches an AI SEO payload with the existing category/tag ids matching the

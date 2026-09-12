@@ -1,21 +1,21 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Admin;
+namespace Nreljed\Platform\Http\Controllers\Admin;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Http\Requests\Admin\StoreRoleRequest;
-use Nreljed\DashboardCore\Http\Requests\Admin\UpdateRoleRequest;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Services\AuditService;
-use Nreljed\DashboardCore\Services\PermissionCacheService;
-use Nreljed\DashboardCore\Services\PermissionGroups;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Requests\Admin\StoreRoleRequest;
+use Nreljed\Platform\Http\Requests\Admin\UpdateRoleRequest;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Services\AuditService;
+use Nreljed\Platform\Services\PermissionCacheService;
+use Nreljed\Platform\Services\PermissionGroups;
+use Nreljed\Platform\Services\SettingsService;
 
 class RoleController extends Controller
 {

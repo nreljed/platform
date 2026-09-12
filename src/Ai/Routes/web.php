@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Nreljed\DashboardCore\Ai\Controllers\AiProviderController;
+use Nreljed\Platform\Ai\Controllers\AiProviderController;
 
 /*
 |--------------------------------------------------------------------------

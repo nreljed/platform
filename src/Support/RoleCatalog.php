@@ -1,8 +1,8 @@
 <?php
 
-namespace Nreljed\DashboardCore\Support;
+namespace Nreljed\Platform\Support;
 
-use Nreljed\DashboardCore\Services\FeatureRegistry;
+use Nreljed\Platform\Services\FeatureRegistry;
 
 /**
  * Merged view of the roles/permissions catalog.

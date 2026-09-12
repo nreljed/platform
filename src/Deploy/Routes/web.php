@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Nreljed\DashboardCore\Deploy\Controllers\DeployController;
+use Nreljed\Platform\Deploy\Controllers\DeployController;
 
 /*
 |--------------------------------------------------------------------------

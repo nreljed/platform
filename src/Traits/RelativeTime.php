@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Traits;
+namespace Nreljed\Platform\Traits;
 
 trait RelativeTime
 {

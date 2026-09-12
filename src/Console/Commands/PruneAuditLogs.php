@@ -1,12 +1,12 @@
 <?php
 
-namespace Nreljed\DashboardCore\Console\Commands;
+namespace Nreljed\Platform\Console\Commands;
 
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use Nreljed\DashboardCore\Models\AuditLog;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Models\AuditLog;
+use Nreljed\Platform\Services\SettingsService;
 
 #[Signature('app:prune-audit-logs {--days= : Override the retention days from settings}')]
 #[Description('Delete audit log entries older than the configured retention period')]

@@ -1,13 +1,13 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Services;
+namespace Nreljed\Platform\Ai\Services;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Collection;
-use Nreljed\DashboardCore\Ai\Exceptions\MissingAiProviderException;
-use Nreljed\DashboardCore\Ai\Models\AiUsageLog;
-use Nreljed\DashboardCore\Ai\Models\AiUsageSetting;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Ai\Exceptions\MissingAiProviderException;
+use Nreljed\Platform\Ai\Models\AiUsageLog;
+use Nreljed\Platform\Ai\Models\AiUsageSetting;
+use Nreljed\Platform\Models\User;
 
 /**
  * Centralized AI service for provider resolution, usage tracking, and caps.

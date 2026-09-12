@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Deploy\Services;
+namespace Nreljed\Platform\Deploy\Services;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
-use Nreljed\DashboardCore\Services\CoreVersionService;
+use Nreljed\Platform\Services\CoreVersionService;
 
 class DeployService
 {
@@ -288,7 +288,7 @@ class DeployService
     private function githubApi(string $url, string $token): ?array
     {
         $response = Http::withHeaders([
-            'User-Agent' => 'DashboardCore',
+            'User-Agent' => 'Platform',
             'Accept' => 'application/vnd.github.v3+json',
         ])->withToken($token)
             ->timeout(30)
@@ -300,7 +300,7 @@ class DeployService
     private function githubDownload(string $url, string $token): string|false
     {
         $response = Http::withHeaders([
-            'User-Agent' => 'DashboardCore',
+            'User-Agent' => 'Platform',
             'Accept' => 'application/octet-stream',
         ])->withToken($token)
             ->timeout(300)

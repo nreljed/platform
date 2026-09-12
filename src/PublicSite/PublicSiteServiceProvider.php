@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Nreljed\DashboardCore\PublicSite;
+namespace Nreljed\Platform\PublicSite;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Nreljed\DashboardCore\Concerns\InteractsWithFeatures;
-use Nreljed\DashboardCore\Contracts\FeatureProvider;
+use Nreljed\Platform\Concerns\InteractsWithFeatures;
+use Nreljed\Platform\Contracts\FeatureProvider;
 
 /**
  * PublicSite feature module — public marketing pages (/, about, services,

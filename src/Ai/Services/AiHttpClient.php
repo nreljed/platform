@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Services;
+namespace Nreljed\Platform\Ai\Services;
 
 use Illuminate\Support\Facades\Http;
 use Throwable;

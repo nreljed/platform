@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
-use Nreljed\DashboardCore\Models\RepeaterData;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Models\RepeaterData;
+use Nreljed\Platform\Models\User;
 
 class RepeaterService
 {

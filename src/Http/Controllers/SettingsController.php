@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers;
+namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -10,17 +10,17 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Http\Requests\ToggleDatabaseMaintenanceRequest;
-use Nreljed\DashboardCore\Http\Requests\UpdateSettingsRequest;
-use Nreljed\DashboardCore\Http\Requests\UploadFaviconRequest;
-use Nreljed\DashboardCore\Http\Requests\UploadLogoRequest;
-use Nreljed\DashboardCore\Models\IpAccessRule;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Services\AuditService;
-use Nreljed\DashboardCore\Services\DatabaseMaintenanceService;
-use Nreljed\DashboardCore\Services\NotificationTypeRegistry;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Http\Requests\ToggleDatabaseMaintenanceRequest;
+use Nreljed\Platform\Http\Requests\UpdateSettingsRequest;
+use Nreljed\Platform\Http\Requests\UploadFaviconRequest;
+use Nreljed\Platform\Http\Requests\UploadLogoRequest;
+use Nreljed\Platform\Models\IpAccessRule;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Services\AuditService;
+use Nreljed\Platform\Services\DatabaseMaintenanceService;
+use Nreljed\Platform\Services\NotificationTypeRegistry;
+use Nreljed\Platform\Services\SettingsService;
 
 class SettingsController extends Controller
 {

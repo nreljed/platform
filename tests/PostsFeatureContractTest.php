@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Tests;
+namespace Nreljed\Platform\Tests;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -58,7 +58,7 @@ final class PostsFeatureContractTest extends TestCase
 
     public function test_seo_agent_schema_declares_term_suggestions(): void
     {
-        $source = (string) file_get_contents((new ReflectionClass(\Nreljed\DashboardCore\Ai\Agents\SeoAgent::class))->getFileName());
+        $source = (string) file_get_contents((new ReflectionClass(\Nreljed\Platform\Ai\Agents\SeoAgent::class))->getFileName());
 
         $this->assertStringContainsString(
             "'suggested_category' => \$schema->string()->nullable()",
@@ -74,7 +74,7 @@ final class PostsFeatureContractTest extends TestCase
 
     public function test_seo_suggestion_resolver_contract(): void
     {
-        $reflection = new ReflectionClass(\Nreljed\DashboardCore\Posts\Services\SeoSuggestionResolver::class);
+        $reflection = new ReflectionClass(\Nreljed\Platform\Posts\Services\SeoSuggestionResolver::class);
         $this->assertTrue($reflection->isInstantiable());
         $method = $reflection->getMethod('resolve');
 
@@ -85,8 +85,8 @@ final class PostsFeatureContractTest extends TestCase
     public function test_seo_suggestion_resolver_wired_into_generate_paths(): void
     {
         foreach ([
-            \Nreljed\DashboardCore\Posts\Controllers\SeoGenerationController::class,
-            \Nreljed\DashboardCore\Jobs\GenerateSeoForPost::class,
+            \Nreljed\Platform\Posts\Controllers\SeoGenerationController::class,
+            \Nreljed\Platform\Jobs\GenerateSeoForPost::class,
         ] as $class) {
             $source = (string) file_get_contents((new ReflectionClass($class))->getFileName());
             $this->assertStringContainsString(
@@ -99,18 +99,18 @@ final class PostsFeatureContractTest extends TestCase
 
     public function test_demo_seed_commands_registered_and_delegate_to_configured_seeder(): void
     {
-        $providerSource = (string) file_get_contents((new ReflectionClass(\Nreljed\DashboardCore\DashboardCoreServiceProvider::class))->getFileName());
+        $providerSource = (string) file_get_contents((new ReflectionClass(\Nreljed\Platform\PlatformServiceProvider::class))->getFileName());
 
         foreach ([
-            \Nreljed\DashboardCore\Console\Commands\PostsSeed::class,
-            \Nreljed\DashboardCore\Console\Commands\PostsClean::class,
+            \Nreljed\Platform\Console\Commands\PostsSeed::class,
+            \Nreljed\Platform\Console\Commands\PostsClean::class,
         ] as $class) {
             $this->assertTrue(class_exists($class), "$class must exist.");
             $fqcn = (string) $class;
             $this->assertStringContainsString(
                 'Console\\Commands\\'.substr($fqcn, strrpos($fqcn, '\\') + 1),
                 $providerSource,
-                "DashboardCoreServiceProvider must register $class."
+                "PlatformServiceProvider must register $class."
             );
 
             $signature = (new ReflectionClass($class))->getProperty('signature')->getDefaultValue();
@@ -120,7 +120,7 @@ final class PostsFeatureContractTest extends TestCase
 
     public function test_posts_seed_reads_blog_demo_seeder_from_config_catalog(): void
     {
-        $source = (string) file_get_contents((new ReflectionClass(\Nreljed\DashboardCore\Console\Commands\PostsSeed::class))->getFileName());
+        $source = (string) file_get_contents((new ReflectionClass(\Nreljed\Platform\Console\Commands\PostsSeed::class))->getFileName());
 
         $this->assertStringContainsString(
             "database_maintenance.seeders.",
@@ -132,7 +132,7 @@ final class PostsFeatureContractTest extends TestCase
 
     public function test_posts_clean_removes_only_demo_marked_posts(): void
     {
-        $source = (string) file_get_contents((new ReflectionClass(\Nreljed\DashboardCore\Console\Commands\PostsClean::class))->getFileName());
+        $source = (string) file_get_contents((new ReflectionClass(\Nreljed\Platform\Console\Commands\PostsClean::class))->getFileName());
 
         $this->assertStringContainsString(
             "metadata->_demo",
@@ -147,7 +147,7 @@ final class PostsFeatureContractTest extends TestCase
 
         $this->assertNotNull($description, 'Posts feature must declare a ContentDescription.');
         $this->assertSame('post', $description->getSlug());
-        $this->assertSame(\Nreljed\DashboardCore\Posts\Models\Post::class, $description->getModelClass());
+        $this->assertSame(\Nreljed\Platform\Posts\Models\Post::class, $description->getModelClass());
         $this->assertSame('posts', $description->getCapabilityBase());
         $this->assertTrue($description->hasFeature('seo'));
         $this->assertTrue($description->hasFeature('scheduled'));
@@ -162,13 +162,13 @@ final class PostsFeatureContractTest extends TestCase
         $tasks = $this->providerInstance()->getScheduledTasks();
 
         $this->assertNotEmpty($tasks, 'Posts feature must declare its scheduled task.');
-        $this->assertSame(\Nreljed\DashboardCore\Console\Commands\PublishScheduledContent::class, $tasks[0]['command'] ?? null);
+        $this->assertSame(\Nreljed\Platform\Console\Commands\PublishScheduledContent::class, $tasks[0]['command'] ?? null);
         $this->assertNotEmpty($tasks[0]['frequency'] ?? '');
     }
 
     public function test_schedule_publish_is_wired_into_core_schedule(): void
     {
-        $source = (string) file_get_contents((new ReflectionClass(\Nreljed\DashboardCore\DashboardCoreServiceProvider::class))->getFileName());
+        $source = (string) file_get_contents((new ReflectionClass(\Nreljed\Platform\PlatformServiceProvider::class))->getFileName());
 
         $this->assertStringContainsString("schedule:publish", $source, 'Core scheduler must register schedule:publish.');
         $this->assertStringContainsString("everyMinute", $source, 'schedule:publish must run every minute.');
@@ -177,7 +177,7 @@ final class PostsFeatureContractTest extends TestCase
 
     public function test_cleanup_orphan_media_recurses_month_folders(): void
     {
-        $source = (string) file_get_contents((new ReflectionClass(\Nreljed\DashboardCore\Console\Commands\CleanupOrphanMedia::class))->getFileName());
+        $source = (string) file_get_contents((new ReflectionClass(\Nreljed\Platform\Console\Commands\CleanupOrphanMedia::class))->getFileName());
 
         $this->assertStringContainsString('allFiles', $source, 'CleanupOrphanMedia must recurse YYYY/m subfolders instead of a top-level file scan.');
         $this->assertStringContainsString('pruneEmptyDirectories', $source, 'CleanupOrphanMedia must prune swept-empty subdirectories.');
@@ -202,11 +202,11 @@ final class PostsFeatureContractTest extends TestCase
     }
 
     /**
-     * @return \Nreljed\DashboardCore\Posts\PostsServiceProvider
+     * @return \Nreljed\Platform\Posts\PostsServiceProvider
      */
     private function providerInstance(): object
     {
-        $reflection = new ReflectionClass(\Nreljed\DashboardCore\Posts\PostsServiceProvider::class);
+        $reflection = new ReflectionClass(\Nreljed\Platform\Posts\PostsServiceProvider::class);
 
         return $reflection->newInstanceWithoutConstructor();
     }

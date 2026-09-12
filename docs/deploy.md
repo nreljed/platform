@@ -1,6 +1,6 @@
 # Deploy (Unified Pipeline)
 
-The deploy system lives **in dashboard-core** so every consuming project shares the same
+The deploy system lives **in platform** so every consuming project shares the same
 server-side behavior. Hosts ship no deploy logic — they only carry a `DEPLOY_TOKEN` and the
 CI workflow that pushes the release.
 
@@ -24,7 +24,7 @@ CI workflow that pushes the release.
 | `lock_path`    | `base_path('.deploy-lock')`             | Deploy lock file (overridable in tests)                           |
 | `version_path` | `base_path('.deployed-version')`        | Last-deployed version marker                                      |
 
-> The `deploy:auto` schedule is registered by `DashboardCoreServiceProvider::configureSchedules()`
+> The `deploy:auto` schedule is registered by `PlatformServiceProvider::configureSchedules()`
 > (gated on `deploy.auto_enabled`). Hosts must **not** schedule `deploy:auto` themselves —
 > that was the old, duplicated approach. To disable, set `auto_enabled` to `false` in the
 > published `config/deploy.php`.
@@ -64,11 +64,11 @@ Because the deploy code lives in core, a core change reaches the Shop app throug
 chain — **publish before you deploy the Shop app** (a new core is required for the unified
 schedule to exist there):
 
-1. Push core changes to the monorepo `main` → `core-publish.yml` publishes
-   `nreljed/dashboard-core` + bumps the version tag + dispatches a `core-updated` event to the
+1. Push core changes to `main` → core CI (tag-triggered) releases
+   `nreljed/platform` + bumps the version tag + dispatches a `core-updated` event to the
    Shop repo.
 2. Shop's `core-update.yml` (weekly schedule + `repository_dispatch`) runs
-   `composer update nreljed/dashboard-core --with-dependencies --no-scripts --no-interaction`
+   `composer update nreljed/platform --with-dependencies --no-scripts --no-interaction`
    and opens a `composer.lock`-only PR.
 3. Merge the PR, then the Shop `deploy.yml` ships it.
 

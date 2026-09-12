@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Models;
+namespace Nreljed\Platform\Ai\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Models\User;
 
 /**
  * Tracks AI usage per user for billing, analytics, and the Account → AI Keys

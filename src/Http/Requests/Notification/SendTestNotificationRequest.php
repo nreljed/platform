@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Requests\Notification;
+namespace Nreljed\Platform\Http\Requests\Notification;
 
 use Illuminate\Foundation\Http\FormRequest;
 

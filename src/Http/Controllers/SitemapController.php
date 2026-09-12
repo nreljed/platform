@@ -1,13 +1,13 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers;
+namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Posts\Models\PostCategory;
-use Nreljed\DashboardCore\Posts\Models\PostTag;
-use Nreljed\DashboardCore\Services\FeatureRegistry;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Posts\Models\Post;
+use Nreljed\Platform\Posts\Models\PostCategory;
+use Nreljed\Platform\Posts\Models\PostTag;
+use Nreljed\Platform\Services\FeatureRegistry;
+use Nreljed\Platform\Services\SettingsService;
 
 class SitemapController extends Controller
 {

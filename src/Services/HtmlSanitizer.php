@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use DOMDocument;
 use DOMElement;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Enums;
+namespace Nreljed\Platform\Enums;
 
 enum AuditAction: string
 {

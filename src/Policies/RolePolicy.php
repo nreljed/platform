@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Policies;
+namespace Nreljed\Platform\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Models\User;
 
 class RolePolicy
 {

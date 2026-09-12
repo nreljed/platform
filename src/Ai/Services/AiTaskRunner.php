@@ -1,14 +1,14 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Services;
+namespace Nreljed\Platform\Ai\Services;
 
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Exceptions\RateLimitedException;
 use Laravel\Ai\Responses\AgentResponse;
 use Laravel\Ai\Responses\QueuedAgentResponse;
 use Laravel\Ai\Responses\StreamableAgentResponse;
-use Nreljed\DashboardCore\Ai\Exceptions\MissingAiProviderException;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Ai\Exceptions\MissingAiProviderException;
+use Nreljed\Platform\Models\User;
 use Throwable;
 
 /**

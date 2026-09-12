@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Tests;
+namespace Nreljed\Platform\Tests;
 
-use Nreljed\DashboardCore\Concerns\InteractsWithFeatures;
-use Nreljed\DashboardCore\Contracts\FeatureProvider;
+use Nreljed\Platform\Concerns\InteractsWithFeatures;
+use Nreljed\Platform\Contracts\FeatureProvider;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

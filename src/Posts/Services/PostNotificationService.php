@@ -1,11 +1,11 @@
 <?php
 
-namespace Nreljed\DashboardCore\Posts\Services;
+namespace Nreljed\Platform\Posts\Services;
 
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Notifications\AppNotification;
-use Nreljed\DashboardCore\Posts\Models\Post;
-use Nreljed\DashboardCore\Services\NotificationService;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Notifications\AppNotification;
+use Nreljed\Platform\Posts\Models\Post;
+use Nreljed\Platform\Services\NotificationService;
 
 /**
  * Emits the `post.published` / `post.scheduled` notification types when a post

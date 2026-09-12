@@ -6,9 +6,12 @@ the `@dashboard` alias; core never auto-registers pages.
 
 ## Consuming in a Host App
 
-1. **Vite alias:** `alias: { '@dashboard': 'vendor/nreljed/dashboard-core/resources/js' }`
-2. **tsconfig paths:** `"@dashboard/*": ["vendor/nreljed/dashboard-core/resources/js/*"]`
-3. **Tailwind:** add `vendor/nreljed/dashboard-core/resources/js` to `@source`
+Wire the alias helper from `platform.aliases.js` (source of truth — apps never hand-write
+vendor paths):
+
+1. **Vite alias:** `...platformAliases()` (emits `@dashboard` + `@` → kernel `resources/js`)
+2. **tsconfig paths:** `"@dashboard/*": ["vendor/nreljed/platform/resources/js/*"]`
+3. **Tailwind:** add `vendor/nreljed/platform/resources/js` to `@source`
 4. **CSS:** `@import` `resources/css/core.css` (header comment documents per-app token
    overrides)
 

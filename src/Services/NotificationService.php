@@ -1,12 +1,12 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification as NotificationFacade;
-use Nreljed\DashboardCore\Models\NotificationPreference;
+use Nreljed\Platform\Models\NotificationPreference;
 
 class NotificationService
 {

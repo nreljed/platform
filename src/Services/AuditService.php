@@ -1,10 +1,10 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Support\Facades\Cache;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Models\AuditLog;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Models\AuditLog;
 
 class AuditService
 {

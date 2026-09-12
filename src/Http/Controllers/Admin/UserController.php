@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Controllers\Admin;
+namespace Nreljed\Platform\Http\Controllers\Admin;
 
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
@@ -9,17 +9,17 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Inertia\Inertia;
 use Inertia\Response;
-use Nreljed\DashboardCore\Enums\AuditAction;
-use Nreljed\DashboardCore\Http\Controllers\Controller;
-use Nreljed\DashboardCore\Http\Requests\Admin\StoreUserRequest;
-use Nreljed\DashboardCore\Http\Requests\Admin\UpdateUserRequest;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Models\User;
-use Nreljed\DashboardCore\Notifications\WelcomeNewUser;
-use Nreljed\DashboardCore\Services\AccountService;
-use Nreljed\DashboardCore\Services\AuditService;
-use Nreljed\DashboardCore\Services\MailService;
-use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\Platform\Enums\AuditAction;
+use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Http\Requests\Admin\StoreUserRequest;
+use Nreljed\Platform\Http\Requests\Admin\UpdateUserRequest;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Models\User;
+use Nreljed\Platform\Notifications\WelcomeNewUser;
+use Nreljed\Platform\Services\AccountService;
+use Nreljed\Platform\Services\AuditService;
+use Nreljed\Platform\Services\MailService;
+use Nreljed\Platform\Services\SettingsService;
 
 class UserController extends Controller
 {

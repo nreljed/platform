@@ -1,8 +1,8 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
-use Nreljed\DashboardCore\Support\ContentDescription;
+use Nreljed\Platform\Support\ContentDescription;
 
 /**
  * Collects ContentDescription value objects from all enabled feature

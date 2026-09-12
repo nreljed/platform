@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Http\Requests\Api;
+namespace Nreljed\Platform\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 

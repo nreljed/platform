@@ -1,9 +1,9 @@
 ---
 name: base-ui-shadcn
-description: "Develops UI components using Base UI and shadcn/ui with Tailwind CSS v4. Activates when creating or modifying React UI components in dashboard-core, shadcn/ui primitives, Base UI components, Tailwind utility classes, dark mode theming, CSS variables, the `cn` package, or when working with the design system, color tokens, or responsive layouts. Also activates for the critical dark mode text rule and component styling patterns."
+description: "Develops UI components using Base UI and shadcn/ui with Tailwind CSS v4. Activates when creating or modifying React UI components in platform, shadcn/ui primitives, Base UI components, Tailwind utility classes, dark mode theming, CSS variables, the `cn` package, or when working with the design system, color tokens, or responsive layouts. Also activates for the critical dark mode text rule and component styling patterns."
 ---
 
-# Base UI + shadcn/ui Development (dashboard-core)
+# Base UI + shadcn/ui Development (platform)
 
 ## When to Apply
 
@@ -25,7 +25,7 @@ Activate this skill when:
 1. **Composition = `render` prop, NEVER `asChild`.** Base UI primitives (and all shadcn
    wrappers in this repo) accept a `render` prop. `asChild` was removed from every trigger
    (trigger, dialog, alert-dialog, dropdown-menu, popover, sheet) and from buttons in
-   dashboard-core — consumers were all migrated. Writing new `asChild` code is a breaking
+   platform — consumers were all migrated. Writing new `asChild` code is a breaking
    error. `<X asChild>` fails typecheck because the prop no longer exists.
 2. **Toasts = `toast.add({ title, type })`, NEVER `sonner`.** The sonner package was removed
    from all consumers. Use `import { toast } from "@/Components/ui/toast"`. Types:

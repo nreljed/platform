@@ -1,6 +1,6 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\Mime\Address;
@@ -12,7 +12,7 @@ class MailerConfigurator
 
     /**
      * Dynamically configure Laravel mail config from stored settings.
-     * Called on every request via the dashboard-core service provider.
+     * Called on every request via the platform service provider.
      */
     public function configure(): void
     {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Console\Commands;
+namespace Nreljed\Platform\Console\Commands;
 
 use Illuminate\Console\Command;
-use Nreljed\DashboardCore\Posts\Models\Post;
+use Nreljed\Platform\Posts\Models\Post;
 
 class PublishScheduledContent extends Command
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Nreljed\DashboardCore\Database\Factories;
+namespace Nreljed\Platform\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Nreljed\DashboardCore\Models\Role;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Models\Role;
+use Nreljed\Platform\Models\User;
 
 /**
  * @extends Factory<User>

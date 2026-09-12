@@ -2,13 +2,13 @@
  * Package deduplication list for Vite.
  *
  * Consuming apps should spread this into their vite.config.js resolve.dedupe
- * to prevent duplicate bundles when multiple packages (dashboard-core,
+ * to prevent duplicate bundles when multiple packages (platform,
  * shop-module, etc.) share the same React/Inertia/Lexical dependencies.
  *
  * Usage in consuming app:
- *   import { packageDedupes } from "@nreljed/dashboard-core/vite-dedupes";
- *   // or for monorepo path:
- *   import { packageDedupes } from "../packages/dashboard-core/vite.dedupe.js";
+ *   import { packageDedupes } from "@nreljed/platform/vite-dedupes";
+ *   // or for local dev:
+ *   import { packageDedupes } from "../packages/platform/vite.dedupe.js";
  *
  *   export default defineConfig({
  *     resolve: { dedupe: packageDedupes },

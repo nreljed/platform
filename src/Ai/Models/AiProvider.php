@@ -1,13 +1,13 @@
 <?php
 
-namespace Nreljed\DashboardCore\Ai\Models;
+namespace Nreljed\Platform\Ai\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
-use Nreljed\DashboardCore\Models\User;
+use Nreljed\Platform\Models\User;
 
 /**
  * @property int $id

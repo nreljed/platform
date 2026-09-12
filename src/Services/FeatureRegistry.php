@@ -1,9 +1,9 @@
 <?php
 
-namespace Nreljed\DashboardCore\Services;
+namespace Nreljed\Platform\Services;
 
 use Illuminate\Support\ServiceProvider;
-use Nreljed\DashboardCore\Contracts\FeatureProvider;
+use Nreljed\Platform\Contracts\FeatureProvider;
 
 class FeatureRegistry
 {
