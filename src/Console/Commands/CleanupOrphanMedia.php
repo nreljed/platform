@@ -8,7 +8,6 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Nreljed\Platform\Posts\Models\Post;
 use Nreljed\Platform\Services\FeatureRegistry;
 
 #[Signature('core:cleanup-orphan-media {--dry-run : List orphan files without deleting them}')]
@@ -19,9 +18,7 @@ class CleanupOrphanMedia extends Command
     {
         $dryRun = $this->option('dry-run');
 
-        $configTargets = config('media.orphan_media', [
-            'posts' => Post::class,
-        ]);
+        $configTargets = config('media.orphan_media', []);
 
         // Merge feature-declared targets so modules can register their own
         // storage folders without touching the host config.

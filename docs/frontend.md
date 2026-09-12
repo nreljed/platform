@@ -49,7 +49,7 @@ resources/js/
 ├── Components/
 │   ├── account/              # account nav + sections (profile, contact, email, password,
 │   │                         #   notification prefs, avatar, security, integrations, danger zone)
-│   ├── blog/                 # ProseContent (blog article renderer)
+│   ├── blog/                 # ProseContent (blog article renderer — shared kit, imported by nreljed/blog pages via `@/`)
 │   ├── dashboard/            # KpiCard, Sparkline, RevenueChart, RecentOrdersTable, ...
 │   ├── editor/               # Lexical rich text editor (image, layout, tables, YouTube,
 │   │                         #   slash commands, TOC, find/replace, word count)

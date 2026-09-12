@@ -3,9 +3,6 @@
 namespace Nreljed\Platform\Http\Controllers;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Nreljed\Platform\Posts\Models\Post;
-use Nreljed\Platform\Posts\Models\PostCategory;
-use Nreljed\Platform\Posts\Models\PostTag;
 use Nreljed\Platform\Services\FeatureRegistry;
 use Nreljed\Platform\Services\SettingsService;
 
@@ -24,46 +21,10 @@ class SitemapController extends Controller
             $this->url($baseUrl.'/about', 'monthly', '0.5'),
             $this->url($baseUrl.'/services', 'monthly', '0.5'),
             $this->url($baseUrl.'/contact', 'monthly', '0.5'),
-            $this->url($baseUrl.'/blog', 'daily', '0.8'),
         ];
 
-        $publishedScope = function ($query) {
-            $query->where('status', 'published')
-                ->where(function ($q) {
-                    $q->whereNull('published_at')->orWhere('published_at', '<=', now());
-                });
-        };
-
-        $posts = Post::query()
-            ->where(fn ($q) => $publishedScope($q))
-            ->latest('published_at')
-            ->get(['slug', 'updated_at']);
-
-        foreach ($posts as $post) {
-            $urls[] = $this->url(
-                $baseUrl.'/blog/'.$post->slug,
-                'weekly',
-                '0.7',
-                $post->updated_at?->toDateString(),
-            );
-        }
-
-        $categories = PostCategory::query()
-            ->whereHas('posts', fn ($q) => $publishedScope($q))
-            ->get(['slug']);
-
-        foreach ($categories as $category) {
-            $urls[] = $this->url($baseUrl.'/blog?category='.$category->slug, 'weekly', '0.5');
-        }
-
-        $tags = PostTag::query()
-            ->whereHas('posts', fn ($q) => $publishedScope($q))
-            ->get(['slug']);
-
-        foreach ($tags as $tag) {
-            $urls[] = $this->url($baseUrl.'/blog?tag='.$tag->slug, 'weekly', '0.4');
-        }
-
+        // Blog (and any future module) contributes its own URLs through the
+        // feature registry — the kernel no longer owns content models.
         foreach ($this->getFeatureSitemapUrls($baseUrl) as $entry) {
             $urls[] = $entry;
         }

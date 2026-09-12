@@ -71,13 +71,14 @@ a mirror in the host):
 Core routes are loaded by `PlatformServiceProvider::loadRoutes()` (web) + the host loads
 its own. Feature providers self-load their routes from their own `Routes/` directory:
 
-- Blog: `BlogServiceProvider::boot()` → `loadRoutesFrom(__DIR__.'/Routes/web.php')` (prefix
-  `dashboard/posts`, names `dashboard.posts.*`) + `Routes/public.php` (prefix `blog`, public).
+- Blog: `BlogServiceProvider::boot()` → routes from `src/Routes/` (prefix
+  `dashboard/posts`, names `dashboard.posts.*`) + public `blog` routes. Ships as
+  [`nreljed/blog`](https://github.com/nreljed/blog).
 - Shop: the package's `ShopServiceProvider` loads 11 route files grouped with `web` +
   `permission:shop.view` (see the Shop package docs).
 
 ## Related
 
-- [Blog](blog.md) — the in-core example provider.
+- [Blog](https://github.com/nreljed/blog) — the reference standalone feature package.
 - [Architecture](architecture.md) — how the registry feeds Inertia shared props.
 - Shop package `docs/architecture.md` — a full external feature provider.

@@ -20,7 +20,7 @@ features, custom dashboard pages).
 | Settings (DB-backed)                | `Services/SettingsService.php`                                  | [Settings](settings.md)                 |
 | Notifications (in-app, push, email) | `Services/NotificationService.php`, `Notifications/`            | [Notifications](notifications.md)       |
 | Email templates                     | `Mail/`, `resources/views/email/`                               | [Notifications](notifications.md)       |
-| Blog feature                        | `src/Blog/`                                                     | [Blog](blog.md)                         |
+| Blog feature                        | ships as `nreljed/blog` (routes, models, editor, pages)       | [Blog](https://github.com/nreljed/blog) |
 | AI agents (BYOK)                    | `src/Ai/`                                                       | [AI](ai.md)                             |
 | Deploy pipeline (server-side)       | `src/Deploy/`, `Console/Commands/DeployAuto.php`                | [Deploy](deploy.md)                     |
 | Artisan commands                    | `Console/Commands/`                                             | [Commands](commands.md)                 |
@@ -56,14 +56,14 @@ split by concern so consuming apps only override what they need:
 
 | Key                        | Default                              | Purpose                                            |
 | -------------------------- | ------------------------------------ | -------------------------------------------------- |
-| `features.providers`       | `[PublicSite, Posts, Ai]`            | Feature providers discovered by the registry       |
+| `features.providers`       | `[PublicSite, Ai]`                  | Feature providers discovered by the registry       |
 | `features.enabled.<slug>`  | `true` per shipped feature           | Per-feature default state (below persisted settings) |
 
 **`config/media.php` — media targets**
 
 | Key                       | Default                | Purpose                                                     |
 | ------------------------- | ---------------------- | ----------------------------------------------------------- |
-| `media.orphan_media`      | `posts`, `avatars`     | Folder → model pairs scanned by `core:cleanup-orphan-media` |
+| `media.orphan_media`      | `avatars`              | Folder → model pairs scanned by `core:cleanup-orphan-media` (modules add their own via `getOrphanMediaTargets()`) |
 
 Deploy settings live in `config/deploy.php` → [Deploy](deploy.md). Roles/permissions defaults
 live in `config/roles.php` and `config/admin.php`.

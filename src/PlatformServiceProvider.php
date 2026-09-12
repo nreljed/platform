@@ -32,9 +32,7 @@ use Nreljed\Platform\Models\User;
 use Nreljed\Platform\Notifications\ResetPassword as CustomResetPassword;
 use Nreljed\Platform\Notifications\VerifyEmail as CustomVerifyEmail;
 use Nreljed\Platform\Observers\UserObserver;
-use Nreljed\Platform\Policies\PostPolicy;
 use Nreljed\Platform\Policies\RolePolicy;
-use Nreljed\Platform\Posts\Models\Post;
 use Nreljed\Platform\Services\ContentRegistry;
 use Nreljed\Platform\Services\FeatureRegistry;
 use Nreljed\Platform\Services\FormattingService;
@@ -76,7 +74,6 @@ class PlatformServiceProvider extends ServiceProvider
 
         RedirectIfAuthenticated::redirectUsing(fn () => route('dashboard.index'));
 
-        Gate::policy(Post::class, PostPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
 
         Gate::before(function (User $user, string $ability) {
@@ -142,24 +139,11 @@ class PlatformServiceProvider extends ServiceProvider
             Console\Commands\MakeFeature::class,
             Console\Commands\PurgeNotifications::class,
             Console\Commands\PruneAuditLogs::class,
-            Console\Commands\PublishScheduledContent::class,
-            Console\Commands\PostsClean::class,
-            Console\Commands\PostsSeed::class,
         ]);
     }
 
     protected function configureSchedules(): void
     {
-        $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
-            if (! Schema::hasTable('posts')) {
-                return;
-            }
-
-            $schedule->command('schedule:publish')
-                ->everyMinute()
-                ->withoutOverlapping();
-        });
-
         if (! config('deploy.auto_enabled', true)) {
             return;
         }

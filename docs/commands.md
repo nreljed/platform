@@ -11,7 +11,7 @@ Registered by `PlatformServiceProvider::loadConsoleRoutes()`.
 | `deploy:auto`               | Server-side self-deploy: check for a new GitHub release, download + extract `deploy.zip`, run post-deploy steps. Scheduled every 5 minutes via the provider (see [Deploy](deploy.md)).       |
 | `permissions:list`          | List all permissions (`--role` to filter).                                                                                                                                                   |
 | `roles:create`              | Create a role with permissions.                                                                                                                                                              |
-| `schedule:publish`          | Publish scheduled content: Products (`future` → `published`), Posts (by `published_at`), Properties (`scheduled()` → `published`). Runs every minute.                                        |
+| `schedule:publish`          | Publish due scheduled content (Posts by `published_at`). Ships with the `nreljed/blog` package, which registers it every minute.                             |
 | `notifications:purge`       | Purge old notifications (`--days`).                                                                                                                                                          |
 | `feature:make`              | Scaffold a new feature provider (contract + trait + config registration).                                                                                                                    |
 
@@ -21,7 +21,6 @@ Host apps schedule the following in their own `routes/console.php` (NOT `deploy:
 one is owned by core):
 
 ```php
-Schedule::command('schedule:publish')->everyMinute();
 Schedule::command('notifications:purge')->daily();
 Schedule::command('app:prune-audit-logs')->daily();
 ```
@@ -29,4 +28,4 @@ Schedule::command('app:prune-audit-logs')->daily();
 ## Related
 
 - [Deploy](deploy.md) — `deploy:auto` + the endpoints it drives.
-- [Blog](blog.md) — `schedule:publish` and the Blog/Shop feature commands.
+- [Blog](https://github.com/nreljed/blog) — `schedule:publish` and other blog feature commands.

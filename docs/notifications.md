@@ -78,4 +78,4 @@ Notification bell polls /api/notifications/unread-count + /api/notifications/rec
 ## Related
 
 - [Settings](settings.md) — notification prefs live in the account page.
-- [Blog](blog.md) / Shop docs — how features register types via `getNotificationTypes()`.
+- [Blog](https://github.com/nreljed/blog) / Shop docs — how features register types via `getNotificationTypes()`.

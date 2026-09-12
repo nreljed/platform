@@ -1,7 +1,6 @@
 <?php
 
 use Nreljed\Platform\Ai\AiServiceProvider;
-use Nreljed\Platform\Posts\PostsServiceProvider;
 use Nreljed\Platform\PublicSite\PublicSiteServiceProvider;
 
 return [
@@ -23,7 +22,6 @@ return [
 
     'providers' => [
         PublicSiteServiceProvider::class,
-        PostsServiceProvider::class,
         AiServiceProvider::class,
     ],
 
@@ -42,7 +40,6 @@ return [
 
     'enabled' => [
         'public-site' => true,
-        'posts' => true,
         'ai' => true,
     ],
 

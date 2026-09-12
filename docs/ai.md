@@ -52,4 +52,4 @@ BYOK traits above. Structured output is available via `HasStructuredOutput` +
 ## Related
 
 - [Settings](settings.md) — provider keys are per-user, not global settings.
-- [Blog](blog.md) — SEO generation consumes `SeoAgent`.
+- [Blog](https://github.com/nreljed/blog) — SEO generation consumes `SeoAgent`.

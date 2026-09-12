@@ -70,7 +70,7 @@ platform/ (vcs install root, composer nreljed/platform)
 | Auth    | `guest`/`auth` + `maintenance`                            | —                    | `login`, `register`, `password.*`, `verification.*`                   | Auth/*                                                                                                         |
 | Account | `auth` + `maintenance`                                    | `/dashboard/account` | `dashboard.account.*`                                                 | Account pages                                                                                                  |
 | Admin   | `auth`, `maintenance`, `throttle:60,1`                    | `/dashboard/admin`   | `dashboard.admin.*`                                                   | Users, roles, permissions, settings, audit logs, system health, database maintenance, notifications, developer |
-| Blog    | `auth`, `verified`, `throttle:60,1`, `permission:posts.*` | `/dashboard/posts`   | `dashboard.posts.*`                                                   | Blog feature (see [Blog](blog.md))                                                                             |
+| Blog    | `auth`, `verified`, `throttle:60,1`, `permission:posts.*` | `/dashboard/posts`   | `dashboard.posts.*`                                                   | Blog feature (ships as `nreljed/blog`)             |
 
 Deploy routes live outside auth so CI can trigger them with a token:
 `POST /deploy/upload`, `GET|POST /deploy/check`, `POST /deploy/migrate`,
@@ -93,9 +93,9 @@ controllers. Highlights: `SettingsService` (DB-backed config), `MailService` +
 - **Shared User model** — `Nreljed\Platform\Models\User` is the single user model across
   apps. Features query it directly (e.g. Shop's `Order::distinct('user_id')`); a host that
   needs custom user logic subclasses or extends via the model's interfaces.
-- **Policies registered in core** — `PostPolicy`, `RolePolicy`, `AiProviderPolicy` +
-  `Gate::before` admin bypass. Feature policies (Shop, etc.) are registered by their own
-  providers.
+- **Policies registered in core** — `RolePolicy`, `AiProviderPolicy` +
+  `Gate::before` admin bypass. Feature policies (`PostPolicy` in `nreljed/blog`, Shop, etc.)
+  are registered by their own providers.
 - **Inertia shared props** — `HandleInertiaRequests` shares auth, notifications, flash,
   `userMode`, `sharedData` (aggregated from `FeatureRegistry::getAllSharedData()`), nav items,
   and capabilities. Hosts subclass it (via `core.inertia_middleware`) to add project props.

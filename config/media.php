@@ -1,7 +1,6 @@
 <?php
 
 use Nreljed\Platform\Models\User;
-use Nreljed\Platform\Posts\Models\Post;
 
 return [
 
@@ -20,7 +19,6 @@ return [
     */
 
     'orphan_media' => [
-        'posts' => Post::class,
         'avatars' => User::class,
     ],
 

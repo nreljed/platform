@@ -21,13 +21,6 @@ return new class extends Migration
         Schema::table('audit_logs', function (Blueprint $table) {
             $table->index('created_at', 'audit_logs_created_at_index');
         });
-
-        // Blog-owned table (feature may be disabled in other apps).
-        if (Schema::hasTable('post_categories')) {
-            Schema::table('post_categories', function (Blueprint $table) {
-                $table->index('parent_id', 'post_categories_parent_id_index');
-            });
-        }
     }
 
     public function down(): void
@@ -47,12 +40,6 @@ return new class extends Migration
         if (Schema::hasIndex('audit_logs', 'audit_logs_created_at_index')) {
             Schema::table('audit_logs', function (Blueprint $table) {
                 $table->dropIndex('audit_logs_created_at_index');
-            });
-        }
-
-        if (Schema::hasIndex('post_categories', 'post_categories_parent_id_index')) {
-            Schema::table('post_categories', function (Blueprint $table) {
-                $table->dropIndex('post_categories_parent_id_index');
             });
         }
     }
