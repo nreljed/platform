@@ -5,6 +5,7 @@ on:
     branches: [main]
     tags: ['v*']
   pull_request:
+  workflow_dispatch:
 
 jobs:
   validate:
@@ -16,6 +17,25 @@ jobs:
       COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
     steps:
       - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        # PHP 8.4 + composer are preinstalled on the self-hosted runner;
+        # setup-php only runs on GitHub-hosted Linux (php.ini rename not
+        # concurrency-safe on the shared Windows runners).
+        if: vars.RUNNER_CI != 'self-hosted'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache Composer dependencies (GitHub-hosted only)
+        if: vars.RUNNER_CI != 'self-hosted'
+        uses: actions/cache@v6
+        with:
+          path: vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
 
       - name: Lint PHP
         shell: bash
@@ -37,6 +57,18 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v7
+
+      - name: Verify tag matches package versions
+        shell: bash
+        run: |
+          COMPOSER_VERSION="$(sed -n 's/.*"version":[[:space:]]*"\([^"]*\)".*/\1/p' composer.json)"
+          NPM_VERSION="$(sed -n 's/.*"version":[[:space:]]*"\([^"]*\)".*/\1/p' package.json)"
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$COMPOSER_VERSION" != "$TAG_VERSION" ] || [ "$NPM_VERSION" != "$TAG_VERSION" ]; then
+            echo "version mismatch: tag v${TAG_VERSION} vs composer ${COMPOSER_VERSION} / npm ${NPM_VERSION}"
+            exit 1
+          fi
+          echo "tag v${TAG_VERSION} matches composer ${COMPOSER_VERSION} and npm ${NPM_VERSION}"
 
       - name: Create GitHub Release
         shell: bash
