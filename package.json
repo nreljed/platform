@@ -1,6 +1,6 @@
 {
   "name": "@nreljed/dashboard-core",
-  "version": "0.1.37",
+  "version": "0.1.38",
   "description": "Shared dashboard core platform — React frontend for Laravel dashboards, admin panels, and CMS features.",
   "license": "proprietary",
   "type": "module",
