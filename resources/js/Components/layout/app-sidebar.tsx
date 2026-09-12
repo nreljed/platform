@@ -136,7 +136,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="h-16 justify-center border-b border-border">
         <NavLogo
           logo={brand.logo || null}
           favicon={brand.favicon || null}
@@ -202,7 +202,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         )}
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="h-16 justify-center border-t border-border">
         <NavUser />
       </SidebarFooter>
       <SidebarRail />
