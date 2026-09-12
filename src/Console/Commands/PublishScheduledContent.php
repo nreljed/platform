@@ -15,9 +15,12 @@ class PublishScheduledContent extends Command
     {
         $published = 0;
 
-        $published += Post::where('status', 'future')
+        Post::where('status', 'future')
             ->where('published_at', '<=', now())
-            ->update(['status' => 'published']);
+            ->each(function (Post $post) use (&$published) {
+                $post->update(['status' => 'published']);
+                $published++;
+            });
 
         $this->info("Published {$published} items.");
 

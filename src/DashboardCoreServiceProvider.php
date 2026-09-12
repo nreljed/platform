@@ -143,11 +143,23 @@ class DashboardCoreServiceProvider extends ServiceProvider
             Console\Commands\PurgeNotifications::class,
             Console\Commands\PruneAuditLogs::class,
             Console\Commands\PublishScheduledContent::class,
+            Console\Commands\PostsClean::class,
+            Console\Commands\PostsSeed::class,
         ]);
     }
 
     protected function configureSchedules(): void
     {
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
+            if (! Schema::hasTable('posts')) {
+                return;
+            }
+
+            $schedule->command('schedule:publish')
+                ->everyMinute()
+                ->withoutOverlapping();
+        });
+
         if (! config('deploy.auto_enabled', true)) {
             return;
         }

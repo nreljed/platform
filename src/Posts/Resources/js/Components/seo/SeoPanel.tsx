@@ -23,6 +23,11 @@ interface SeoData {
   secondary_keywords: string[];
   seo_score: number;
   recommendations: SeoRecommendation[];
+  suggested_category?: string;
+  suggested_category_id?: number | null;
+  suggested_tags?: string[];
+  suggested_tag_names?: string[];
+  suggested_tag_ids?: number[];
 }
 
 interface SeoPanelProps {
@@ -202,6 +207,48 @@ function SeoPanel({
               onSelect={handleSelectKeyword}
             />
           </div>
+        </div>
+      )}
+
+      {seoData && (seoData.suggested_category || (seoData.suggested_tag_names?.length ?? 0) > 0) && (
+        <div className="space-y-1.5 rounded-md border border-border p-3 text-xs text-muted-foreground">
+          {seoData.suggested_category && (
+            <p className="flex flex-wrap items-center gap-1">
+              <span className="font-medium text-foreground">Category:</span>
+              {seoData.suggested_category}
+              {seoData.suggested_category_id ? (
+                <span className="text-green-600 dark:text-green-400">✓ selected</span>
+              ) : (
+                <span className="text-amber-600 dark:text-amber-400">not in list</span>
+              )}
+            </p>
+          )}
+          {(seoData.suggested_tag_names?.length ?? 0) > 0 && (
+            <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+              <span className="font-medium text-foreground">Tags:</span>
+              {seoData.suggested_tag_names?.map((tagName, i) => {
+                const matched = (seoData.suggested_tag_ids?.[i] ?? 0) > 0;
+                return (
+                  <span
+                    key={tagName}
+                    className={matched ? "text-green-600 dark:text-green-400" : undefined}
+                  >
+                    {tagName}
+                    {matched ? " ✓" : " *"}
+                  </span>
+                );
+              })}
+            </p>
+          )}
+          {((seoData.suggested_tag_names?.some((_, i) => (seoData.suggested_tag_ids?.[i] ?? 0) === 0) ??
+            false) ||
+            (seoData.suggested_category && !seoData.suggested_category_id)) && (
+            <p className="text-[10px]">
+              <span className="text-amber-600 dark:text-amber-400">*</span> needs manual creation,{" "}
+              <span className="text-green-600 dark:text-green-400">✓</span> added to the form
+              automatically
+            </p>
+          )}
         </div>
       )}
 

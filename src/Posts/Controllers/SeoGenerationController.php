@@ -11,6 +11,7 @@ use Nreljed\DashboardCore\Jobs\GenerateSeoForPost;
 use Nreljed\DashboardCore\Posts\Models\Post;
 use Nreljed\DashboardCore\Posts\Requests\BulkSeoRequest;
 use Nreljed\DashboardCore\Posts\Requests\GenerateSeoRequest;
+use Nreljed\DashboardCore\Posts\Services\SeoSuggestionResolver;
 
 class SeoGenerationController extends Controller
 {
@@ -25,6 +26,8 @@ class SeoGenerationController extends Controller
                 content: $request->validated('content', ''),
                 keyword: $request->validated('keyword'),
             );
+
+            $seo = app(SeoSuggestionResolver::class)->resolve($seo);
 
             return response()->json(['seo' => $seo]);
         } catch (MissingAiProviderException) {

@@ -5,6 +5,7 @@ namespace Nreljed\DashboardCore\Console\Commands;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Nreljed\DashboardCore\Posts\Models\Post;
@@ -52,7 +53,9 @@ class CleanupOrphanMedia extends Command
         $disk = Storage::disk('public');
         $referencedPaths = $this->getAllReferencedPaths($modelClass);
 
-        $files = $disk->files($folder);
+        // allFiles() recurses YYYY/m month subfolders used by organizeByMonth
+        // upload profiles (posts/2026/09/...) — files() only scans the top level.
+        $files = $disk->allFiles($folder);
         $orphanCount = 0;
 
         foreach ($files as $file) {
@@ -67,11 +70,31 @@ class CleanupOrphanMedia extends Command
             }
         }
 
+        if (! $dryRun) {
+            $this->pruneEmptyDirectories($disk, $folder);
+        }
+
         if ($orphanCount === 0) {
             $this->line("  No orphans found in {$folder}/");
         }
 
         return $orphanCount;
+    }
+
+    /**
+     * Remove directories left empty after the sweep (deepest first), so
+     * nested YYYY/m month folders do not accumulate.
+     */
+    private function pruneEmptyDirectories(FilesystemAdapter $disk, string $folder): void
+    {
+        $directories = $disk->allDirectories($folder);
+        rsort($directories);
+
+        foreach ($directories as $directory) {
+            if ($disk->files($directory) === [] && $disk->directories($directory) === []) {
+                $disk->deleteDirectory($directory);
+            }
+        }
     }
 
     /**

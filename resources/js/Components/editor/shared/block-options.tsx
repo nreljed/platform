@@ -2,6 +2,7 @@ import { MenuOption } from "@lexical/react/LexicalTypeaheadMenuPlugin";
 import {
   $createParagraphNode,
   $getSelection,
+  $insertNodes,
   $isRangeSelection,
   FORMAT_ELEMENT_COMMAND,
   type LexicalEditor,
@@ -32,6 +33,7 @@ import {
   Table,
   ImagePlus,
   Columns3,
+  ListTree,
   AlignLeft,
   AlignCenter,
   AlignRight,
@@ -41,6 +43,7 @@ import {
 import { ImageInsertDialog } from "../image";
 import { InsertTableDialog } from "../table";
 import { InsertLayoutDialog } from "../layout";
+import { $createTableOfContentsNode } from "../toc";
 
 export class BlockOption extends MenuOption {
   title: string;
@@ -164,6 +167,17 @@ export function getBlockOptions(
             }}
           />
         )),
+    }),
+    new BlockOption("Table of Contents", {
+      icon: ListTree,
+      keywords: ["toc", "contents", "outline", "summary", "table of contents", "navigation"],
+      onSelect: () =>
+        editor.update(() => {
+          const selection = $getSelection();
+          if ($isRangeSelection(selection)) {
+            $insertNodes([$createTableOfContentsNode()]);
+          }
+        }),
     }),
     new BlockOption("Image", {
       icon: ImagePlus,

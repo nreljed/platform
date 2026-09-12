@@ -43,6 +43,7 @@ class Setting extends Model
         'maintenance_ends_at' => 'maintenance',
         'maintenance_bypass_token' => 'maintenance',
         'database_maintenance_enabled' => 'developer',
+        'show_word_count' => 'posts',
     ];
 
     public static function get(string $key, mixed $default = null): mixed

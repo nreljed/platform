@@ -27,8 +27,10 @@ import { WordCountPlugin } from "./plugins/WordCountPlugin";
 import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
 import CursorGuardPlugin from "./plugins/CursorGuardPlugin";
 import { ImageNode, ImagePlugin } from "./image";
+import { SPAN_STYLE_IMPORT } from "./plugins/span-style-import";
 import { YouTubeNode, YouTubeEmbedConfig } from "./youtube/YouTubeNode";
 import { LayoutContainerNode, LayoutItemNode, ColumnsPlugin, LayoutControlsPlugin } from "./layout";
+import { TableOfContentsNode } from "./toc";
 
 import { OnChangeEmitter } from "./components/on-change-emitter";
 import { HtmlLoader } from "./components/html-loader";
@@ -64,7 +66,7 @@ const AUTOLINK_EXCLUDE_PARENTS = [
 const editorExtension = defineExtension({
   name: "[root]",
   namespace: "RichTextEditor",
-  nodes: () => [ImageNode, YouTubeNode, LayoutContainerNode, LayoutItemNode],
+  nodes: () => [ImageNode, YouTubeNode, LayoutContainerNode, LayoutItemNode, TableOfContentsNode],
   dependencies: [
     RichTextExtension,
     HistoryExtension,
@@ -98,6 +100,9 @@ const editorExtension = defineExtension({
     DragonExtension,
   ],
   theme: editorTheme,
+  html: {
+    import: SPAN_STYLE_IMPORT,
+  },
 });
 
 export interface RichTextEditorProps {
