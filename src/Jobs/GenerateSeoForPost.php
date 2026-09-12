@@ -10,6 +10,7 @@ use Nreljed\DashboardCore\Ai\Agents\SeoAgent;
 use Nreljed\DashboardCore\Ai\Exceptions\MissingAiProviderException;
 use Nreljed\DashboardCore\Models\User;
 use Nreljed\DashboardCore\Posts\Models\Post;
+use Nreljed\DashboardCore\Posts\Services\SeoSuggestionResolver;
 
 class GenerateSeoForPost implements ShouldQueue
 {
@@ -44,6 +45,8 @@ class GenerateSeoForPost implements ShouldQueue
                 title: $this->post->title,
                 content: $this->post->content ?? '',
             );
+
+            $seo = app(SeoSuggestionResolver::class)->resolve($seo);
 
             $this->post->update([
                 'meta_title' => $seo['title_options'][0] ?? null,

@@ -6,9 +6,13 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Nreljed\DashboardCore\Concerns\InteractsWithFeatures;
+use Nreljed\DashboardCore\Console\Commands\PublishScheduledContent;
 use Nreljed\DashboardCore\Contracts\FeatureProvider;
 use Nreljed\DashboardCore\Observers\PostObserver;
 use Nreljed\DashboardCore\Posts\Models\Post;
+use Nreljed\DashboardCore\Services\SettingsService;
+use Nreljed\DashboardCore\Support\ContentDescription;
+use Nreljed\DashboardCore\Support\SettingsSection;
 
 class PostsServiceProvider extends ServiceProvider implements FeatureProvider
 {
@@ -32,7 +36,10 @@ class PostsServiceProvider extends ServiceProvider implements FeatureProvider
 
         $this->loadRoutes();
         $this->loadPublicRoutes();
+        $this->loadAdminSettingsRoutes();
         $this->loadMigrations();
+
+        $this->loadViewsFrom(__DIR__.'/Resources/views', 'posts');
 
         Post::observe(PostObserver::class);
     }
@@ -50,6 +57,14 @@ class PostsServiceProvider extends ServiceProvider implements FeatureProvider
         Route::middleware(['web'])
             ->prefix('blog')
             ->group(__DIR__.'/Routes/public.php');
+    }
+
+    protected function loadAdminSettingsRoutes(): void
+    {
+        Route::middleware(['web', 'auth', 'verified', 'admin', 'throttle:60,1'])
+            ->prefix('dashboard/admin/settings/posts')
+            ->name('dashboard.posts.settings.')
+            ->group(__DIR__.'/Routes/settings.php');
     }
 
     protected function loadMigrations(): void
@@ -141,29 +156,92 @@ class PostsServiceProvider extends ServiceProvider implements FeatureProvider
         return [];
     }
 
+    public function getSettingsRoute(): ?string
+    {
+        return 'dashboard.posts.settings.index';
+    }
+
+    public function hasSettings(): bool
+    {
+        return true;
+    }
+
+    public function getSettingsGroups(): array
+    {
+        return ['posts'];
+    }
+
+    public function getSettingsData(): array
+    {
+        $settings = Schema::hasTable('settings') ? SettingsService::getGroup('posts') : [];
+
+        return [
+            'show_word_count' => ($settings['show_word_count'] ?? '1') === '1',
+        ];
+    }
+
+    public function getSettingsSection(): ?SettingsSection
+    {
+        return new SettingsSection(
+            tab: 'posts',
+            label: 'Posts',
+            icon: 'FileText',
+            component: 'posts/settings',
+            submitUrl: 'dashboard.posts.settings.update',
+            nonceKey: 'posts_settings',
+            defaults: ['show_word_count' => true],
+        );
+    }
+
     public function getNotificationTypes(): array
     {
         return [
             'post.published' => [
                 'label' => 'Post Published',
                 'description' => 'When a post is published.',
-                'default_channels' => ['in_app'],
+                'default_channels' => ['in_app', 'email'],
                 'default_enabled' => true,
                 'group' => 'Content',
+                'email_template' => 'post-published',
+                'entity_id_keys' => ['post_id'],
             ],
             'post.scheduled' => [
                 'label' => 'Post Scheduled',
                 'description' => 'When a post is scheduled.',
-                'default_channels' => ['in_app'],
+                'default_channels' => ['in_app', 'email'],
                 'default_enabled' => true,
                 'group' => 'Content',
+                'email_template' => 'post-scheduled',
+                'entity_id_keys' => ['post_id'],
             ],
         ];
     }
 
     public function getEmailTemplates(): array
     {
-        return [];
+        return [
+            'post-published' => [
+                'label' => 'Post Published',
+                'group' => 'Content',
+                'description' => 'Notifies the author when a post is published.',
+                'sample_data' => [
+                    'postTitle' => 'Welcome to the blog',
+                    'postUrl' => 'https://example.com/blog/welcome',
+                    'userName' => 'John Doe',
+                ],
+            ],
+            'post-scheduled' => [
+                'label' => 'Post Scheduled',
+                'group' => 'Content',
+                'description' => 'Notifies the author when a post is scheduled for publication.',
+                'sample_data' => [
+                    'postTitle' => 'Update: product roadmap',
+                    'postUrl' => 'https://example.com/blog/update',
+                    'userName' => 'John Doe',
+                    'scheduledAt' => 'Mar 15, 2026 09:00',
+                ],
+            ],
+        ];
     }
 
     public function getGalleryConfig(): array
@@ -199,6 +277,67 @@ class PostsServiceProvider extends ServiceProvider implements FeatureProvider
     {
         return [
             'posts_table' => Schema::hasTable('posts'),
+        ];
+    }
+
+    public function getContentDescription(): ?ContentDescription
+    {
+        return new ContentDescription(
+            slug: 'post',
+            modelClass: Post::class,
+            label: 'Post',
+            features: ['seo', 'excerpt', 'scheduled', 'gallery'],
+            taxonomies: [
+                ['key' => 'category', 'label' => 'Categories', 'hierarchical' => true],
+                ['key' => 'tag', 'label' => 'Tags', 'hierarchical' => false],
+            ],
+            mediaConfig: [
+                'subdirectory' => 'posts',
+                'organize_by_month' => true,
+                'max_images' => 20,
+                'upload_action' => 'dashboard.posts.upload-image',
+                'delete_action' => 'dashboard.posts.delete-image',
+            ],
+            capabilityBase: 'posts',
+        );
+    }
+
+    public function getSitemapUrls(): array
+    {
+        if (! Schema::hasTable('posts')) {
+            return [];
+        }
+
+        $urls = [
+            [
+                'loc' => '/blog',
+                'changefreq' => 'daily',
+                'priority' => '0.8',
+            ],
+        ];
+
+        Post::query()
+            ->where('status', 'published')
+            ->each(function (Post $post) use (&$urls) {
+                $urls[] = [
+                    'loc' => sprintf('/blog/%s', $post->slug),
+                    'changefreq' => 'weekly',
+                    'priority' => '0.7',
+                    'lastmod' => ($post->updated_at ?? $post->published_at)?->toDateString(),
+                ];
+            });
+
+        return $urls;
+    }
+
+    public function getScheduledTasks(): array
+    {
+        return [
+            [
+                'command' => PublishScheduledContent::class,
+                'frequency' => 'every:1',
+                'description' => 'Publish due scheduled posts and fire post.published notifications.',
+            ],
         ];
     }
 }

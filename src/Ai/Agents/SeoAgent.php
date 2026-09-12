@@ -32,6 +32,8 @@ When generating SEO metadata:
 - Score realistically based on keyword optimization, content relevance, and SERP competitiveness
 
 When a target keyword is provided, all suggestions MUST incorporate that keyword naturally.
+
+Finally, optionally suggest one category name and up to 5 tag names relevant to the content.
 INSTRUCTIONS;
     }
 
@@ -51,6 +53,8 @@ INSTRUCTIONS;
                 'severity' => $schema->string()->enum(['critical', 'warning', 'info'])->required(),
                 'message' => $schema->string()->required(),
             ]))->required(),
+            'suggested_category' => $schema->string()->nullable(),
+            'suggested_tags' => $schema->array()->items($schema->string())->max(5),
         ];
     }
 
@@ -119,6 +123,7 @@ INSTRUCTIONS;
         $prompt .= "- Content depth and relevance\n";
 
         $prompt .= "\nProvide 3-5 specific, actionable recommendations for improving SEO.";
+        $prompt .= "\nFinally, suggest one category name and up to 5 tag names relevant to the content.";
 
         return $prompt;
     }

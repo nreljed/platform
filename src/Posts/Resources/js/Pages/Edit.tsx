@@ -165,6 +165,20 @@ const PostEdit = () => {
     }
   };
 
+  const handleSeoGenerated = (seo: SeoData) => {
+    if (seo.suggested_category_id && !data.category_id) {
+      setData("category_id", seo.suggested_category_id);
+    }
+
+    const matchedTagIds = (seo.suggested_tag_ids ?? []).filter((id) => id > 0);
+    if (matchedTagIds.length > 0) {
+      const merged = Array.from(new Set([...data.tag_ids, ...matchedTagIds]));
+      if (merged.length !== data.tag_ids.length) {
+        setData("tag_ids", merged);
+      }
+    }
+  };
+
   return (
     <AuthenticatedLayout header="Edit Post" maxWidth="max-w-full">
       <Head title="Edit Post" />
@@ -247,6 +261,7 @@ const PostEdit = () => {
               keyword={data.focus_keyword}
               savedSeoData={data.seo_metadata ?? null}
               onChange={handleSeoChange}
+              onSeoGenerated={handleSeoGenerated}
             />
           </form>
         </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $getSelection, $isRangeSelection } from "lexical";
+import { $getSelection, $insertNodes, $isRangeSelection } from "lexical";
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { $findMatchingParent } from "@lexical/utils";
 import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/extension";
@@ -9,6 +9,7 @@ import {
   ImagePlus,
   Table,
   Columns3,
+  ListTree,
   Plus,
   Minus,
   ChevronDown,
@@ -26,6 +27,7 @@ import { ImageInsertDialog } from "../image";
 import { InsertTableDialog } from "../table";
 import { InsertLayoutDialog } from "../layout";
 import { YouTubeEmbedDialog } from "../youtube/YouTubeEmbedDialog";
+import { $createTableOfContentsNode } from "../toc";
 
 export function InsertMenu() {
   const [editor] = useLexicalComposerContext();
@@ -50,6 +52,14 @@ export function InsertMenu() {
 
   const insertHorizontalRule = () => {
     editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined);
+  };
+
+  const insertTableOfContents = () => {
+    editor.update(() => {
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
+      $insertNodes([$createTableOfContentsNode()]);
+    });
   };
 
   return (
@@ -89,6 +99,10 @@ export function InsertMenu() {
           <DropdownMenuItem onClick={() => setLayoutDialogOpen(true)}>
             <Columns3 className="h-4 w-4" />
             Columns Layout
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={insertTableOfContents}>
+            <ListTree className="h-4 w-4" />
+            Table of Contents
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
