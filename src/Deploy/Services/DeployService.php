@@ -78,68 +78,71 @@ class DeployService
             File::put($zipFile, $zipData);
             $output[] = 'Downloaded '.round(strlen($zipData) / 1048576, 1).' MB';
 
-            $backupEnv = File::exists($envPath) ? File::get($envPath) : '';
-            $zipFiles = [];
+            try {
+                $backupEnv = File::exists($envPath) ? File::get($envPath) : '';
+                $zipFiles = [];
 
-            // Atomic install: extract into a staging dir first, boot-check the
-            // staged tree, THEN swap it into place while keeping the current
-            // vendor/ as a backup. A failed/broken release is rejected before
-            // it ever touches the live install, so a bad deploy can no longer
-            // leave the app dead (the shop outage caused by vendor/ purge
-            // dying mid-extract).
-            if (! $this->installZipFile($zipFile, $zipFiles, $output)) {
-                File::delete($zipFile);
+                // Atomic install: extract into a staging dir first, boot-check the
+                // staged tree, THEN swap it into place while keeping the current
+                // vendor/ as a backup. A failed/broken release is rejected before
+                // it ever touches the live install, so a bad deploy can no longer
+                // leave the app dead (the shop outage caused by vendor/ purge
+                // dying mid-extract).
+                if (! $this->installZipFile($zipFile, $zipFiles, $output)) {
+                    return $this->result('error', 'Install failed; previous version kept', output: $output, statusCode: 500);
+                }
 
-                return $this->result('error', 'Install failed; previous version kept', output: $output, statusCode: 500);
-            }
+                if ($backupEnv) {
+                    File::put($envPath, $backupEnv);
+                    $output[] = 'Restored .env';
+                }
 
-            File::delete($zipFile);
+                File::put($versionFile, $latestTag);
+                $output[] = "New version: $latestTag";
 
-            if ($backupEnv) {
-                File::put($envPath, $backupEnv);
-                $output[] = 'Restored .env';
-            }
+                $stale = $this->removeStaleFiles($zipFiles);
+                if ($stale['aborted']) {
+                    $output[] = "Stale cleanup aborted (ratio: $stale[ratio])";
+                } else {
+                    $output[] = "Removed $stale[removed] stale files";
+                }
 
-            File::put($versionFile, $latestTag);
-            $output[] = "New version: $latestTag";
+                $this->cleanStaleMigrations($zipFiles, $output);
 
-            $stale = $this->removeStaleFiles($zipFiles);
-            if ($stale['aborted']) {
-                $output[] = "Stale cleanup aborted (ratio: $stale[ratio])";
-            } else {
-                $output[] = "Removed $stale[removed] stale files";
-            }
+                $commands = [
+                    'package:discover' => [[]],
+                    'migrate' => [['--force' => true]],
+                    'app:create-admin' => [[
+                        '--no-interaction' => true,
+                        '--email' => config('admin.email', ''),
+                        '--password' => config('admin.password', ''),
+                        '--name' => config('admin.name', 'Admin'),
+                    ]],
+                    'config:cache' => [[]],
+                    'route:cache' => [[]],
+                    'view:cache' => [[]],
+                    'storage:link' => [['--force' => true]],
+                ];
 
-            $this->cleanStaleMigrations($zipFiles, $output);
-
-            $commands = [
-                'package:discover' => [[]],
-                'migrate' => [['--force' => true]],
-                'app:create-admin' => [[
-                    '--no-interaction' => true,
-                    '--email' => config('admin.email', ''),
-                    '--password' => config('admin.password', ''),
-                    '--name' => config('admin.name', 'Admin'),
-                ]],
-                'config:cache' => [[]],
-                'route:cache' => [[]],
-                'view:cache' => [[]],
-                'storage:link' => [['--force' => true]],
-            ];
-
-            foreach ($commands as $cmd => [$params]) {
-                try {
-                    Artisan::call($cmd, $params);
-                    $output[] = "$cmd: ".strtok(trim(Artisan::output()), "\n");
-                } catch (\Exception $e) {
-                    $output[] = "$cmd: ERROR ".$e->getMessage();
-                    if (in_array($cmd, ['migrate', 'config:cache'])) {
-                        return $this->result('error', "$cmd failed", output: $output, statusCode: 500);
+                foreach ($commands as $cmd => [$params]) {
+                    try {
+                        Artisan::call($cmd, $params);
+                        $output[] = "$cmd: ".strtok(trim(Artisan::output()), "\n");
+                    } catch (\Exception $e) {
+                        $output[] = "$cmd: ERROR ".$e->getMessage();
+                        if (in_array($cmd, ['migrate', 'config:cache'])) {
+                            return $this->result('error', "$cmd failed", output: $output, statusCode: 500);
+                        }
                     }
                 }
-            }
 
-            return $this->result('deployed', "Deployed $latestTag.", tag: $latestTag, output: $output);
+                return $this->result('deployed', "Deployed $latestTag.", tag: $latestTag, output: $output);
+            } finally {
+                // Never leave the downloaded zip behind, even when an install
+                // throws — stale deploy-*.zip files accumulate unbounded and
+                // bloat the recursive walk the SystemHealth page runs.
+                File::delete($zipFile);
+            }
         } finally {
             File::delete($lockFile);
         }
@@ -187,8 +190,11 @@ class DeployService
 
         $stage = storage_path('app/deploy-staging-'.uniqid());
 
-        $extracted = $zip->extractTo($stage);
-        $zip->close();
+        try {
+            $extracted = $zip->extractTo($stage);
+        } finally {
+            $zip->close();
+        }
 
         if (! $extracted || ! File::exists($stage.'/vendor/autoload.php')) {
             File::deleteDirectory($stage);
@@ -200,7 +206,19 @@ class DeployService
 
         $output[] = 'Extracted '.count($zipFiles).' files to staging';
 
-        if (! $this->bootCheck($stage, $output)) {
+        // A thrown boot check must never orphan the staging tree — the app's
+        // SystemHealth page walks storage/app recursively and a pile-up of
+        // leftover staging trees blows its execution-time budget on shared hosts.
+        try {
+            $verified = $this->bootCheck($stage, $output);
+        } catch (\Throwable $e) {
+            File::deleteDirectory($stage);
+            $output[] = 'Boot check errored: '.$e->getMessage();
+
+            return false;
+        }
+
+        if (! $verified) {
             File::deleteDirectory($stage);
 
             $output[] = 'Boot check failed; release rejected (previous version kept)';
@@ -479,7 +497,7 @@ class DeployService
         }
 
         $cmd = 'cd '.escapeshellarg($stage).' && '.escapeshellarg($php).' artisan --version 2>&1';
-        $version = @shell_exec($cmd);
+        $version = function_exists('shell_exec') ? @shell_exec($cmd) : null;
 
         if ($version !== null && trim($version) !== '') {
             $output[] = 'Boot check passed (shell): '.trim($version);

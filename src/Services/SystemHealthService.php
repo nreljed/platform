@@ -1271,22 +1271,8 @@ class SystemHealthService
         foreach ($dirs as $dir) {
             $exists = is_dir($dir['path']);
             $writable = $exists && is_writable($dir['path']);
-            $size = 0;
-            $fileCount = 0;
-
-            if ($exists) {
-                try {
-                    $rii = new \RecursiveIteratorIterator(
-                        new \RecursiveDirectoryIterator($dir['path'], \RecursiveDirectoryIterator::SKIP_DOTS)
-                    );
-                    foreach ($rii as $file) {
-                        $fileCount++;
-                        $size += $file->getSize();
-                    }
-                } catch (\Exception) {
-                }
-                $totalSize += $size;
-            }
+            [$size, $fileCount] = $this->measureTree($dir['path']);
+            $totalSize += $size;
 
             $results[] = [
                 'name' => $dir['name'],
@@ -1302,6 +1288,59 @@ class SystemHealthService
             'total_size' => $totalSize > 0 ? $this->formatBytes($totalSize) : '0 B',
             'disk' => $this->getDiskUsage(),
         ];
+    }
+
+    /**
+     * Measure a directory tree, skipping transient deploy artifacts
+     * (deploy-*.zip downloads + deploy-staging-* extraction trees) and capping
+     * the recursive walk so a bloat-pile (e.g. from interrupted deploys on a
+     * shared host) cannot blow the request execution-time budget.
+     *
+     * @return array{0: int, 1: int} [total bytes, file count]
+     */
+    protected function measureTree(string $path): array
+    {
+        if (! is_dir($path)) {
+            return [0, 0];
+        }
+
+        $size = 0;
+        $count = 0;
+        $maxFiles = (int) config('core.health_max_walk_files', 5000);
+
+        try {
+            $directory = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
+            $filtered = new \RecursiveCallbackFilterIterator($directory, function (\SplFileInfo $file): bool {
+                return ! $this->isDeployArtifact($file->getPathname());
+            });
+
+            $iterator = new \RecursiveIteratorIterator($filtered, \RecursiveIteratorIterator::LEAVES_ONLY);
+
+            foreach ($iterator as $file) {
+                if ($count >= $maxFiles) {
+                    throw new \RuntimeException('Walk budget exceeded');
+                }
+
+                $count++;
+                $size += $file->getSize();
+            }
+        } catch (\Exception) {
+            // Budget hit or I/O error: report what we measured, don't hang the
+            // health page on a pathological tree.
+        }
+
+        return [$size, $count];
+    }
+
+    /**
+     * @return bool True when the path is a transient deploy artifact.
+     */
+    protected function isDeployArtifact(string $path): bool
+    {
+        $name = basename($path);
+
+        return str_starts_with($name, 'deploy-staging-')
+            || preg_match('/^deploy-[0-9a-f]{12,13}\.zip$/', $name) === 1;
     }
 
     protected function getDiskUsage(): ?array
