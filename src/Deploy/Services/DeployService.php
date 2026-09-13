@@ -474,7 +474,7 @@ class DeployService
             $output[] = 'Boot check passed';
 
             return true;
-        } catch (LogicException $e) {
+        } catch (\LogicException $e) {
             // proc_open unavailable — fall through to shell_exec / structural.
         }
 
