@@ -65,4 +65,44 @@ return [
 
     'version_path' => base_path('.deployed-version'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Safe Install Boot Check
+    |--------------------------------------------------------------------------
+    |
+    | Before a release is swapped into the live install, the staged tree is
+    | boot-checked via `php artisan --version` (with the live .env copied in).
+    | Set to `false` only for first-time bootstrap when the app cannot boot yet
+    | (e.g. no .env / no database). On the server this can be toggled through
+    | the DEPLOY_BOOT_CHECK env var — see .env.example.
+    |
+    */
+
+    'boot_check' => env('DEPLOY_BOOT_CHECK', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Safe Install Boot Check Timeout
+    |--------------------------------------------------------------------------
+    |
+    | Seconds allowed for the staged boot check before it is treated as failed.
+    |
+    */
+
+    'boot_check_timeout' => 90,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Install Root
+    |--------------------------------------------------------------------------
+    |
+    | Directory the staged release is swapped into. Defaults to the project root
+    | (base_path). Overridable so tests can run the swap inside a sandbox
+    | instead of replacing the live vendor/ of the running process (which
+    | Windows, and good sense, will not allow).
+    |
+    */
+
+    'install_root' => base_path(),
+
 ];

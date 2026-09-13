@@ -314,24 +314,15 @@ class DeployController extends Controller
 
         $output[] = 'Received '.round(filesize($zipPath) / 1048576, 1).' MB';
 
-        $zip = new \ZipArchive;
-        if ($zip->open($zipPath) !== true) {
-            $output[] = 'ERROR: Failed to open ZIP';
+        // Use the same atomic install as the server-side check: stage, boot
+        // check, then swap with the previous vendor/ kept as backup.
+        $zipFiles = [];
+        if (! $this->deployService->installZipFile($zipPath, $zipFiles, $output)) {
+            $output[] = 'Deploy aborted: release rejected (previous version kept)';
 
             return false;
         }
 
-        // Build lookup set of all zip entries for stale cleanup
-        $zipFiles = [];
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $stat = $zip->statIndex($i);
-            if ($stat && $stat['name'] !== '' && ! str_ends_with($stat['name'], '/')) {
-                $zipFiles[str_replace('\\', '/', $stat['name'])] = true;
-            }
-        }
-
-        $zip->extractTo(base_path());
-        $zip->close();
         File::delete($zipPath);
         $output[] = 'Extracted ('.count($zipFiles).' files)';
 

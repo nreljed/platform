@@ -5,6 +5,7 @@ namespace Nreljed\Platform\Deploy\Services;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Process;
 use Nreljed\Platform\Services\CoreVersionService;
 
 class DeployService
@@ -78,28 +79,20 @@ class DeployService
             $output[] = 'Downloaded '.round(strlen($zipData) / 1048576, 1).' MB';
 
             $backupEnv = File::exists($envPath) ? File::get($envPath) : '';
-
-            $zip = new \ZipArchive;
-            if ($zip->open($zipFile) !== true) {
-                return $this->result('error', 'Failed to open ZIP', output: $output);
-            }
-
-            // Build a lookup set of all entries in the zip (excluding dir markers)
             $zipFiles = [];
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $stat = $zip->statIndex($i);
-                if ($stat && $stat['name'] !== '' && ! str_ends_with($stat['name'], '/')) {
-                    $zipFiles[str_replace('\\', '/', $stat['name'])] = true;
-                }
+
+            // Atomic install: extract into a staging dir first, boot-check the
+            // staged tree, THEN swap it into place while keeping the current
+            // vendor/ as a backup. A failed/broken release is rejected before
+            // it ever touches the live install, so a bad deploy can no longer
+            // leave the app dead (the shop outage caused by vendor/ purge
+            // dying mid-extract).
+            if (! $this->installZipFile($zipFile, $zipFiles, $output)) {
+                File::delete($zipFile);
+
+                return $this->result('error', 'Install failed; previous version kept', output: $output, statusCode: 500);
             }
 
-            // Purge volatile state BEFORE extraction: vendor must match exactly
-            // what CI built (--no-dev), and cached config/routes/views/services
-            // from previous deploys can reference classes that no longer exist.
-            $this->purgeVolatileDirectories($output);
-
-            $zip->extractTo(base_path());
-            $zip->close();
             File::delete($zipFile);
 
             if ($backupEnv) {
@@ -150,6 +143,75 @@ class DeployService
         } finally {
             File::delete($lockFile);
         }
+    }
+
+    /**
+     * Safely apply a deploy.zip to the live install.
+     *
+     * 1. Builds the zip file index,
+     * 2. Moves the current vendor/ aside (backup),
+     * 3. Extracts the archive into an isolated staging dir,
+     * 4. Boot-checks the staged tree (`php artisan --version`), and
+     * 5. Swaps the staged tree into place, restoring the backup if anything
+     *    fails. The live install stays on the previous version until the new
+     *    one has demonstrably booted.
+     *
+     * @see https://github.com/nreljed/platform for the deploy architecture.
+     */
+    public function installZipFile(string $zipPath, array &$zipFiles, array &$output): bool
+    {
+        $zip = new \ZipArchive;
+        if ($zip->open($zipPath) !== true) {
+            $output[] = 'Failed to open ZIP';
+
+            return false;
+        }
+
+        $zipFiles = [];
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $stat = $zip->statIndex($i);
+            if ($stat && $stat['name'] !== '' && ! str_ends_with($stat['name'], '/')) {
+                $zipFiles[str_replace('\\', '/', $stat['name'])] = true;
+            }
+        }
+
+        $stage = storage_path('app/deploy-staging-'.uniqid());
+        $backup = $this->backupVendor($stage, $output);
+
+        $extracted = $zip->extractTo($stage);
+        $zip->close();
+
+        if (! $extracted || ! File::exists($stage.'/vendor/autoload.php')) {
+            File::deleteDirectory($stage);
+            $this->restoreVendorBackup($backup, $output);
+
+            $output[] = 'Extraction failed or staged vendor is incomplete';
+
+            return false;
+        }
+
+        $output[] = 'Extracted '.count($zipFiles).' files to staging';
+
+        if (! $this->bootCheck($stage, $output)) {
+            File::deleteDirectory($stage);
+            $this->restoreVendorBackup($backup, $output);
+
+            $output[] = 'Boot check failed; release rejected (previous version kept)';
+
+            return false;
+        }
+
+        try {
+            $this->swapStagedIntoPlace($stage, $backup, $output);
+        } catch (\Throwable $e) {
+            File::deleteDirectory($stage);
+            $this->restoreVendorBackup($backup, $output);
+            $output[] = 'Install aborted: '.$e->getMessage();
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -231,28 +293,171 @@ class DeployService
     }
 
     /**
-     * Remove directories that must always mirror the incoming zip exactly.
+     * Directory the staged release is swapped into. Defaults to the project
+     * root; overridable so the safe-install helpers can run against a sandbox.
+     */
+    private function installRoot(): string
+    {
+        return rtrim((string) config('deploy.install_root', base_path()), '/\\');
+    }
+
+    /**
+     * Move the current vendor/ aside so a failed release can be rolled back.
      *
-     * vendor/ is rebuilt from scratch on every deploy so orphaned packages
-     * (e.g. require-dev leftovers like Telescope) can never survive, and
-     * bootstrap/cache is cleared because cached config/routes/views/services
-     * may reference classes removed by this deploy.
+     *
+     * @param  array<int, string>  $output
+     * @return string|null Absolute path to the backup, or null when there is
+     *                     no existing vendor/ (fresh install — nothing to keep).
+     */
+    private function backupVendor(string $stage, array &$output): ?string
+    {
+        $vendorPath = $this->installRoot().'/vendor';
+
+        if (! File::isDirectory($vendorPath)) {
+            return null;
+        }
+
+        $backup = $stage.'-vendor-backup';
+        File::move($vendorPath, $backup);
+        $output[] = 'Backed up current vendor/';
+
+        return $backup;
+    }
+
+    /**
+     * Restore a previously backed-up vendor/ and clear caches so the app boots
+     * against the version that was live before the interrupted swap.
      *
      * @param  array<int, string>  $output
      */
-    private function purgeVolatileDirectories(array &$output): void
+    private function restoreVendorBackup(?string $backup, array &$output): void
     {
-        foreach (['vendor', 'bootstrap/cache'] as $dir) {
-            $path = base_path($dir);
-            if (! File::exists($path)) {
+        if (! $backup || ! File::isDirectory($backup)) {
+            return;
+        }
+
+        if (File::isDirectory($this->installRoot().'/vendor')) {
+            File::deleteDirectory($this->installRoot().'/vendor');
+        }
+
+        File::move($backup, $this->installRoot().'/vendor');
+        $this->clearBootstrapCache($output);
+        $output[] = 'Restored previous vendor/';
+    }
+
+    /**
+     * Swap a boot-checked staging tree into the live install.
+     *
+     * Non-vendor files are mirrored first while the app keeps serving the old
+     * vendor; vendor/ is moved last so it is never missing mid-swap. The
+     * backed-up vendor is discarded only after the new tree is fully in place.
+     *
+     * @param  array<int, string>  $output
+     */
+    private function swapStagedIntoPlace(string $stage, ?string $backup, array &$output): void
+    {
+        $this->copyStagedTree($stage, $output);
+
+        if (! File::isDirectory($stage.'/vendor') || ! File::exists($stage.'/vendor/autoload.php')) {
+            throw new \RuntimeException('Staged vendor/ is incomplete after boot check');
+        }
+
+        $this->clearBootstrapCache($output);
+        File::move($stage.'/vendor', $this->installRoot().'/vendor');
+        File::deleteDirectory($stage);
+
+        if ($backup && File::isDirectory($backup)) {
+            File::deleteDirectory($backup);
+        }
+
+        $output[] = 'Swapped staged release into place';
+    }
+
+    /**
+     * Boot-check a staged install before it touches the live tree.
+     *
+     * Runs `php artisan --version` inside the staging dir (with the live .env
+     * copied in) so any breakage across the new vendor + app files is caught
+     * early — a rejected release leaves the live install completely untouched.
+     *
+     * @param  array<int, string>  $output
+     */
+    private function bootCheck(string $stage, array &$output): bool
+    {
+        if (! config('deploy.boot_check', true)) {
+            $output[] = 'Boot check skipped (deploy.boot_check=false)';
+
+            return true;
+        }
+
+        if (! File::exists($stage.'/vendor/autoload.php')) {
+            return false;
+        }
+
+        if (File::exists($this->installRoot().'/.env')) {
+            File::copy($this->installRoot().'/.env', $stage.'/.env');
+        }
+
+        $result = Process::path($stage)->timeout((int) config('deploy.boot_check_timeout', 90))
+            ->run([PHP_BINARY, 'artisan', '--version']);
+
+        if ($result->exitCode() !== 0) {
+            $output[] = 'Boot check failed: '.trim($result->errorOutput());
+
+            return false;
+        }
+
+        $output[] = 'Boot check passed';
+
+        return true;
+    }
+
+    /**
+     * Copy a staged tree into the live install without touching vendor/,
+     * storage/ or .env (those are handled separately).
+     *
+     * @param  array<int, string>  $output
+     */
+    private function copyStagedTree(string $stage, array &$output): void
+    {
+        foreach (File::directories($stage) as $dir) {
+            $name = basename($dir);
+
+            if (in_array($name, ['vendor', 'storage'], true)) {
                 continue;
             }
-            File::deleteDirectory($path);
-            if (! File::isDirectory($path)) {
-                File::makeDirectory($path, 0755, true, true);
-            }
+
+            File::copyDirectory($dir, $this->installRoot().'/'.$name);
         }
-        $output[] = 'Purged vendor/ + bootstrap/cache/';
+
+        foreach (File::files($stage) as $file) {
+            if ($file->getFilename() === '.env') {
+                continue;
+            }
+
+            File::copy($file->getPathname(), $this->installRoot().'/'.$file->getFilename());
+        }
+
+        $output[] = 'Mirrored staged app files over live tree';
+    }
+
+    /**
+     * Remove directories that must always be regenerated from the incoming
+     * release: bootstrap/cache artifacts (cached config/routes/views may
+     * reference classes removed by this deploy).
+     *
+     * @param  array<int, string>  $output
+     */
+    private function clearBootstrapCache(array &$output): void
+    {
+        $path = $this->installRoot().'/bootstrap/cache';
+
+        if (File::exists($path)) {
+            File::deleteDirectory($path);
+        }
+
+        File::makeDirectory($path, 0755, true, true);
+        $output[] = 'Cleared bootstrap/cache/';
     }
 
     /**
