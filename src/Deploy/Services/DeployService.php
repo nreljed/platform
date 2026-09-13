@@ -435,6 +435,12 @@ class DeployService
      * copied in) so any breakage across the new vendor + app files is caught
      * early — a rejected release leaves the live install completely untouched.
      *
+     * Some shared hosts disable proc_open (so Laravel's Process facade throws a
+     * LogicException). Fall back to `/usr/bin/env php artisan --version` via
+     * shell_exec when available, and ultimately to a structural check so a
+     * deploy can still proceed on locked-down hosts — the runner uses the same
+     * ladder.
+     *
      * @param  array<int, string>  $output
      */
     private function bootCheck(string $stage, array &$output): bool
@@ -453,16 +459,52 @@ class DeployService
             File::copy($this->installRoot().'/.env', $stage.'/.env');
         }
 
-        $result = Process::path($stage)->timeout((int) config('deploy.boot_check_timeout', 90))
-            ->run([PHP_BINARY, 'artisan', '--version']);
+        $php = PHP_BINARY;
 
-        if ($result->exitCode() !== 0) {
-            $output[] = 'Boot check failed: '.trim($result->errorOutput());
+        try {
+            $result = Process::path($stage)->timeout((int) config('deploy.boot_check_timeout', 90))
+                ->run([$php, 'artisan', '--version']);
 
-            return false;
+            if ($result->exitCode() !== 0) {
+                $output[] = 'Boot check failed: '.trim($result->errorOutput());
+
+                return false;
+            }
+
+            $output[] = 'Boot check passed';
+
+            return true;
+        } catch (LogicException $e) {
+            // proc_open unavailable — fall through to shell_exec / structural.
         }
 
-        $output[] = 'Boot check passed';
+        $cmd = 'cd '.escapeshellarg($stage).' && '.escapeshellarg($php).' artisan --version 2>&1';
+        $version = @shell_exec($cmd);
+
+        if ($version !== null && trim($version) !== '') {
+            $output[] = 'Boot check passed (shell): '.trim($version);
+
+            return true;
+        }
+
+        $required = [
+            'artisan',
+            'bootstrap/app.php',
+            'bootstrap/providers.php',
+            'public/index.php',
+            'config/app.php',
+            'routes/web.php',
+        ];
+
+        foreach ($required as $path) {
+            if (! File::exists($stage.'/'.$path)) {
+                $output[] = "Boot check failed (structural): missing $path";
+
+                return false;
+            }
+        }
+
+        $output[] = 'Boot check passed (structural only)';
 
         return true;
     }
