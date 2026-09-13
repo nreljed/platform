@@ -148,18 +148,28 @@ class DeployService
     /**
      * Safely apply a deploy.zip to the live install.
      *
+     * Kill-window-free ordering: the live tree (including vendor/) is NEVER
+     * touched until the new release has been extracted to staging AND passed
+     * its boot check. Only then is the old vendor/ moved aside and the staged
+     * release swapped in with a fast directory rename. If the process dies at
+     * any point before activation, the app keeps serving the previous version.
+     *
      * 1. Builds the zip file index,
-     * 2. Moves the current vendor/ aside (backup),
+     * 2. Heals any backup left behind by a killed earlier run,
      * 3. Extracts the archive into an isolated staging dir,
      * 4. Boot-checks the staged tree (`php artisan --version`), and
-     * 5. Swaps the staged tree into place, restoring the backup if anything
-     *    fails. The live install stays on the previous version until the new
-     *    one has demonstrably booted.
+     * 5. Backs up the current vendor/, swaps the staged tree into place.
      *
      * @see https://github.com/nreljed/platform for the deploy architecture.
      */
     public function installZipFile(string $zipPath, array &$zipFiles, array &$output): bool
     {
+        if ($this->recoverStrandedBackup($output)) {
+            $output[] = 'Interrupted install healed; previous version restored';
+
+            return false;
+        }
+
         $zip = new \ZipArchive;
         if ($zip->open($zipPath) !== true) {
             $output[] = 'Failed to open ZIP';
@@ -176,14 +186,12 @@ class DeployService
         }
 
         $stage = storage_path('app/deploy-staging-'.uniqid());
-        $backup = $this->backupVendor($stage, $output);
 
         $extracted = $zip->extractTo($stage);
         $zip->close();
 
         if (! $extracted || ! File::exists($stage.'/vendor/autoload.php')) {
             File::deleteDirectory($stage);
-            $this->restoreVendorBackup($backup, $output);
 
             $output[] = 'Extraction failed or staged vendor is incomplete';
 
@@ -194,7 +202,6 @@ class DeployService
 
         if (! $this->bootCheck($stage, $output)) {
             File::deleteDirectory($stage);
-            $this->restoreVendorBackup($backup, $output);
 
             $output[] = 'Boot check failed; release rejected (previous version kept)';
 
@@ -202,14 +209,44 @@ class DeployService
         }
 
         try {
-            $this->swapStagedIntoPlace($stage, $backup, $output);
+            $this->swapStagedIntoPlace($stage, $output);
         } catch (\Throwable $e) {
             File::deleteDirectory($stage);
-            $this->restoreVendorBackup($backup, $output);
             $output[] = 'Install aborted: '.$e->getMessage();
 
             return false;
         }
+
+        return true;
+    }
+
+    /**
+     * Recover from a deploy killed between "old vendor moved aside" and the
+     * swap (crash, timeout, OOM): if the live vendor/ is missing but a
+     * `deploy-staging-*-vendor-backup` directory exists, move it back so the
+     * app boots on the version that was live before the interrupted run.
+     *
+     * @param  array<int, string>  $output
+     */
+    private function recoverStrandedBackup(array &$output): bool
+    {
+        if (File::isDirectory($this->installRoot().'/vendor')) {
+            return false;
+        }
+
+        $backups = array_values(File::glob(storage_path('app/deploy-staging-*-vendor-backup')));
+        if ($backups === []) {
+            return false;
+        }
+
+        sort($backups);
+        File::move(end($backups), $this->installRoot().'/vendor');
+        foreach (array_slice($backups, 0, -1) as $stale) {
+            File::deleteDirectory($stale);
+        }
+
+        $this->clearBootstrapCache($output);
+        $output[] = 'Restored previous vendor/ from interrupted-install backup';
 
         return true;
     }
@@ -304,12 +341,15 @@ class DeployService
     /**
      * Move the current vendor/ aside so a failed release can be rolled back.
      *
+     * Called only inside the swap, after the new release has boot-checked.
+     * The backup lives in storage/app so the stranded-backup recovery glob in
+     * recoverStrandedBackup() can find and heal a killed run.
      *
      * @param  array<int, string>  $output
      * @return string|null Absolute path to the backup, or null when there is
      *                     no existing vendor/ (fresh install — nothing to keep).
      */
-    private function backupVendor(string $stage, array &$output): ?string
+    private function backupVendor(array &$output): ?string
     {
         $vendorPath = $this->installRoot().'/vendor';
 
@@ -317,7 +357,7 @@ class DeployService
             return null;
         }
 
-        $backup = $stage.'-vendor-backup';
+        $backup = storage_path('app/deploy-staging-'.uniqid().'-vendor-backup');
         File::move($vendorPath, $backup);
         $output[] = 'Backed up current vendor/';
 
@@ -349,12 +389,14 @@ class DeployService
      * Swap a boot-checked staging tree into the live install.
      *
      * Non-vendor files are mirrored first while the app keeps serving the old
-     * vendor; vendor/ is moved last so it is never missing mid-swap. The
-     * backed-up vendor is discarded only after the new tree is fully in place.
+     * vendor; the old vendor is then moved aside and the new one renamed in —
+     * a two-rename window of milliseconds total. If anything throws after the
+     * old vendor was moved aside, it is immediately restored. The backup is
+     * discarded only after the new tree is fully in place.
      *
      * @param  array<int, string>  $output
      */
-    private function swapStagedIntoPlace(string $stage, ?string $backup, array &$output): void
+    private function swapStagedIntoPlace(string $stage, array &$output): void
     {
         $this->copyStagedTree($stage, $output);
 
@@ -363,7 +405,20 @@ class DeployService
         }
 
         $this->clearBootstrapCache($output);
-        File::move($stage.'/vendor', $this->installRoot().'/vendor');
+
+        $backup = null;
+
+        try {
+            $backup = $this->backupVendor($output);
+            File::move($stage.'/vendor', $this->installRoot().'/vendor');
+        } catch (\Throwable $e) {
+            if ($backup && File::isDirectory($backup)) {
+                $this->restoreVendorBackup($backup, $output);
+            }
+
+            throw $e;
+        }
+
         File::deleteDirectory($stage);
 
         if ($backup && File::isDirectory($backup)) {
