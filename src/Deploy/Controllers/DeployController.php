@@ -437,6 +437,13 @@ class DeployController extends Controller
                 'tag' => $result['tag'],
                 'core' => $result['core'],
             ]),
+            'release-layout' => response()->json([
+                'status' => 'release-layout',
+                'tag' => $result['tag'],
+                'message' => $result['message'],
+                'output' => $result['output'],
+                'core' => $result['core'],
+            ]),
             'locked' => response()->json(['status' => 'locked']),
             'no-release' => response()->json([
                 'status' => 'no-release',

@@ -5,7 +5,7 @@ namespace Nreljed\Platform\Tests;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Core-side guard for the module ↔ dashboard-core compatibility contract
+ * Core-side guard for the module ↔ platform compatibility contract
  * (core-compat.json).
  *
  * The core repo is the hub of the ecosystem, so it owns the registry: every
@@ -62,20 +62,20 @@ final class ModuleCompatContractTest extends TestCase
             $composer = $this->composer($moduleRoot, $package);
 
             $this->assertArrayHasKey(
-                'nreljed/dashboard-core',
+                'nreljed/platform',
                 $composer['require'],
-                "[{$package}] composer.json must require nreljed/dashboard-core"
+                "[{$package}] composer.json must require nreljed/platform"
             );
 
-            $constraint = (string) $composer['require']['nreljed/dashboard-core'];
+            $constraint = (string) $composer['require']['nreljed/platform'];
 
             $this->assertMatchesRegularExpression(
                 '/^\^0(?:\.\d+){0,2}$/',
                 $constraint,
-                "[{$package}] must pin dashboard-core with a caret-zero ^0.x range, got [{$constraint}]"
+                "[{$package}] must pin platform with a caret-zero ^0.x range, got [{$constraint}]"
             );
 
-            $coreVersion = (string) ($this->composer($this->coreRoot, 'nreljed/dashboard-core')['version'] ?? '');
+            $coreVersion = (string) ($this->composer($this->coreRoot, 'nreljed/platform')['version'] ?? '');
 
             $this->assertMatchesRegularExpression('/^\d+\.\d+\.\d+$/', $coreVersion, 'core composer.json version must be semver shaped');
 

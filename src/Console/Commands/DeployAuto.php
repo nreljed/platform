@@ -19,6 +19,7 @@ class DeployAuto extends Command
             'current' => $this->report('info', "Already up to date ({$result['tag']})."),
             'deployed' => $this->reportDeployed($result),
             'locked' => $this->report('info', 'Deploy already in progress; skipping.'),
+            'release-layout' => $this->report('info', 'Release-layout host — in-place self-deploy disabled. CI must deploy via the deploy-runner release-install action.'),
             'no-release' => $this->report('warn', 'No release to deploy: '.$result['message']),
             default => $this->reportFailure($result),
         };

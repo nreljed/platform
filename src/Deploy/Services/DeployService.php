@@ -55,6 +55,23 @@ class DeployService
                 return $this->result('current', "Already up to date ($latestTag).", tag: $latestTag);
             }
 
+            // Release-layout hosts are served from releases/<active> (the webroot
+            // `public` is a symlink into it). The legacy in-place swap below would
+            // mutate an immutable release directory and break the deploy-runner's
+            // rollback/cleanup model — refuse and tell CI to hand off to the
+            // runner's release-install action instead.
+            if ($this->usesReleaseLayout()) {
+                $output[] = "New release: $latestTag";
+                $output[] = 'Release-layout host detected — in-place self-deploy disabled.';
+
+                return $this->result(
+                    'release-layout',
+                    "Release-layout host ($latestTag available) — deploy via the deploy-runner release-install action.",
+                    tag: $latestTag,
+                    output: $output,
+                );
+            }
+
             $assetUrl = '';
             foreach ($releases[0]['assets'] ?? [] as $asset) {
                 if (($asset['name'] ?? null) === 'deploy.zip') {
@@ -167,6 +184,14 @@ class DeployService
      */
     public function installZipFile(string $zipPath, array &$zipFiles, array &$output): bool
     {
+        // The in-place install mutates the live tree — never run it on a
+        // release-layout host where the app is served from releases/<active>.
+        if ($this->usesReleaseLayout()) {
+            $output[] = 'Release-layout host — in-place install refused. Use the deploy-runner release-install action instead.';
+
+            return false;
+        }
+
         if ($this->recoverStrandedBackup($output)) {
             $output[] = 'Interrupted install healed; previous version restored';
 
@@ -345,6 +370,26 @@ class DeployService
         if ($removed > 0) {
             $output[] = "Cleaned $removed stale migration files";
         }
+    }
+
+    /**
+     * True when the app root sits inside a Capistrano-style release directory
+     * (i.e. <home>/releases/<active> — the deploy-runner's release layout).
+     *
+     * On such hosts the legacy in-place swap must never run: base_path()
+     * resolves inside the active release and a swap would mutate the immutable
+     * release tree.  The canonical deploy path is the deploy-runner's atomic
+     * release-install action (restore.yml).
+     *
+     * Accepts an optional $basePath to support callers that resolve outside
+     * the normal Laravel context (tests, console commands).
+     */
+    public function usesReleaseLayout(?string $basePath = null): bool
+    {
+        $root = rtrim($basePath ?? base_path(), '/\\');
+        $parent = dirname($root);
+
+        return basename($parent) === 'releases' && is_dir($parent);
     }
 
     /**
