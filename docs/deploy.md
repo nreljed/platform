@@ -23,6 +23,7 @@ CI workflow that pushes the release.
 | `lock_ttl`           | `600`                                   | Seconds a `.deploy-lock` stays valid before it can be re-acquired                                      |
 | `lock_path`          | `base_path('.deploy-lock')`             | Deploy lock file (overridable in tests)                                                                |
 | `version_path`       | `base_path('.deployed-version')`        | Last-deployed version marker                                                                           |
+| `env_backup_retention` | `env('DEPLOY_ENV_BACKUP_RETENTION', 5)` | Max `.env.backup.<ts>` snapshots kept beside `.env` (see below)                                        |
 | `boot_check`         | `env('DEPLOY_BOOT_CHECK', true)`        | Boot-check the staged release (`php artisan --version`) before swapping it live                         |
 | `boot_check_timeout` | `90`                                    | Seconds allowed for the staged boot check before it is treated as failed                               |
 | `install_root`       | `base_path()`                           | Live install root the release swaps into (overridable so safety tests run in a sandbox)                |
@@ -62,6 +63,54 @@ in the consumer app (`tests/Feature/Deploy/DeploySafetyTest.php`); they are skip
 pinned platform package predates `installZipFile` (`method_exists` guard), so consumer CI
 stays green on older locks and activates as soon as the vendor copy is updated.
 
+## Release-Layout Hosts (atomic `releases/<ts>-v<tag>` deployments)
+
+Consumer hosts migrated to capistrano-style atomic releases are **served from
+`releases/<active>`** (`public` and `current` at the home root are symlinks into the active
+release; `.env` and `storage/` are symlinked to golden copies at the home root). On these
+hosts:
+
+- `DeployService::check()` detects the layout (`usesReleaseLayout()`) and **refuses the
+  legacy in-place swap** — it never mutates an immutable release directory.
+- Deploys go through the **deploy-runner** (`public/runner.php`, staged by the CI `restore`
+  step): `action=release-install&version=<tag>` extracts the deploy.zip into a fresh
+  `releases/<ts>-v<tag>` dir, restores `.env`, boot-checks, atomically points `current` and
+  `public` at it, then prunes to the 3 newest releases (`release-cleanup` keeps rollback +
+  `.public.legacy-*` fallback when no prior release exists).
+- `deploy:auto` is a no-op here by design: it reports `release-layout` and exits, so the
+  server never self-deploys into an immutable release. The 5-minute resilience net is CI's
+  `Deploy Runner (Auto-Repair)` workflow + the runner's `auto-repair` action.
+
+## Host Cron (scheduler only)
+
+The host cron runs the **app scheduler**, not deploy logic (deploy is CI/runner-driven on
+release-layout hosts; `deploy:auto` registers itself via the provider schedule but is a
+no-op there). The single line every host needs, targeting the **active release** — never a
+legacy root `artisan`:
+
+```
+* * * * * /usr/local/bin/php <home>/current/artisan schedule:run >> /dev/null 2>&1
+```
+
+`<home>/current` is the symlink to the active release, so the line stays valid across
+releases. If it pointed at a legacy root `<home>/artisan` that no longer exists (after a
+root cleanup), `schedule:run` fails and silenced daily jobs (`notifications:purge`,
+`app:prune-audit-logs`) stop — fix the cron to `current/artisan`.
+
+## .env Backup Retention
+
+Every env-modifying endpoint (`/deploy/env` via `updateEnv`/`updateEnvValues`) snapshots the
+live `.env` to `.env.backup.<timestamp>` **before** writing, then prunes to the newest
+`deploy.env_backup_retention` (default 5) snapshots via `DeployService::pruneEnvBackups()`.
+`updateEnvValues` is the CI env-push path (GITHUB_TOKEN refresh on every deploy).
+
+- On release-layout hosts the snapshots land **inside the active release directory** and are
+  further pruned by `release-cleanup` (keep=3 releases) — they are never written to the home
+  root. `.env.backup.*` files at the home root are **legacy residue** from before the
+  release-layout migration and can be deleted (archived to `legacy-root-env-backups-<date>/`
+  on all three hosts on 2026-09-14).
+- `DEPLOY_ENV_BACKUP_RETENTION` overrides the cap per host.
+
 ## HTTP Endpoints
 
 All endpoints are CSRF-exempt (see `configureMiddleware()` → `PreventRequestForgery::except`)
@@ -80,16 +129,22 @@ and token-gated via `DeployController::verifyToken()`. Grouped with `maintenance
 
 ## CI/CD Flow (GitHub Actions)
 
-1. Push to `master` → `deploy.yml` builds a release:
+1. Push to `main` → `deploy.yml` builds a release:
    - PHP 8.4 + Node 22, `composer install`, `migrate --force`, `npm run typecheck` +
      `npm run build`, `php artisan test`, Pint, `composer install --no-dev`.
    - Creates GitHub Release with semver tag + `deploy.zip` attachment.
    - Pushes the fresh `GITHUB_TOKEN` to the server `.env` via `POST /deploy/env` (before
      upload, retried up to 3×).
-   - Calls `/deploy/check` (canonical — server pulls the release itself), falling back to
-     `/deploy/upload`, then FTP upload of `deploy.zip` for manual extraction.
-2. Server-side `deploy:auto` (every 5 minutes) re-runs the same check so any missed trigger
-   self-heals.
+   - **Release-layout host:** stages `deploy-runner.php`, `deploy.zip` and the new
+     `GITHUB_TOKEN` via FTP, then polls `runner.php?action=release-install&version=<tag>` —
+     the canonical path (check → upload → FTP fallback order in the workflow; the runner
+     installs atomically into a new `releases/` dir).
+   - **Legacy host:** calls `/deploy/check` (self-deploy pulls the release itself), falling
+     back to `/deploy/upload`, then FTP upload of `deploy.zip` for manual extraction.
+2. Resilience: if CI is blocked by the host's security layer (datacenter IPs), the **CI-side
+   `Deploy Runner (Auto-Repair)`** workflow or a manual `workflow_dispatch` picks the release
+   up via the runner's `release-install`. `deploy:auto` self-healing only applies to legacy
+   (non-release-layout) hosts.
 
 ## Publishing the Core Package
 
