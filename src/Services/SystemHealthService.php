@@ -1174,11 +1174,11 @@ class SystemHealthService
     /**
      * Resolve the installed platform package commit and version.
      *
-     * Delegates to CoreVersionService, which prefers the build-time recorded
-     * storage/app/core.json and falls back to the legacy core.sha marker.
-     * The payload additionally describes whether the install is a dev build
-     * (path repo, @dev constraint) and whether the vendor copy is out of sync
-     * with the source package tree.
+     * Delegates to CoreVersionService, which reads the authoritative install
+     * state (vendor/composer/installed.json + composer.lock) — build-time
+     * snapshots are no longer consulted. The payload additionally describes
+     * whether the install is a dev build (path repo, @dev constraint) and
+     * whether the vendor copy is out of sync with the source package tree.
      */
     protected function getCorePackage(): array
     {

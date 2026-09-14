@@ -50,6 +50,10 @@ on:
         description: "Pass when no frontend test files exist"
         type: boolean
         default: false
+      skip-core-versions:
+        description: "Skip the platform-core fleet version check (one core version for all apps)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -109,6 +113,36 @@ jobs:
 
       - name: Composer audit
         run: composer audit --no-interaction
+
+      - name: Enforce platform core version (fleet single-core)
+        if: ${{ !inputs.skip-core-versions }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          PINNED=$(php -r '$l=json_decode(file_get_contents("composer.lock"),true);foreach(array_merge($l["packages"]??[],$l["packages-dev"]??[]) as $p){if(($p["name"]??"")==="nreljed/platform"){echo $p["version"];break;}}')
+          echo "pinned nreljed/platform: ${PINNED:-<not found>}"
+          if [ -z "${PINNED}" ]; then
+            echo "::error::nreljed/platform is not pinned in composer.lock"
+            exit 1
+          fi
+          case "${PINNED}" in
+            dev-*|9999999-*|'@dev') echo "dev build pinned — skipping fleet check"; exit 0 ;;
+          esac
+          LATEST=$(curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H "User-Agent: fleet-check" \
+            "https://api.github.com/repos/nreljed/platform/releases/latest" 2>/dev/null \
+            | php -r '$d=json_decode(stream_get_contents(STDIN),true);echo $d["tag_name"]??"";')
+          echo "latest nreljed/platform release: ${LATEST:-<unknown>}"
+          if [ -z "${LATEST}" ]; then
+            echo "could not resolve latest release — skipping fleet check"
+            exit 0
+          fi
+          NORM=${PINNED#v}; NORM=${NORM%% +@}
+          LATEST_NORM=${LATEST#v}
+          if [ "${NORM}" != "${LATEST_NORM}" ]; then
+            echo "::error::Platform core drift — composer.lock pins ${PINNED} but latest nreljed/platform release is ${LATEST}. All apps must run one core version; update via composer update nreljed/platform."
+            exit 1
+          fi
+          echo "core version OK (${NORM})"
 
       - name: Foundation boundary check
         run: php scripts/foundation-check.php

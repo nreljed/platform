@@ -7,33 +7,40 @@ class CoreVersionService
     public const PACKAGE_NAME = 'platform';
 
     /**
+     * Composer full package name. Consuming apps install it via Composer
+     * as a vcs package from this repo.
+     */
+    public const PACKAGE = 'nreljed/platform';
+
+    /**
      * GitHub repo hosting the platform distribution source. Consuming
      * apps install it via Composer as a vcs package from this repo.
      */
     public const PACKAGE_REPO = 'nreljed/platform';
 
     /**
-     * Resolve the installed platform package identity.
+     * Resolve the installed platform package identity from the actual
+     * install state — never from a build-time record.
      *
-     * Prefers the build-time recorded storage/app/core.json (name, version,
-     * sha, repo), then falls back to the legacy storage/app/core.sha marker
-     * plus the version field of the installed package composer.json.
+     * Version comes from vendor/composer/installed.json (the authoritative
+     * Composer install state; falls back to the package's own composer.json
+     * "version" field). The commit SHA comes from installed.json's
+     * source/dist reference (falls back to composer.lock). The repo is
+     * derived from the installed source URL, falling back to the package
+     * constant. Build-time snapshots (storage/app/core.json, core.sha) are
+     * deliberately ignored — they can drift from what is actually installed.
      *
      * @return array{name: string, version: string|null, sha: string|null, repo: string}
      */
     public function info(): array
     {
-        $file = $this->fromJsonFile();
-
-        if ($file !== null) {
-            return $file;
-        }
+        $installed = $this->installedMeta();
 
         return [
             'name' => self::PACKAGE_NAME,
-            'version' => $this->composerVersion(),
-            'sha' => $this->shaFromMarker(),
-            'repo' => $this->defaultRepo(),
+            'version' => $this->installedVersion() ?? $this->composerVersion(),
+            'sha' => $installed['reference'] ?? $this->lockReference(),
+            'repo' => $this->repoFromInstalledUrl($installed['url'] ?? null) ?? $this->defaultRepo(),
         ];
     }
 
@@ -53,35 +60,80 @@ class CoreVersionService
     }
 
     /**
-     * @return array{name: string, version: string|null, sha: string|null, repo: string}|null
+     * Authoritative installed version for the platform package, sourced from
+     * vendor/composer/installed.json (falls back to vendor package composer.json).
      */
-    protected function fromJsonFile(): ?array
+    protected function installedVersion(): ?string
     {
-        $path = config('core.json_path', storage_path('app/core.json'));
+        return (new PackageVersionService)->installedVersion(self::PACKAGE);
+    }
+
+    /**
+     * @return array{version: string|null, reference: string|null, url: string|null}
+     */
+    protected function installedMeta(): array
+    {
+        $path = base_path('vendor/composer/installed.json');
+
+        if (! is_file($path)) {
+            return ['version' => null, 'reference' => null, 'url' => null];
+        }
+
+        $data = json_decode((string) file_get_contents($path), true);
+        $packages = is_array($data) ? ($data['packages'] ?? []) : [];
+
+        foreach ($packages as $package) {
+            if (! is_array($package) || ($package['name'] ?? null) !== self::PACKAGE) {
+                continue;
+            }
+
+            return [
+                'version' => $this->trimToNull($package['version'] ?? null),
+                'reference' => $this->trimToNull(
+                    $package['source']['reference'] ?? $package['dist']['reference'] ?? null
+                ),
+                'url' => $this->trimToNull($package['source']['url'] ?? $package['dist']['url'] ?? null),
+            ];
+        }
+
+        return ['version' => null, 'reference' => null, 'url' => null];
+    }
+
+    protected function lockReference(): ?string
+    {
+        $path = base_path('composer.lock');
 
         if (! is_file($path)) {
             return null;
         }
 
-        $data = json_decode((string) file_get_contents($path), true);
+        $lock = json_decode((string) file_get_contents($path), true);
+        $packages = array_merge($lock['packages'] ?? [], $lock['packages-dev'] ?? []);
 
-        if (! is_array($data) || (! isset($data['sha']) && ! isset($data['version']))) {
+        foreach ($packages as $package) {
+            if (! is_array($package) || ($package['name'] ?? null) !== self::PACKAGE) {
+                continue;
+            }
+
+            return $this->trimToNull(
+                $package['source']['reference'] ?? $package['dist']['reference'] ?? null
+            );
+        }
+
+        return null;
+    }
+
+    protected function repoFromInstalledUrl(?string $url): ?string
+    {
+        if ($url === null) {
             return null;
         }
 
-        return [
-            'name' => $this->clean($data['name'] ?? null) ?? self::PACKAGE_NAME,
-            'version' => $this->clean($data['version'] ?? null),
-            'sha' => $this->clean($data['sha'] ?? null),
-            'repo' => $this->clean($data['repo'] ?? null) ?? $this->defaultRepo(),
-        ];
-    }
+        if (preg_match('#github\.com[/:]([^/]+/[^/.]+?)(?:\.git)?$#', $url, $m)) {
+            return $m[1];
+        }
 
-    protected function shaFromMarker(): ?string
-    {
-        $path = config('core.sha_path', storage_path('app/core.sha'));
-
-        return is_file($path) ? $this->clean(file_get_contents($path)) : null;
+        return null;
     }
 
     protected function composerVersion(): ?string
@@ -94,7 +146,7 @@ class CoreVersionService
 
         $meta = json_decode((string) file_get_contents($path), true);
 
-        return is_array($meta) ? $this->clean($meta['version'] ?? null) : null;
+        return is_array($meta) ? $this->trimToNull($meta['version'] ?? null) : null;
     }
 
     protected function defaultRepo(): string
@@ -102,7 +154,7 @@ class CoreVersionService
         return config('core.github_repo', self::PACKAGE_REPO);
     }
 
-    protected function clean(mixed $value): ?string
+    protected function trimToNull(mixed $value): ?string
     {
         if (! is_string($value)) {
             return null;
