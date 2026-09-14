@@ -13,6 +13,36 @@ class DeployService
     public function __construct(private readonly CoreVersionService $coreVersion) {}
 
     /**
+     * Prune `.env.backup.<timestamp>` snapshots down to the newest N.
+     *
+     * Centralised here so the retention behaviour is framework-free testable
+     * (the deploy suite deliberately avoids booting the application). The
+     * `env_backup_retention` config key caps how many backups survive; pass an
+     * explicit $retention when called without a booted app (e.g. in tests).
+     *
+     * @return int number of backups pruned
+     */
+    public function pruneEnvBackups(string $envPath, ?int $retention = null): int
+    {
+        $retention = $retention ?? (int) config('deploy.env_backup_retention', 5);
+        $retention = max(1, $retention);
+
+        $backups = glob($envPath.'.backup.*') ?: [];
+        if ($backups === []) {
+            return 0;
+        }
+
+        sort($backups);
+
+        $stale = array_slice($backups, 0, -$retention);
+        foreach ($stale as $file) {
+            @unlink($file);
+        }
+
+        return count($stale);
+    }
+
+    /**
      * Check GitHub for a newer release and, if found, deploy it by pulling the
      * deploy.zip asset into the current installation.
      *

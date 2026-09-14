@@ -52,6 +52,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Environment Backup Retention
+    |--------------------------------------------------------------------------
+    |
+    | How many `.env.backup.<timestamp>` snapshots to keep beside the live
+    | `.env`. Every env-modifying endpoint writes a snapshot before touching
+    | the file; older ones are pruned so the directory never grows without
+    | bound. On release-layout hosts the snapshots land inside the active
+    | release and are additionally pruned by release-cleanup.
+    |
+    */
+
+    'env_backup_retention' => (int) env('DEPLOY_ENV_BACKUP_RETENTION', 5),
+
+    /*
+    |--------------------------------------------------------------------------
     | Deploy Marker Paths
     |--------------------------------------------------------------------------
     |

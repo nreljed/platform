@@ -48,6 +48,26 @@ class DeployController extends Controller
         return '"'.str_replace(['\\', '"', '$'], ['\\\\', '\\"', '\\$'], $value).'"';
     }
 
+    /**
+     * Snapshot the current .env before a mutation, then prune old snapshots.
+     *
+     * Keeps the `env_backup_retention` most recent backups (default 5) so a
+     * busy CI pipeline cannot accumulate `.env.backup.<timestamp>` files
+     * without bound. Pruning runs only when a rotation to the active release
+     * has already happened — release-cleanup is the backstop on release-layout
+     * hosts, this cap is the first line of defence everywhere.
+     */
+    private function backupEnv(string $envPath): void
+    {
+        if (! File::exists($envPath)) {
+            return;
+        }
+
+        File::copy($envPath, $envPath.'.backup.'.now()->timestamp);
+
+        $this->deployService->pruneEnvBackups($envPath);
+    }
+
     public function updateEnv(Request $request)
     {
         $this->verifyToken($request);
@@ -76,9 +96,7 @@ class DeployController extends Controller
 
         $envPath = base_path('.env');
 
-        if (File::exists($envPath)) {
-            File::copy($envPath, $envPath.'.backup.'.now()->timestamp);
-        }
+        $this->backupEnv($envPath);
 
         File::put($envPath, $content);
 
@@ -113,8 +131,9 @@ class DeployController extends Controller
 
         $envPath = base_path('.env');
 
+        $this->backupEnv($envPath);
+
         if (File::exists($envPath)) {
-            File::copy($envPath, $envPath.'.backup.'.now()->timestamp);
             $content = File::get($envPath);
         } else {
             $content = '';
