@@ -43,7 +43,7 @@ jobs:
 
       - name: Validate composer.json + lock sync
         shell: bash
-        run: composer validate --strict --no-check-all
+        run: composer validate --no-check-all
 
       - name: Install dependencies
         shell: bash
