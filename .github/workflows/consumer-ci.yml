@@ -86,10 +86,10 @@ jobs:
         with:
           node-version: "26"
           # Cache pnpm workspaces (pinned by the root pnpm-lock.yaml) and npm
-          # apps (package-lock.json) from the calling repo accordingly.
+          # apps (package-lock.json) from the calling repo accordingly. pnpm is
+          # NOT installed here: setup-node@v7 has no pnpm-version input — the
+          # install step below bootstraps it when a pnpm workspace is detected.
           cache: ${{ vars.RUNNER_CI != 'self-hosted' && (hashFiles('pnpm-workspace.yaml') != '' && 'pnpm' || 'npm') || '' }}
-          # Installs pnpm on any runner; npm apps ignore it.
-          pnpm-version: "11"
 
       - name: Cache Composer dependencies (GitHub-hosted only)
         if: vars.RUNNER_CI != 'self-hosted'
@@ -157,6 +157,7 @@ jobs:
       - name: Install npm dependencies
         run: |
           if [ -f pnpm-workspace.yaml ] || [ -f pnpm-lock.yaml ]; then
+            command -v pnpm >/dev/null 2>&1 || npm install -g pnpm@11
             pnpm install --frozen-lockfile
           else
             npm ci --legacy-peer-deps
