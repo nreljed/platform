@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
-import { Section } from "@/Components/shared/section";
+import { Section } from "../../shared/section";
 import { router, usePage } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
+import { toast } from "../../ui/toast";
 import {
   Eye,
   Send,
@@ -13,20 +13,20 @@ import {
   Tablet,
   Smartphone,
 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog";
+} from "../../ui/select";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../ui/dialog";
 
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 
 interface EmailTemplate {
   label: string;

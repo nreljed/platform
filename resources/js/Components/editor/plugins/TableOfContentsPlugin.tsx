@@ -8,7 +8,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "../../ui/select";
 import { List } from "lucide-react";
 
 interface HeadingEntry {

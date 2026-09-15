@@ -1,5 +1,5 @@
-import { Section } from "@/Components/shared/section";
-import { Badge } from "@/Components/ui/badge";
+import { Section } from "../../shared/section";
+import { Badge } from "../../ui/badge";
 import { Info } from "lucide-react";
 
 interface AccountInfoSectionProps {

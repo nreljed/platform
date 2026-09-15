@@ -1,9 +1,9 @@
 // @ts-nocheck
 import * as React from "react";
 import { useMap } from "react-leaflet";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Alert, AlertDescription } from "@/Components/ui/alert";
-import { Button } from "@/Components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card";
+import { Alert, AlertDescription } from "../../ui/alert";
+import { Button } from "../../ui/button";
 import {
   Map,
   MapTileLayer,
@@ -19,11 +19,11 @@ import {
 } from "./map";
 import { MapDebugPanel } from "./map-debug-panel";
 import type { DebugData } from "./map-debug-panel";
-import { reverseGeocode, WORLD_BOUNDS, WORLD_CENTER } from "@/lib/geocoding";
-import type { AddressData } from "@/lib/geocoding";
-import { getCountryBounds } from "@/lib/country-bounds";
+import { reverseGeocode, WORLD_BOUNDS, WORLD_CENTER } from "../../../lib/geocoding";
+import type { AddressData } from "../../../lib/geocoding";
+import { getCountryBounds } from "../../../lib/country-bounds";
 import { AlertTriangleIcon, BugIcon, MapPin } from "lucide-react";
-import { toast } from "@/Components/ui/toast";
+import { toast } from "../../ui/toast";
 
 interface MapOptions {
   countryCode?: string;

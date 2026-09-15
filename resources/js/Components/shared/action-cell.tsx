@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, router } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Button } from "@/Components/ui/button";
+import { toast } from "../ui/toast";
+import { Button } from "../ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,14 +11,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/Components/ui/alert-dialog";
+} from "../ui/alert-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 import { MoreHorizontal, Pencil, Trash2, Eye, FileEdit, AlertTriangle } from "lucide-react";
 
 export interface ActionItem {

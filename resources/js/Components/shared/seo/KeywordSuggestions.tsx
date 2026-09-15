@@ -1,5 +1,5 @@
-import { Badge } from "@/Components/ui/badge";
-import { cn } from "@/lib/utils";
+import { Badge } from "../../ui/badge";
+import { cn } from "../../../lib/utils";
 import { Hash } from "lucide-react";
 
 interface KeywordSuggestionsProps {

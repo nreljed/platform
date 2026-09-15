@@ -1,5 +1,5 @@
-import { Section } from "@/Components/shared/section";
-import { AvatarUploader } from "@/Components/shared/avatar-uploader";
+import { Section } from "../../shared/section";
+import { AvatarUploader } from "../../shared/avatar-uploader";
 import { Camera } from "lucide-react";
 
 interface AvatarSectionProps {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { Link } from "@inertiajs/react";
 import { Eye, EyeOff, Info, Check } from "lucide-react";
 import {
@@ -7,9 +7,9 @@ import {
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@/Components/ui/input-group";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/Components/ui/tooltip";
-import { Field, FieldLabel, FieldError } from "@/Components/ui/field";
+} from "../ui/input-group";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Field, FieldLabel, FieldError } from "../ui/field";
 
 interface ZxcvbnFeedback {
   warning?: string;

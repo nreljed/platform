@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import { cva } from "class-variance-authority";
 
 import { cn } from "cn";
-import { Label } from "@/Components/ui/label";
-import { Separator } from "@/Components/ui/separator";
+import { Label } from "./label";
+import { Separator } from "./separator";
 
 function FieldSet({ className, ...props }: React.ComponentPropsWithoutRef<"fieldset">) {
   return (

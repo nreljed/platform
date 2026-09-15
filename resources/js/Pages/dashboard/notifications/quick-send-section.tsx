@@ -1,4 +1,4 @@
-import { Button } from "@/Components/ui/button";
+import { Button } from "../../../Components/ui/button";
 import { BellDot } from "lucide-react";
 
 interface NotificationType {

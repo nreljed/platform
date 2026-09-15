@@ -1,17 +1,17 @@
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Textarea } from "@/Components/ui/textarea";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/Components/ui/field";
+import AdminLayout from "../../../../Layouts/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../Components/ui/card";
+import { Button } from "../../../../Components/ui/button";
+import { Input } from "../../../../Components/ui/input";
+import { Textarea } from "../../../../Components/ui/textarea";
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "../../../../Components/ui/field";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "../../../../Components/ui/select";
 import {
   Combobox,
   ComboboxChip,
@@ -24,8 +24,8 @@ import {
   ComboboxLabel,
   ComboboxList,
   ComboboxValue,
-} from "@/Components/ui/combobox";
-import { Alert, AlertDescription } from "@/Components/ui/alert";
+} from "../../../../Components/ui/combobox";
+import { Alert, AlertDescription } from "../../../../Components/ui/alert";
 import { ArrowLeft, Lock, Save, ShieldAlert } from "lucide-react";
 import { FormEventHandler } from "react";
 

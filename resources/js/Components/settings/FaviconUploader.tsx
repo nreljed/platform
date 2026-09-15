@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Upload, Loader2, Trash2, ImageIcon, Info } from "lucide-react";
-import { toast } from "@/Components/ui/toast";
-import { Button } from "@/Components/ui/button";
-import { getCsrfToken } from "@/lib/gallery-utils";
+import { toast } from "../ui/toast";
+import { Button } from "../ui/button";
+import { getCsrfToken } from "../../lib/gallery-utils";
 
 const ALLOWED_TYPES = ["image/x-icon", "image/png", "image/svg+xml"];
 const ALLOWED_EXTENSIONS = new Set([".ico", ".png", ".svg"]);

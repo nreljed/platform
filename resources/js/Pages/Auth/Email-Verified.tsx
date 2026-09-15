@@ -1,8 +1,8 @@
 import { Link, router } from "@inertiajs/react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "../../Components/ui/button";
 import { CheckCircle2 } from "lucide-react";
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/Components/ui/card";
-import GuestLayout from "@/Layouts/GuestLayout";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "../../Components/ui/card";
+import GuestLayout from "../../Layouts/GuestLayout";
 
 export default function EmailVerified() {
   return (

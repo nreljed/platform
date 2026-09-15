@@ -1,13 +1,13 @@
 import * as React from "react";
-import { Section, SectionField } from "@/Components/shared/section";
-import { Input } from "@/Components/ui/input";
+import { Section, SectionField } from "../../shared/section";
+import { Input } from "../../ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "../../ui/select";
 import { DollarSign, Ruler, Hash } from "lucide-react";
 
 const CURRENCY_OPTIONS = [

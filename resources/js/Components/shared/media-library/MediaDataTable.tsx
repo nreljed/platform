@@ -3,11 +3,11 @@
  * actions (mirrors the Posts list pattern instead of the plain grid-style list).
  */
 import * as React from "react";
-import { toast } from "@/Components/ui/toast";
-import { DataTable } from "@/Components/ui/data-table";
-import { DataTableColumnHeader } from "@/Components/ui/data-table-column-header";
-import { Button } from "@/Components/ui/button";
-import { Skeleton } from "@/Components/ui/skeleton";
+import { toast } from "../../ui/toast";
+import { DataTable } from "../../ui/data-table";
+import { DataTableColumnHeader } from "../../ui/data-table-column-header";
+import { Button } from "../../ui/button";
+import { Skeleton } from "../../ui/skeleton";
 import {
   Image as ImageIcon,
   MoreHorizontal,
@@ -22,7 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "../../ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,10 +32,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/Components/ui/alert-dialog";
+} from "../../ui/alert-dialog";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { AppTableFeatures } from "@/lib/table-features";
-import { formatFileSize } from "@/lib/gallery-utils";
+import type { AppTableFeatures } from "../../../lib/table-features";
+import { formatFileSize } from "../../../lib/gallery-utils";
 import type { MediaItem } from "./types";
 
 interface MediaDataTableProps {

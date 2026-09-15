@@ -54,17 +54,17 @@ import {
 } from "lucide-react";
 import { ColorPicker, TEXT_COLORS, HIGHLIGHT_COLORS } from "./ColorPicker";
 import { TableOfContentsPlugin } from "../plugins/TableOfContentsPlugin";
-import { ToggleGroup } from "@/Components/ui/toggle-group";
-import { Toggle } from "@/Components/ui/toggle";
+import { ToggleGroup } from "../../ui/toggle-group";
+import { Toggle } from "../../ui/toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
-import { Separator } from "@/Components/ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/Components/ui/tooltip";
+} from "../../ui/dropdown-menu";
+import { Separator } from "../../ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../ui/tooltip";
 import { InsertMenu } from "./InsertMenu";
 import { ElementFormatDropdown } from "./ElementFormatDropdown";
 import { TextFormatDropdown } from "./TextFormatDropdown";

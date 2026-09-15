@@ -1,16 +1,16 @@
 import { Link, useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { PasswordInput } from "@/Components/shared/password-input";
-import { Label } from "@/Components/ui/label";
-import { Alert, AlertDescription } from "@/Components/ui/alert";
-import { Field, FieldDescription, FieldError } from "@/Components/ui/field";
-import { ErrorMessage } from "@/Components/shared/error-message";
-import { Spinner } from "@/Components/ui/spinner";
-import { registrationSchema } from "@/lib/schemas";
-import { zodErrorsToMap } from "@/lib/utils";
-import { useFieldAvailability } from "@/lib/use-field-availability";
+import { Button } from "../../Components/ui/button";
+import { Input } from "../../Components/ui/input";
+import { PasswordInput } from "../../Components/shared/password-input";
+import { Label } from "../../Components/ui/label";
+import { Alert, AlertDescription } from "../../Components/ui/alert";
+import { Field, FieldDescription, FieldError } from "../../Components/ui/field";
+import { ErrorMessage } from "../../Components/shared/error-message";
+import { Spinner } from "../../Components/ui/spinner";
+import { registrationSchema } from "../../lib/schemas";
+import { zodErrorsToMap } from "../../lib/utils";
+import { useFieldAvailability } from "../../lib/use-field-availability";
 import {
   Card,
   CardContent,
@@ -18,8 +18,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/Components/ui/card";
-import GuestLayout from "@/Layouts/GuestLayout";
+} from "../../Components/ui/card";
+import GuestLayout from "../../Layouts/GuestLayout";
 import { Loader2, Check, X } from "lucide-react";
 
 export default function Register({ errors: pageErrors }: { errors?: Record<string, string> }) {

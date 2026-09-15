@@ -1,6 +1,6 @@
 import { Head, router, usePage } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import AdminLayout from "../../../../Layouts/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../Components/ui/card";
 import {
   Table,
   TableBody,
@@ -8,16 +8,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/Components/ui/table";
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
+} from "../../../../Components/ui/table";
+import { Badge } from "../../../../Components/ui/badge";
+import { Button } from "../../../../Components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "../../../../Components/ui/select";
 import {
   Pagination,
   PaginationContent,
@@ -25,8 +25,8 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/Components/ui/pagination";
-import { DateRangePicker } from "@/Components/shared/date-range-picker";
+} from "../../../../Components/ui/pagination";
+import { DateRangePicker } from "../../../../Components/shared/date-range-picker";
 import {
   Filter,
   ScrollText,
@@ -43,10 +43,10 @@ import {
   EmptyTitle,
   EmptyDescription,
   EmptyMedia,
-} from "@/Components/ui/empty";
+} from "../../../../Components/ui/empty";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Input } from "@/Components/ui/input";
+import { cn } from "../../../../lib/utils";
+import { Input } from "../../../../Components/ui/input";
 
 interface RoleBrief {
   slug: string;

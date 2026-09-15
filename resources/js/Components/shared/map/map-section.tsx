@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Skeleton } from "@/Components/ui/skeleton";
+import { Skeleton } from "../../ui/skeleton";
 
 const MapSectionInner = React.lazy(() => import("./map-section-inner"));
 

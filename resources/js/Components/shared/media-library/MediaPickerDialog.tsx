@@ -5,8 +5,8 @@
  * instead of re-uploading (with an optional direct upload).
  */
 import * as React from "react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import {
   Dialog,
   DialogClose,
@@ -14,9 +14,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/Components/ui/dialog";
-import { ScrollArea } from "@/Components/ui/scroll-area";
-import { formatFileSize } from "@/lib/gallery-utils";
+} from "../../ui/dialog";
+import { ScrollArea } from "../../ui/scroll-area";
+import { formatFileSize } from "../../../lib/gallery-utils";
 import { MediaGrid } from "./MediaGrid";
 import { useMediaLibrary } from "./use-media-library";
 import { UploadCloud, Search, Check, X } from "lucide-react";

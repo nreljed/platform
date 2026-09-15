@@ -15,7 +15,7 @@ import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { autoUpdate, flip, inline, offset, shift, useFloating } from "@floating-ui/react";
 import { createPortal } from "react-dom";
 import { Bold, Italic, Underline, Strikethrough, Code, Link } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 
 function FloatingToolbarButton({
   icon: Icon,

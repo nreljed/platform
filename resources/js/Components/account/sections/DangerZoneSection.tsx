@@ -1,12 +1,12 @@
 import { useState, useCallback } from "react";
 import { router } from "@inertiajs/react";
-import { cn } from "@/lib/utils";
-import { Input } from "@/Components/ui/input";
-import { Textarea } from "@/Components/ui/textarea";
-import { Button } from "@/Components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/Components/ui/field";
-import { SettingsAccordionItem } from "@/Components/shared/settings-accordion";
-import { CurrentPasswordInput } from "@/Components/shared/current-password-input";
+import { cn } from "../../../lib/utils";
+import { Input } from "../../ui/input";
+import { Textarea } from "../../ui/textarea";
+import { Button } from "../../ui/button";
+import { Field, FieldError, FieldLabel } from "../../ui/field";
+import { SettingsAccordionItem } from "../../shared/settings-accordion";
+import { CurrentPasswordInput } from "../../shared/current-password-input";
 import { AlertTriangle, Trash2, X, CheckCircle2 } from "lucide-react";
 
 interface DangerZoneSectionProps {

@@ -32,7 +32,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "../../ui/dropdown-menu";
 import { useContainerPosition } from "../hooks/use-container-position";
 import { DropIndicator } from "../shared/drop-indicator";
 import {

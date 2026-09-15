@@ -1,16 +1,16 @@
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon, EyeOffIcon } from "lucide-react";
 import type { CellData, Column, RowData } from "@tanstack/react-table";
 
-import { AppTableFeatures } from "@/lib/table-features";
+import { AppTableFeatures } from "../../lib/table-features";
 import { cn } from "cn";
-import { Button } from "@/Components/ui/button";
+import { Button } from "./button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "./dropdown-menu";
 
 interface DataTableColumnHeaderProps<
   TData extends RowData,

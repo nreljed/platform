@@ -1,5 +1,5 @@
 import { Link, usePage } from "@inertiajs/react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import {
   Globe,
   ShieldCheck,
@@ -14,8 +14,8 @@ import {
   Settings,
   type LucideIcon,
 } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/Components/ui/sheet";
-import { Button } from "@/Components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
+import { Button } from "../ui/button";
 
 interface NavItem {
   icon: LucideIcon;

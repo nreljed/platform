@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
 import type { LucideIcon } from "lucide-react";
 import { router } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Button } from "@/Components/ui/button";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Separator } from "@/Components/ui/separator";
-import { Badge } from "@/Components/ui/badge";
-import { SettingsAccordionItem } from "@/Components/shared/settings-accordion";
+import { toast } from "../../ui/toast";
+import { Button } from "../../ui/button";
+import { Checkbox } from "../../ui/checkbox";
+import { Separator } from "../../ui/separator";
+import { Badge } from "../../ui/badge";
+import { SettingsAccordionItem } from "../../shared/settings-accordion";
 import { Bell, BellOff, Mail, Monitor, Volume2, VolumeX } from "lucide-react";
 
 interface NotificationTypeConfig {

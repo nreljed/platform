@@ -1,15 +1,15 @@
 import * as React from "react";
 import { router } from "@inertiajs/react";
-import { Section, SectionField } from "@/Components/shared/section";
+import { Section, SectionField } from "../../shared/section";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { Input } from "@/Components/ui/input";
-import { Button } from "@/Components/ui/button";
+} from "../../ui/select";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import {
   Combobox,
   ComboboxContent,
@@ -19,9 +19,9 @@ import {
   ComboboxList,
   ComboboxTrigger,
   ComboboxValue,
-} from "@/Components/ui/combobox";
+} from "../../ui/combobox";
 import { CalendarDays } from "lucide-react";
-import { toast } from "@/Components/ui/toast";
+import { toast } from "../../ui/toast";
 
 interface FormatOption {
   value: string;

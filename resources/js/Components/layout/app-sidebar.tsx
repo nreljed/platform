@@ -15,9 +15,9 @@ import {
   Database,
 } from "lucide-react";
 import { usePage } from "@inertiajs/react";
-import { NavMain, type NavItem } from "@/Components/navigation/nav-main";
-import { NavUser } from "@/Components/navigation/nav-user";
-import { NavLogo } from "@/Components/navigation/nav-logo";
+import { NavMain, type NavItem } from "../navigation/nav-main";
+import { NavUser } from "../navigation/nav-user";
+import { NavLogo } from "../navigation/nav-logo";
 import {
   Sidebar,
   SidebarContent,
@@ -27,9 +27,9 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
-} from "@/Components/ui/sidebar";
-import { useAuth } from "@/hooks/use-auth";
-import { featureIcons } from "@/lib/icons";
+} from "../ui/sidebar";
+import { useAuth } from "../../hooks/use-auth";
+import { featureIcons } from "../../lib/icons";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { isAdmin } = useAuth();

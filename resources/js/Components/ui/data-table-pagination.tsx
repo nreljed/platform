@@ -6,15 +6,15 @@ import {
 } from "lucide-react";
 import type { ReactTable, RowData } from "@tanstack/react-table";
 
-import { AppTableFeatures } from "@/lib/table-features";
-import { Button } from "@/Components/ui/button";
+import { AppTableFeatures } from "../../lib/table-features";
+import { Button } from "./button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "./select";
 
 interface DataTablePaginationProps<TData extends RowData> {
   table: ReactTable<AppTableFeatures, TData>;

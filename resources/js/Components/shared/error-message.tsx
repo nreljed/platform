@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Link } from "@inertiajs/react";
-import { FieldError } from "@/Components/ui/field";
-import { AlertDescription } from "@/Components/ui/alert";
-import { cn } from "@/lib/utils";
+import { FieldError } from "../ui/field";
+import { AlertDescription } from "../ui/alert";
+import { cn } from "../../lib/utils";
 
 export function ErrorMessage({
   error,

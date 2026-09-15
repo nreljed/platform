@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { Head, router } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
+import { toast } from "../../../Components/ui/toast";
 import {
   Bell,
   BellOff,
@@ -13,20 +13,20 @@ import {
   User,
   FileText,
 } from "lucide-react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/Components/ui/tabs";
+import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
+import { Button } from "../../../Components/ui/button";
+import { Input } from "../../../Components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "../../../Components/ui/tabs";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/Components/ui/accordion";
-import { cn } from "@/lib/utils";
-import { NotificationItem } from "@/Components/notifications/NotificationItem";
-import { NotificationDetailDialog } from "@/Components/notifications/NotificationDetailDialog";
-import type { StructuredNotification } from "@/lib/notifications";
+} from "../../../Components/ui/accordion";
+import { cn } from "../../../lib/utils";
+import { NotificationItem } from "../../../Components/notifications/NotificationItem";
+import { NotificationDetailDialog } from "../../../Components/notifications/NotificationDetailDialog";
+import type { StructuredNotification } from "../../../lib/notifications";
 
 interface NotificationsPageProps {
   notifications: {

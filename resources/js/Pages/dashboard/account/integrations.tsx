@@ -1,14 +1,14 @@
 import { Link, Head, usePage } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { AccountSettingsNav } from "@/Components/account/AccountSettingsNav";
-import AiKeysSection from "@/Components/account/sections/AiKeysSection";
+} from "../../../Components/ui/breadcrumb";
+import { AccountSettingsNav } from "../../../Components/account/AccountSettingsNav";
+import AiKeysSection from "../../../Components/account/sections/AiKeysSection";
 
 interface AiUsageSnapshot {
   cap: { requests: number; tokens: number };

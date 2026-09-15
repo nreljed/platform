@@ -6,7 +6,7 @@
  * (remove missing records / unrecorded files). Non-managers never see orphan
  * files from the backend, so their "files" row stays disabled.
  */
-import { Button } from "@/Components/ui/button";
+import { Button } from "../../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -14,9 +14,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/Components/ui/dialog";
-import { formatFileSize } from "@/lib/gallery-utils";
-import { cn } from "@/lib/utils";
+} from "../../ui/dialog";
+import { formatFileSize } from "../../../lib/gallery-utils";
+import { cn } from "../../../lib/utils";
 import {
   FolderX,
   ImageOff,

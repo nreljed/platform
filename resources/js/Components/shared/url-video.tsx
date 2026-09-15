@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Input } from "@/Components/ui/input";
+import { Input } from "../ui/input";
 import { AlertCircle, Play, Loader2 } from "lucide-react";
 
 const MATCH_URL_YOUTUBE =

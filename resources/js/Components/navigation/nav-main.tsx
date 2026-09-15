@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link, usePage } from "@inertiajs/react";
 import { ChevronRight, FileText } from "lucide-react";
-import { Badge } from "@/Components/ui/badge";
+import { Badge } from "../ui/badge";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -9,8 +9,8 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/Components/ui/sidebar";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/Components/ui/collapsible";
+} from "../ui/sidebar";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 
 interface NavItem {
   title: string;

@@ -9,7 +9,7 @@ import type {
 } from "@tanstack/react-table";
 import { flexRender, useTable } from "@tanstack/react-table";
 
-import { AppTableFeatures, tableFeaturesConfig } from "@/lib/table-features";
+import { AppTableFeatures, tableFeaturesConfig } from "../../lib/table-features";
 import {
   Table,
   TableBody,
@@ -17,18 +17,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/Components/ui/table";
-import { DataTablePagination } from "@/Components/ui/data-table-pagination";
-import { DataTableToolbar } from "@/Components/ui/data-table-toolbar";
-import { Button } from "@/Components/ui/button";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Skeleton } from "@/Components/ui/skeleton";
+} from "./table";
+import { DataTablePagination } from "./data-table-pagination";
+import { DataTableToolbar } from "./data-table-toolbar";
+import { Button } from "./button";
+import { Checkbox } from "./checkbox";
+import { Skeleton } from "./skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "./dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,7 +38,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/Components/ui/alert-dialog";
+} from "./alert-dialog";
 import { AlertTriangleIcon, ChevronDownIcon } from "lucide-react";
 
 interface BulkAction {

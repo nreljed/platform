@@ -1,21 +1,21 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Link, Head, router, usePage } from "@inertiajs/react";
 import type { RequestPayload } from "@inertiajs/core";
-import { toast } from "@/Components/ui/toast";
+import { toast } from "../../../Components/ui/toast";
 import { Loader2 } from "lucide-react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { AccountSettingsNav } from "@/Components/account/AccountSettingsNav";
-import { AccountInfoSection } from "@/Components/account/sections/AccountInfoSection";
-import { AvatarSection } from "@/Components/account/sections/AvatarSection";
-import { PersonalInfoSection } from "@/Components/account/sections/PersonalInfoSection";
-import { AddressSection } from "@/Components/settings/sections/AddressSection";
+} from "../../../Components/ui/breadcrumb";
+import { AccountSettingsNav } from "../../../Components/account/AccountSettingsNav";
+import { AccountInfoSection } from "../../../Components/account/sections/AccountInfoSection";
+import { AvatarSection } from "../../../Components/account/sections/AvatarSection";
+import { PersonalInfoSection } from "../../../Components/account/sections/PersonalInfoSection";
+import { AddressSection } from "../../../Components/settings/sections/AddressSection";
 
 export default function Profile() {
   const { props } = usePage();

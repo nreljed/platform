@@ -1,17 +1,17 @@
 import { useMemo, useState } from "react";
-import { toast } from "@/Components/ui/toast";
-import { Section, SectionField } from "@/Components/shared/section";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Textarea } from "@/Components/ui/textarea";
+import { toast } from "../../ui/toast";
+import { Section, SectionField } from "../../shared/section";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Textarea } from "../../ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { getCsrfToken } from "@/lib/gallery-utils";
+} from "../../ui/select";
+import { getCsrfToken } from "../../../lib/gallery-utils";
 import { FlaskConical, Loader2, Mail, Send, Trash2, Users } from "lucide-react";
 
 interface NotificationType {

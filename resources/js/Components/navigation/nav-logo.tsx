@@ -6,9 +6,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuContent,
-} from "@/Components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
-import { SidebarMenu, SidebarMenuItem } from "@/Components/ui/sidebar";
+} from "../ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { SidebarMenu, SidebarMenuItem } from "../ui/sidebar";
 
 interface NavLogoProps {
   logo?: string | null;

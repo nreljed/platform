@@ -1,5 +1,5 @@
 import { usePage } from "@inertiajs/react";
-import { formatDate, formatDateTime } from "@/lib/utils";
+import { formatDate, formatDateTime } from "../lib/utils";
 
 export function useFormatDate() {
   const props = usePage().props as Record<string, unknown>;

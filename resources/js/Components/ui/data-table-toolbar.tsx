@@ -1,16 +1,16 @@
 import { XIcon, SearchIcon, Settings2Icon } from "lucide-react";
 import type { ReactTable, RowData } from "@tanstack/react-table";
 
-import { AppTableFeatures } from "@/lib/table-features";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
+import { AppTableFeatures } from "../../lib/table-features";
+import { Button } from "./button";
+import { Input } from "./input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "./select";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -19,7 +19,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "./dropdown-menu";
 
 interface DataTableToolbarProps<TData extends RowData> {
   table: ReactTable<AppTableFeatures, TData>;

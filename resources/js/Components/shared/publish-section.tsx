@@ -1,10 +1,10 @@
 import * as React from "react";
 import { router } from "@inertiajs/react";
-import { useFormatDate } from "@/hooks/use-format-date";
-import { DateTimePicker } from "@/Components/shared/datetime-picker";
-import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
-import { Label } from "@/Components/ui/label";
-import { Button } from "@/Components/ui/button";
+import { useFormatDate } from "../../hooks/use-format-date";
+import { DateTimePicker } from "./datetime-picker";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
@@ -12,9 +12,9 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from "@/Components/ui/card";
+} from "../ui/card";
 import { Calendar, Clock, Send, FileEdit, Eye } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 interface PublishSectionProps {
   status?: string;

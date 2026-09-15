@@ -1,14 +1,14 @@
 import { Link, Head } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { AccountSettingsNav } from "@/Components/account/AccountSettingsNav";
-import { DangerZoneSection } from "@/Components/account/sections/DangerZoneSection";
+} from "../../../Components/ui/breadcrumb";
+import { AccountSettingsNav } from "../../../Components/account/AccountSettingsNav";
+import { DangerZoneSection } from "../../../Components/account/sections/DangerZoneSection";
 
 export default function Advanced() {
   return (

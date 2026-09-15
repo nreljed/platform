@@ -1,6 +1,6 @@
 import { Head } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { useAuth } from "@/hooks/use-auth";
+import AuthenticatedLayout from "../../Layouts/AuthenticatedLayout";
+import { useAuth } from "../../hooks/use-auth";
 
 export default function DashboardIndex() {
   const { user } = useAuth();

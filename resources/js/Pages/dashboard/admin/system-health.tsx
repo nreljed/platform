@@ -25,14 +25,14 @@ import {
   GitBranch,
   FolderOpen,
 } from "lucide-react";
-import AdminLayout from "@/Layouts/AdminLayout";
-import { jsonHeaders } from "@/lib/gallery-utils";
-import { normalizeVersion } from "@/lib/versions";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/Components/ui/collapsible";
-import { Separator } from "@/Components/ui/separator";
+import AdminLayout from "../../../Layouts/AdminLayout";
+import { jsonHeaders } from "../../../lib/gallery-utils";
+import { normalizeVersion } from "../../../lib/versions";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../Components/ui/card";
+import { Badge } from "../../../Components/ui/badge";
+import { Button } from "../../../Components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../../../Components/ui/collapsible";
+import { Separator } from "../../../Components/ui/separator";
 
 /*
 ─── Type Definitions ───

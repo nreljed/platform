@@ -1,9 +1,9 @@
 import { CheckIcon } from "lucide-react";
 import type { CellData, Column, RowData } from "@tanstack/react-table";
 
-import { AppTableFeatures } from "@/lib/table-features";
+import { AppTableFeatures } from "../../lib/table-features";
 import { cn } from "cn";
-import { Button } from "@/Components/ui/button";
+import { Button } from "./button";
 
 interface DataTableFilterProps<TData extends RowData, TValue extends CellData = CellData> {
   column?: Column<AppTableFeatures, TData, TValue>;

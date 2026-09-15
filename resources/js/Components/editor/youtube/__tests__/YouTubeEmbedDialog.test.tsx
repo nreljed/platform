@@ -10,11 +10,11 @@ vi.mock("@lexical/react/LexicalComposerContext", () => ({
   useLexicalComposerContext: () => [{ update }],
 }));
 
-vi.mock("@/Components/ui/toast", () => ({
+vi.mock("../../../ui/toast", () => ({
   toast: { add: vi.fn() },
 }));
 
-import { toast } from "@/Components/ui/toast";
+import { toast } from "../../../ui/toast";
 
 describe("YouTubeEmbedConfig.parseUrl", () => {
   it.each([

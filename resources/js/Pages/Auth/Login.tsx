@@ -1,17 +1,17 @@
 import * as React from "react";
 import { Link, useForm, usePage } from "@inertiajs/react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { PasswordInput } from "@/Components/shared/password-input";
-import { Label } from "@/Components/ui/label";
-import { Alert, AlertDescription } from "@/Components/ui/alert";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Field, FieldError } from "@/Components/ui/field";
-import { ErrorMessage } from "@/Components/shared/error-message";
+import { Button } from "../../Components/ui/button";
+import { Input } from "../../Components/ui/input";
+import { PasswordInput } from "../../Components/shared/password-input";
+import { Label } from "../../Components/ui/label";
+import { Alert, AlertDescription } from "../../Components/ui/alert";
+import { Checkbox } from "../../Components/ui/checkbox";
+import { Field, FieldError } from "../../Components/ui/field";
+import { ErrorMessage } from "../../Components/shared/error-message";
 import { CheckCircle } from "lucide-react";
-import { Spinner } from "@/Components/ui/spinner";
-import { loginSchema } from "@/lib/schemas";
-import { zodErrorsToMap } from "@/lib/utils";
+import { Spinner } from "../../Components/ui/spinner";
+import { loginSchema } from "../../lib/schemas";
+import { zodErrorsToMap } from "../../lib/utils";
 import {
   Card,
   CardContent,
@@ -19,8 +19,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/Components/ui/card";
-import GuestLayout from "@/Layouts/GuestLayout";
+} from "../../Components/ui/card";
+import GuestLayout from "../../Layouts/GuestLayout";
 
 interface LoginData {
   username: string;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildPageMap, type FoundationAppConfig, type PageImport } from "@/app";
+import { buildPageMap, type FoundationAppConfig, type PageImport } from "../app";
 
 function stubPage(_name: string): PageImport {
   return async () =>

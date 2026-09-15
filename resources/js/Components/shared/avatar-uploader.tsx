@@ -9,20 +9,20 @@ import {
   AlertCircle,
   CheckCircle2,
 } from "lucide-react";
-import { toast } from "@/Components/ui/toast";
-import { cn } from "@/lib/utils";
-import { Button } from "@/Components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/Components/ui/avatar";
-import { Alert, AlertDescription } from "@/Components/ui/alert";
-import { getUserInitials } from "@/hooks/use-auth";
-import { CropperDialog } from "@/Components/shared/cropper-dialog";
+import { toast } from "../ui/toast";
+import { cn } from "../../lib/utils";
+import { Button } from "../ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Alert, AlertDescription } from "../ui/alert";
+import { getUserInitials } from "../../hooks/use-auth";
+import { CropperDialog } from "./cropper-dialog";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/Components/ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];

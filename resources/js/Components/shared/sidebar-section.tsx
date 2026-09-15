@@ -1,8 +1,8 @@
 import * as React from "react";
 import { ChevronDown } from "lucide-react";
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/Components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+import { cn } from "../../lib/utils";
 
 interface SidebarSectionProps {
   icon: React.ComponentType<{ className?: string }>;

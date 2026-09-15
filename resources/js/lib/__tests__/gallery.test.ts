@@ -12,7 +12,7 @@ import {
   type GalleryImageUploading,
   type GalleryImageError,
   type ServerGalleryImage,
-} from "@/types/gallery";
+} from "../../types/gallery";
 
 describe("GalleryImage type guards", () => {
   const doneImage: GalleryImageDone = {

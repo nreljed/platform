@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "../ui/button";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -8,8 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogCancel,
-} from "@/Components/ui/alert-dialog";
-import { Badge } from "@/Components/ui/badge";
+} from "../ui/alert-dialog";
+import { Badge } from "../ui/badge";
 import { Tag } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 

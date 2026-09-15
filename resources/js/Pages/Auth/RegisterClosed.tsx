@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "../../Components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,9 +7,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/Components/ui/card";
+} from "../../Components/ui/card";
 import { UserX } from "lucide-react";
-import GuestLayout from "@/Layouts/GuestLayout";
+import GuestLayout from "../../Layouts/GuestLayout";
 
 export default function RegisterClosed() {
   return (

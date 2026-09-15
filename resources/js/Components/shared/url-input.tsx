@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Input } from "@/Components/ui/input";
-import { cn } from "@/lib/utils";
+import { Input } from "../ui/input";
+import { cn } from "../../lib/utils";
 import { Globe } from "lucide-react";
 
 const URL_PATTERN =

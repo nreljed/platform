@@ -1,22 +1,22 @@
 import { useState, useCallback, useMemo } from "react";
 import { Head, Link, router, usePage } from "@inertiajs/react";
-import type { PageProps } from "@/types";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Textarea } from "@/Components/ui/textarea";
-import { Label } from "@/Components/ui/label";
+import type { PageProps } from "../../../types";
+import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
+import { Button } from "../../../Components/ui/button";
+import { Input } from "../../../Components/ui/input";
+import { Textarea } from "../../../Components/ui/textarea";
+import { Label } from "../../../Components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { Separator } from "@/Components/ui/separator";
-import { SettingsAccordion } from "@/Components/shared/settings-accordion";
-import { SystemStatusCards } from "@/Pages/dashboard/notifications/system-status-cards";
-import { QuickSendSection } from "@/Pages/dashboard/notifications/quick-send-section";
+} from "../../../Components/ui/select";
+import { Separator } from "../../../Components/ui/separator";
+import { SettingsAccordion } from "../../../Components/shared/settings-accordion";
+import { SystemStatusCards } from "./system-status-cards";
+import { QuickSendSection } from "./quick-send-section";
 import {
   Bell,
   BellDot,

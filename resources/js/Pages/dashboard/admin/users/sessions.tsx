@@ -1,6 +1,6 @@
 import { Head, Link, router, usePage } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import AdminLayout from "../../../../Layouts/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../Components/ui/card";
 import {
   Table,
   TableBody,
@@ -8,9 +8,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/Components/ui/table";
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
+} from "../../../../Components/ui/table";
+import { Badge } from "../../../../Components/ui/badge";
+import { Button } from "../../../../Components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +20,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/Components/ui/alert-dialog";
+} from "../../../../Components/ui/alert-dialog";
 import { ArrowLeft, Smartphone, Monitor, Trash2 } from "lucide-react";
 import { useState } from "react";
 

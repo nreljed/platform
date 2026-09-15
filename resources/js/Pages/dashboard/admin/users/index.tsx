@@ -1,18 +1,18 @@
 import { Head, Link, router, usePage } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
-import { DataTable } from "@/Components/ui/data-table";
-import { DataTableColumnHeader } from "@/Components/ui/data-table-column-header";
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/Components/ui/avatar";
-import { getUserInitials, useAuth } from "@/hooks/use-auth";
+import AdminLayout from "../../../../Layouts/AdminLayout";
+import { DataTable } from "../../../../Components/ui/data-table";
+import { DataTableColumnHeader } from "../../../../Components/ui/data-table-column-header";
+import { Badge } from "../../../../Components/ui/badge";
+import { Button } from "../../../../Components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "../../../../Components/ui/avatar";
+import { getUserInitials, useAuth } from "../../../../hooks/use-auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "../../../../Components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,7 +22,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/Components/ui/alert-dialog";
+} from "../../../../Components/ui/alert-dialog";
 import {
   Empty,
   EmptyContent,
@@ -30,11 +30,11 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/Components/ui/empty";
+} from "../../../../Components/ui/empty";
 import { Plus, Pencil, Trash2, MoreHorizontal, LogIn, MailCheck, Send, Users } from "lucide-react";
 import { useState, useMemo } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { AppTableFeatures } from "@/lib/table-features";
+import type { AppTableFeatures } from "../../../../lib/table-features";
 
 interface Role {
   id: number;

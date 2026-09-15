@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Input } from "@/Components/ui/input";
-import { Field, FieldLabel, FieldError, FieldDescription } from "@/Components/ui/field";
+import { Input } from "../ui/input";
+import { Field, FieldLabel, FieldError, FieldDescription } from "../ui/field";
 import { Eye, EyeOff } from "lucide-react";
 import { Link } from "@inertiajs/react";
 

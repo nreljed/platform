@@ -6,8 +6,8 @@
  * standalone page and the picker dialog.
  */
 import * as React from "react";
-import { toast } from "@/Components/ui/toast";
-import { getCsrfToken, jsonHeaders } from "@/lib/gallery-utils";
+import { toast } from "../../ui/toast";
+import { getCsrfToken, jsonHeaders } from "../../../lib/gallery-utils";
 import type {
   MediaItem,
   MediaListResponse,

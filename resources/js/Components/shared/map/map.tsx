@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "@/Components/ui/button";
-import { ButtonGroup } from "@/Components/ui/button-group";
+import { cn } from "../../../lib/utils";
+import { Button, buttonVariants } from "../../ui/button";
+import { ButtonGroup } from "../../ui/button-group";
 import {
   DropdownMenu,
   DropdownMenuGroup,
@@ -12,7 +12,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "../../ui/dropdown-menu";
 import { PlaceAutocomplete } from "./place-autocomplete";
 import "leaflet.fullscreen/dist/Control.FullScreen.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
@@ -69,7 +69,7 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import { useDarkMode } from "@/hooks/use-dark-mode";
+import { useDarkMode } from "../../../hooks/use-dark-mode";
 
 function createLazyComponent(factory) {
   const LazyComponent = lazy(factory);

@@ -3,7 +3,7 @@ import * as RPNInput from "react-phone-number-input";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import flags from "react-phone-number-input/flags";
 import type { CountryCode } from "libphonenumber-js/min";
-import { Button } from "@/Components/ui/button";
+import { Button } from "../ui/button";
 import {
   Command,
   CommandEmpty,
@@ -11,11 +11,11 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/Components/ui/command";
-import { Input } from "@/Components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
-import { ScrollArea } from "@/Components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+} from "../ui/command";
+import { Input } from "../ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { ScrollArea } from "../ui/scroll-area";
+import { cn } from "../../lib/utils";
 
 const toE164 = (val: string | undefined): string | undefined => {
   if (!val || typeof val !== "string") return undefined;

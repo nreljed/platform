@@ -1,5 +1,5 @@
 import * as React from "react";
-import { composeRefs } from "@/lib/compose-refs";
+import { composeRefs } from "./compose-refs";
 
 function mergeProps(
   slotProps: Record<string, unknown>,

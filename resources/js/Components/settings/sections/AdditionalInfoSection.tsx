@@ -1,8 +1,8 @@
 import * as React from "react";
 import { router } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Section } from "@/Components/shared/section";
-import { Repeater } from "@/Components/shared/repeater";
+import { toast } from "../../ui/toast";
+import { Section } from "../../shared/section";
+import { Repeater } from "../../shared/repeater";
 import { Building2, Phone } from "lucide-react";
 
 const SOCIAL_PRESETS = [

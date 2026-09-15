@@ -7,18 +7,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+} from "../../ui/dialog";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { Switch } from "@/Components/ui/switch";
+} from "../../ui/select";
+import { Switch } from "../../ui/switch";
 import { TOC_DEPTH_VALUES, type TableOfContentsOptions } from "./TableOfContentsNode";
 import { $isTableOfContentsNode } from "./TableOfContentsNode";
 

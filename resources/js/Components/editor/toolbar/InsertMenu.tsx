@@ -21,8 +21,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
-import { Button } from "@/Components/ui/button";
+} from "../../ui/dropdown-menu";
+import { Button } from "../../ui/button";
 import { ImageInsertDialog } from "../image";
 import { InsertTableDialog } from "../table";
 import { InsertLayoutDialog } from "../layout";

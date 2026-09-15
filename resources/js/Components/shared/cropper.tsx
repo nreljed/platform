@@ -1,11 +1,11 @@
 import { cva } from "class-variance-authority";
-import { Slot } from "@/lib/slot";
+import { Slot } from "../../lib/slot";
 import * as React from "react";
-import { useComposedRefs } from "@/lib/compose-refs";
-import { cn } from "@/lib/utils";
-import { useAsRef } from "@/hooks/use-as-ref";
-import { useIsomorphicLayoutEffect } from "@/hooks/use-isomorphic-layout-effect";
-import { useLazyRef } from "@/hooks/use-lazy-ref";
+import { useComposedRefs } from "../../lib/compose-refs";
+import { cn } from "../../lib/utils";
+import { useAsRef } from "../../hooks/use-as-ref";
+import { useIsomorphicLayoutEffect } from "../../hooks/use-isomorphic-layout-effect";
+import { useLazyRef } from "../../hooks/use-lazy-ref";
 
 const ROOT_NAME = "Cropper";
 const ROOT_IMPL_NAME = "CropperImpl";

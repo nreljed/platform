@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { usePage, router } from "@inertiajs/react";
-import { getCsrfToken, jsonHeaders } from "@/lib/gallery-utils";
-import type { Notification } from "@/lib/notifications";
+import { getCsrfToken, jsonHeaders } from "../lib/gallery-utils";
+import type { Notification } from "../lib/notifications";
 
 interface UseNotificationsResult {
   unreadCount: number;
@@ -425,4 +425,4 @@ export function useNotifications(): UseNotificationsResult {
   };
 }
 
-export { type Severity, type Notification } from "@/lib/notifications";
+export { type Severity, type Notification } from "../lib/notifications";

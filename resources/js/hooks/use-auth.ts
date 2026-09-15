@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { usePage } from "@inertiajs/react";
-import { User } from "@/types";
+import { User } from "../types";
 
 interface AuthData {
   user?: User | null;

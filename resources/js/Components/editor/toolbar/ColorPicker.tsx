@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
-import { Toggle } from "@/Components/ui/toggle";
-import { Input } from "@/Components/ui/input";
-import { cn } from "@/lib/utils";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/Components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
+import { Toggle } from "../../ui/toggle";
+import { Input } from "../../ui/input";
+import { cn } from "../../../lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
 
 export const TEXT_COLORS = [
   { label: "Default", value: "" },

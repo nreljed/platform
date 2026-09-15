@@ -1,14 +1,14 @@
 import React, { useMemo, useEffect } from "react";
 import { useForm, router } from "@inertiajs/react";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { Alert, AlertDescription } from "@/Components/ui/alert";
-import { Field, FieldError } from "@/Components/ui/field";
-import { ErrorMessage } from "@/Components/shared/error-message";
-import { Spinner } from "@/Components/ui/spinner";
-import { forgotPasswordSchema } from "@/lib/schemas";
-import { zodErrorsToMap } from "@/lib/utils";
+import { Button } from "../../Components/ui/button";
+import { Input } from "../../Components/ui/input";
+import { Label } from "../../Components/ui/label";
+import { Alert, AlertDescription } from "../../Components/ui/alert";
+import { Field, FieldError } from "../../Components/ui/field";
+import { ErrorMessage } from "../../Components/shared/error-message";
+import { Spinner } from "../../Components/ui/spinner";
+import { forgotPasswordSchema } from "../../lib/schemas";
+import { zodErrorsToMap } from "../../lib/utils";
 import {
   Card,
   CardContent,
@@ -16,8 +16,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/Components/ui/card";
-import GuestLayout from "@/Layouts/GuestLayout";
+} from "../../Components/ui/card";
+import GuestLayout from "../../Layouts/GuestLayout";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 
 const ALLOWED_REDIRECT_PREFIXES = ["/", "/dashboard"];

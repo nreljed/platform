@@ -1,15 +1,15 @@
 import * as React from "react";
-import { Section, SectionField } from "@/Components/shared/section";
-import { Input } from "@/Components/ui/input";
+import { Section, SectionField } from "../../shared/section";
+import { Input } from "../../ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { LogoUploader } from "@/Components/settings/LogoUploader";
-import { FaviconUploader } from "@/Components/settings/FaviconUploader";
+} from "../../ui/select";
+import { LogoUploader } from "../LogoUploader";
+import { FaviconUploader } from "../FaviconUploader";
 import { Globe } from "lucide-react";
 
 const LOCALE_OPTIONS = [

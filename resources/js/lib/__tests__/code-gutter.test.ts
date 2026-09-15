@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { countCodeLines, buildCodeGutter } from "@/lib/code-gutter";
+import { countCodeLines, buildCodeGutter } from "../code-gutter";
 
 describe("countCodeLines", () => {
   it("returns 1 for empty or single-line input", () => {

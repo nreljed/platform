@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { router, usePage } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Section, SectionField } from "@/Components/shared/section";
-import { Input } from "@/Components/ui/input";
-import { Switch } from "@/Components/ui/switch";
-import { Label } from "@/Components/ui/label";
+import { toast } from "../../ui/toast";
+import { Section, SectionField } from "../../shared/section";
+import { Input } from "../../ui/input";
+import { Switch } from "../../ui/switch";
+import { Label } from "../../ui/label";
 import { Wrench, Copy, Check, Clock, Mail } from "lucide-react";
 
 interface MaintenanceSectionProps {

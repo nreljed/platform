@@ -1,12 +1,12 @@
 import { createInertiaApp, router } from "@inertiajs/react";
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "next-themes";
-import { TooltipProvider } from "@/Components/ui/tooltip";
-import { Toaster, toast } from "@/Components/ui/toast";
-import { ErrorBoundary } from "@/Components/ErrorBoundary";
+import { TooltipProvider } from "./Components/ui/tooltip";
+import { Toaster, toast } from "./Components/ui/toast";
+import { ErrorBoundary } from "./Components/ErrorBoundary";
 import type { PageImport } from "./dashboard";
 
-import "@/Components/ui/sidebar";
+import "./Components/ui/sidebar";
 
 import { useEffect } from "react";
 

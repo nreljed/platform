@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useForm, router } from "@inertiajs/react";
-import { Button } from "@/Components/ui/button";
-import { PasswordInput } from "@/Components/shared/password-input";
-import { Alert, AlertDescription } from "@/Components/ui/alert";
-import { Spinner } from "@/Components/ui/spinner";
-import { resetPasswordSchema } from "@/lib/schemas";
-import { zodErrorsToMap } from "@/lib/utils";
+import { Button } from "../../Components/ui/button";
+import { PasswordInput } from "../../Components/shared/password-input";
+import { Alert, AlertDescription } from "../../Components/ui/alert";
+import { Spinner } from "../../Components/ui/spinner";
+import { resetPasswordSchema } from "../../lib/schemas";
+import { zodErrorsToMap } from "../../lib/utils";
 import {
   Card,
   CardContent,
@@ -13,8 +13,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/Components/ui/card";
-import GuestLayout from "@/Layouts/GuestLayout";
+} from "../../Components/ui/card";
+import GuestLayout from "../../Layouts/GuestLayout";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 
 function SuccessRedirect({ status }: { status: string }) {

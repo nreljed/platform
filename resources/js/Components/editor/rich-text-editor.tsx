@@ -16,7 +16,7 @@ import { HorizontalRuleExtension, AutoFocusExtension } from "@lexical/extension"
 import { DragonExtension } from "@lexical/dragon";
 import { TRANSFORMERS } from "@lexical/markdown";
 import { type ElementNode } from "lexical";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { editorTheme } from "./editor-theme";
 import { EditorToolbar } from "./toolbar";
 import { KeyboardShortcutsPlugin } from "./plugins/KeyboardShortcutsPlugin";

@@ -18,8 +18,8 @@ import { mergeRegister } from "@lexical/utils";
 import { $isLinkNode, TOGGLE_LINK_COMMAND, type LinkNode } from "@lexical/link";
 import { ExternalLink, Pencil, Trash2, Check, X, LinkIcon } from "lucide-react";
 import { createPortal } from "react-dom";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 
 function sanitizeUrl(url: string): string {
   const trimmed = url.trim();

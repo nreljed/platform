@@ -1,14 +1,14 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandItem,
   CommandList,
-} from "@/Components/ui/command";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/Components/ui/input-group";
-import { Spinner } from "@/Components/ui/spinner";
+} from "../../ui/command";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "../../ui/input-group";
+import { Spinner } from "../../ui/spinner";
 import { MapPinIcon, NavigationIcon, SearchIcon, XIcon } from "lucide-react";
 import * as React from "react";
 

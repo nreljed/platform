@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
-import { Card, CardContent } from "@/Components/ui/card";
+import { Card, CardContent } from "../../ui/card";
 import {
   Empty,
   EmptyHeader,
   EmptyTitle,
   EmptyDescription,
   EmptyMedia,
-} from "@/Components/ui/empty";
+} from "../../ui/empty";
 import { Inbox } from "lucide-react";
 
 interface CardGridProps<T> {

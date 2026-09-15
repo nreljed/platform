@@ -11,10 +11,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
-import { Label } from "@/Components/ui/label";
-import { cn } from "@/lib/utils";
+} from "../../ui/dialog";
+import { Button } from "../../ui/button";
+import { Label } from "../../ui/label";
+import { cn } from "../../../lib/utils";
 
 const LAYOUTS = [
   {

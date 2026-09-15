@@ -8,12 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+} from "../../ui/dialog";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
 import { uploadImageToServer, deleteImageFromServer } from "./ImagePlugin";
-import { toast } from "@/Components/ui/toast";
+import { toast } from "../../ui/toast";
 import { Upload } from "lucide-react";
 
 interface EditImageDialogProps {

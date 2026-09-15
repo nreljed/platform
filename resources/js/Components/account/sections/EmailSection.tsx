@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { router } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Input } from "@/Components/ui/input";
-import { Button } from "@/Components/ui/button";
-import { Label } from "@/Components/ui/label";
-import { Badge } from "@/Components/ui/badge";
-import { Field, FieldError, FieldLabel } from "@/Components/ui/field";
-import { SettingsAccordionItem } from "@/Components/shared/settings-accordion";
-import { cn } from "@/lib/utils";
+import { toast } from "../../ui/toast";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { Label } from "../../ui/label";
+import { Badge } from "../../ui/badge";
+import { Field, FieldError, FieldLabel } from "../../ui/field";
+import { SettingsAccordionItem } from "../../shared/settings-accordion";
+import { cn } from "../../../lib/utils";
 import { Mail, CheckCircle2, AlertTriangle } from "lucide-react";
-import { CurrentPasswordInput } from "@/Components/shared/current-password-input";
+import { CurrentPasswordInput } from "../../shared/current-password-input";
 
 interface EmailSectionProps {
   user?: Record<string, unknown>;

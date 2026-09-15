@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { router } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Section } from "@/Components/shared/section";
+import { toast } from "../../ui/toast";
+import { Section } from "../../shared/section";
 import { Shield } from "lucide-react";
-import { CurrentPasswordInput } from "@/Components/shared/current-password-input";
-import { PasswordInput } from "@/Components/shared/password-input";
+import { CurrentPasswordInput } from "../../shared/current-password-input";
+import { PasswordInput } from "../../shared/password-input";
 
 interface PasswordSectionProps {
   asAccordion?: boolean;

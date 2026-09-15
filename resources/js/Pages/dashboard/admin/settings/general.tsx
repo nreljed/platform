@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { Head, router, Link } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import AdminLayout from "../../../../Layouts/AdminLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { AdminSettingsNav } from "@/Components/settings/AdminSettingsNav";
-import { GeneralSection } from "@/Components/settings/sections/GeneralSection";
-import { FormattingSection } from "@/Components/settings/sections/FormattingSection";
-import { DateFormatSection } from "@/Components/settings/sections/DateFormatSection";
-import { toast } from "@/Components/ui/toast";
+} from "../../../../Components/ui/breadcrumb";
+import { AdminSettingsNav } from "../../../../Components/settings/AdminSettingsNav";
+import { GeneralSection } from "../../../../Components/settings/sections/GeneralSection";
+import { FormattingSection } from "../../../../Components/settings/sections/FormattingSection";
+import { DateFormatSection } from "../../../../Components/settings/sections/DateFormatSection";
+import { toast } from "../../../../Components/ui/toast";
 
 interface GeneralProps {
   settings?: Record<string, string>;

@@ -1,12 +1,12 @@
 import React from "react";
-import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from "@/Components/ui/sheet";
-import { Button } from "@/Components/ui/button";
-import { ScrollArea } from "@/Components/ui/scroll-area";
-import { Separator } from "@/Components/ui/separator";
+import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
+import { Button } from "../ui/button";
+import { ScrollArea } from "../ui/scroll-area";
+import { Separator } from "../ui/separator";
 import { X, CheckCheck, Bell, BellOff, Eye } from "lucide-react";
 import { Link } from "@inertiajs/react";
-import { NotificationItem } from "@/Components/notifications/NotificationItem";
-import type { StructuredNotification } from "@/lib/notifications";
+import { NotificationItem } from "./NotificationItem";
+import type { StructuredNotification } from "../../lib/notifications";
 
 type Notification = StructuredNotification;
 

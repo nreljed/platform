@@ -19,9 +19,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
-import { Toggle } from "@/Components/ui/toggle";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/Components/ui/tooltip";
+} from "../../ui/dropdown-menu";
+import { Toggle } from "../../ui/toggle";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../ui/tooltip";
 
 interface TextFormatDropdownProps {
   isStrikethrough: boolean;

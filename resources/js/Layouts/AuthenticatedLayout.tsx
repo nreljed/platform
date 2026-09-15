@@ -1,19 +1,19 @@
 import { PropsWithChildren, ReactNode } from "react";
 import { Head } from "@inertiajs/react";
-import { AppSidebar } from "@/Components/layout/app-sidebar";
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/Components/ui/sidebar";
-import { Separator } from "@/Components/ui/separator";
+import { AppSidebar } from "../Components/layout/app-sidebar";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "../Components/ui/sidebar";
+import { Separator } from "../Components/ui/separator";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "@/Components/ui/breadcrumb";
-import { CommandSearch } from "@/Components/navigation/command-search";
-import ImpersonationBanner from "@/Components/layout/ImpersonationBanner";
-import NotificationBell from "@/Components/notifications/NotificationBell";
-import { NavUser } from "@/Components/navigation/nav-user";
-import { cn } from "@/lib/utils";
+} from "../Components/ui/breadcrumb";
+import { CommandSearch } from "../Components/navigation/command-search";
+import ImpersonationBanner from "../Components/layout/ImpersonationBanner";
+import NotificationBell from "../Components/notifications/NotificationBell";
+import { NavUser } from "../Components/navigation/nav-user";
+import { cn } from "../lib/utils";
 
 type LayoutVariant = "default" | "admin";
 

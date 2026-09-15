@@ -1,14 +1,14 @@
 import React from "react";
 import { router } from "@inertiajs/react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import {
   getSeverity,
   normalizeNotificationType,
   type Severity,
   type StructuredNotification,
-} from "@/lib/notifications";
-import { Button } from "@/Components/ui/button";
-import { Checkbox } from "@/Components/ui/checkbox";
+} from "../../lib/notifications";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 import {
   Check,
   Trash2,
@@ -23,8 +23,8 @@ import {
   UserPlus,
 } from "lucide-react";
 
-export type { StructuredNotification } from "@/lib/notifications";
-export type { Severity } from "@/lib/notifications";
+export type { StructuredNotification } from "../../lib/notifications";
+export type { Severity } from "../../lib/notifications";
 
 type TypeIconConfig = {
   icon: React.ComponentType<{ className?: string }>;

@@ -2,9 +2,9 @@
  * MediaGrid - shared Media Library display, in grid or list mode.
  */
 import { Image as ImageIcon } from "lucide-react";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Skeleton } from "@/Components/ui/skeleton";
-import { formatFileSize } from "@/lib/gallery-utils";
+import { Checkbox } from "../../ui/checkbox";
+import { Skeleton } from "../../ui/skeleton";
+import { formatFileSize } from "../../../lib/gallery-utils";
 import type { MediaItem } from "./types";
 
 export type MediaView = "grid" | "list";

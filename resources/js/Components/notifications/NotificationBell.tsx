@@ -1,8 +1,8 @@
 import React from "react";
 import { Bell } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { useNotifications } from "@/hooks/use-notifications";
-import { NotificationPanel } from "@/Components/notifications/NotificationPanel";
+import { Button } from "../ui/button";
+import { useNotifications } from "../../hooks/use-notifications";
+import { NotificationPanel } from "./NotificationPanel";
 
 export default function NotificationBell() {
   const [open, setOpen] = React.useState(false);

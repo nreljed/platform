@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { router } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Section, SectionField } from "@/Components/shared/section";
-import { Input } from "@/Components/ui/input";
-import { Button } from "@/Components/ui/button";
-import { Switch } from "@/Components/ui/switch";
-import { Label } from "@/Components/ui/label";
+import { toast } from "../../ui/toast";
+import { Section, SectionField } from "../../shared/section";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { Switch } from "../../ui/switch";
+import { Label } from "../../ui/label";
 import { Network, Plus, Trash2 } from "lucide-react";
 
 interface IpRule {

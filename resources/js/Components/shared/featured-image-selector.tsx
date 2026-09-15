@@ -1,10 +1,10 @@
 import * as React from "react";
 import { X, Image as ImageIcon, Loader2, AlertCircle, Images } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Progress } from "@/Components/ui/progress";
-import { toast } from "@/Components/ui/toast";
-import { MediaPickerDialog } from "@/Components/shared/media-library/MediaPickerDialog";
-import { useImageUpload } from "@/hooks/use-image-upload";
+import { Button } from "../ui/button";
+import { Progress } from "../ui/progress";
+import { toast } from "../ui/toast";
+import { MediaPickerDialog } from "./media-library/MediaPickerDialog";
+import { useImageUpload } from "../../hooks/use-image-upload";
 
 interface FeaturedImageSelectorProps {
   value?: string;

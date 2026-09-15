@@ -1,21 +1,21 @@
 import { Head, Link, useForm } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import AdminLayout from "../../../../Layouts/AdminLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { AdminSettingsNav } from "@/Components/settings/AdminSettingsNav";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
-import { Switch } from "@/Components/ui/switch";
-import { Label } from "@/Components/ui/label";
-import { Field } from "@/Components/ui/field";
-import { Alert, AlertDescription, AlertTitle } from "@/Components/ui/alert";
-import { CurrentPasswordInput } from "@/Components/shared/current-password-input";
+} from "../../../../Components/ui/breadcrumb";
+import { AdminSettingsNav } from "../../../../Components/settings/AdminSettingsNav";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../../Components/ui/card";
+import { Badge } from "../../../../Components/ui/badge";
+import { Button } from "../../../../Components/ui/button";
+import { Switch } from "../../../../Components/ui/switch";
+import { Label } from "../../../../Components/ui/label";
+import { Field } from "../../../../Components/ui/field";
+import { Alert, AlertDescription, AlertTitle } from "../../../../Components/ui/alert";
+import { CurrentPasswordInput } from "../../../../Components/shared/current-password-input";
 import { ShieldAlert, TerminalSquare } from "lucide-react";
 
 interface DeveloperSettingsProps {

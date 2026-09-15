@@ -4,8 +4,8 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/Components/ui/accordion";
-import { cn } from "@/lib/utils";
+} from "../ui/accordion";
+import { cn } from "../../lib/utils";
 
 function getStorageKey(value: string) {
   if (typeof window === "undefined") return null;

@@ -19,7 +19,7 @@ import {
 } from "./ColumnsPlugin";
 import { useContainerPosition } from "../hooks/use-container-position";
 import { DropIndicator } from "../shared/drop-indicator";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 
 type ColumnDragData = {
   columnIndex: number;

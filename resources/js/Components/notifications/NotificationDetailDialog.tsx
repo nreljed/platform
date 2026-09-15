@@ -7,12 +7,12 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
-import { Badge } from "@/Components/ui/badge";
-import { Separator } from "@/Components/ui/separator";
-import { getSeverity, getTypeLabel, SEVERITY_COLORS, SEVERITY_LABELS } from "@/lib/notifications";
-import type { StructuredNotification } from "@/lib/notifications";
+} from "../ui/dialog";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { Separator } from "../ui/separator";
+import { getSeverity, getTypeLabel, SEVERITY_COLORS, SEVERITY_LABELS } from "../../lib/notifications";
+import type { StructuredNotification } from "../../lib/notifications";
 
 interface NotificationDetailDialogProps {
   notification: StructuredNotification | null;

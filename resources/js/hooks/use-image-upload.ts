@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { processImage, getCsrfToken } from "@/lib/gallery-utils";
+import { processImage, getCsrfToken } from "../lib/gallery-utils";
 
 interface UseImageUploadOptions {
   uploadUrl?: string;

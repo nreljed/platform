@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useRef } from "react";
-import { sanitizeLexicalTables } from "@/lib/sanitize-lexical-tables";
-import { buildCodeGutter, countCodeLines } from "@/lib/code-gutter";
+import { sanitizeLexicalTables } from "../../lib/sanitize-lexical-tables";
+import { buildCodeGutter, countCodeLines } from "../../lib/code-gutter";
 
 interface ProseContentProps {
   html: string;

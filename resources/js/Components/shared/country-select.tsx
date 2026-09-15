@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/Components/ui/button";
+import { cn } from "../../lib/utils";
+import { Button } from "../ui/button";
 import {
   Command,
   CommandEmpty,
@@ -9,9 +9,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/Components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
-import { COUNTRY_NAMES } from "@/lib/country-names";
+} from "../ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { COUNTRY_NAMES } from "../../lib/country-names";
 
 interface CountrySelectProps {
   value?: string;

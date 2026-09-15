@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { ChevronDown, ChevronRight, ListTree, Settings2 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/Components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { Button } from "../../ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
+import { cn } from "../../../lib/utils";
 import {
   $getHeadings,
   buildTocTree,

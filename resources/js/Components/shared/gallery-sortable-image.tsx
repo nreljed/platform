@@ -2,17 +2,17 @@ import * as React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Trash2, Star, GripVertical, Check, RotateCcw, AlertCircle } from "lucide-react";
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
-import { Progress } from "@/Components/ui/progress";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Progress } from "../ui/progress";
 import {
   type GalleryImage,
   isGalleryImageDone,
   isGalleryImageUploading,
   isGalleryImageError,
   getGalleryImageUrl,
-} from "@/types/gallery";
-import { formatFileSize } from "@/lib/gallery-utils";
+} from "../../types/gallery";
+import { formatFileSize } from "../../lib/gallery-utils";
 
 interface SortableImageProps {
   image: GalleryImage;

@@ -1,15 +1,15 @@
 import { Link, Head, usePage } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { AccountSettingsNav } from "@/Components/account/AccountSettingsNav";
-import { EmailSection } from "@/Components/account/sections/EmailSection";
-import { PasswordSection } from "@/Components/account/sections/PasswordSection";
+} from "../../../Components/ui/breadcrumb";
+import { AccountSettingsNav } from "../../../Components/account/AccountSettingsNav";
+import { EmailSection } from "../../../Components/account/sections/EmailSection";
+import { PasswordSection } from "../../../Components/account/sections/PasswordSection";
 
 export default function Security() {
   const { props } = usePage();

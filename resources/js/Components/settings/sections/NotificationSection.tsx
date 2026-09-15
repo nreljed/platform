@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { router } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Section, SectionField } from "@/Components/shared/section";
-import { Switch } from "@/Components/ui/switch";
-import { Label } from "@/Components/ui/label";
+import { toast } from "../../ui/toast";
+import { Section, SectionField } from "../../shared/section";
+import { Switch } from "../../ui/switch";
+import { Label } from "../../ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "../../ui/select";
 import { Bell } from "lucide-react";
 
 interface NotificationSectionProps {

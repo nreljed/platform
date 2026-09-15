@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
-import { Badge } from "@/Components/ui/badge";
-import { Card, CardContent } from "@/Components/ui/card";
+import { Badge } from "../../../Components/ui/badge";
+import { Card, CardContent } from "../../../Components/ui/card";
 import { Database, Mail, Bell, BellRing } from "lucide-react";
 
 interface SystemStatusCardsProps {

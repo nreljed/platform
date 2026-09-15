@@ -8,13 +8,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
-import { toast } from "@/Components/ui/toast";
-import { MediaPickerDialog } from "@/Components/shared/media-library/MediaPickerDialog";
+} from "../../ui/dialog";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
+import { toast } from "../../ui/toast";
+import { MediaPickerDialog } from "../../shared/media-library/MediaPickerDialog";
 import { ImagePlus, Upload, LinkIcon, Images } from "lucide-react";
 
 interface ImageInsertDialogProps {

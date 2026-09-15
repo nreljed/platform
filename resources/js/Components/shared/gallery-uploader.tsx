@@ -15,10 +15,10 @@ import {
   sortableKeyboardCoordinates,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
-import { toast } from "@/Components/ui/toast";
+import { toast } from "../ui/toast";
 import { Upload, Loader2, Trash2, CheckSquare, Square, X, SquareCheck } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { cn } from "../../lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,10 +28,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/Components/ui/alert-dialog";
+} from "../ui/alert-dialog";
 import { SortableImage } from "./gallery-sortable-image";
-import { useImageUpload, type UploadResult } from "@/hooks/use-image-upload";
-import { GALLERY_MAX_SIZE, formatFileSize } from "@/lib/gallery-utils";
+import { useImageUpload, type UploadResult } from "../../hooks/use-image-upload";
+import { GALLERY_MAX_SIZE, formatFileSize } from "../../lib/gallery-utils";
 import {
   type GalleryImage,
   type GalleryImageDone,
@@ -41,10 +41,10 @@ import {
   createGalleryImageFromFile,
   imagesToServerFormat,
   imagesFromServerFormat,
-} from "@/types/gallery";
+} from "../../types/gallery";
 
-export type { GalleryImage, GalleryImageDone, ServerGalleryImage } from "@/types/gallery";
-export type { UploadResult } from "@/hooks/use-image-upload";
+export type { GalleryImage, GalleryImageDone, ServerGalleryImage } from "../../types/gallery";
+export type { UploadResult } from "../../hooks/use-image-upload";
 
 type GalleryUploaderBaseProps = {
   maxImages?: number;

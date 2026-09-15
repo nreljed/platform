@@ -1,14 +1,14 @@
 import { Link, Head, usePage } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { AccountSettingsNav } from "@/Components/account/AccountSettingsNav";
-import { NotificationPrefsSection } from "@/Components/account/sections/NotificationPrefsSection";
+} from "../../../Components/ui/breadcrumb";
+import { AccountSettingsNav } from "../../../Components/account/AccountSettingsNav";
+import { NotificationPrefsSection } from "../../../Components/account/sections/NotificationPrefsSection";
 
 export default function Notifications() {
   const { props } = usePage();

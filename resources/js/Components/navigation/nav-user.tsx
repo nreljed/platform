@@ -22,7 +22,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,11 +32,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/Components/ui/alert-dialog";
-import { Avatar, AvatarImage, AvatarFallback } from "@/Components/ui/avatar";
-import { SidebarMenu, SidebarMenuItem } from "@/Components/ui/sidebar";
-import { useAuth, getUserInitials } from "@/hooks/use-auth";
-import { cn } from "@/lib/utils";
+} from "../ui/alert-dialog";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { SidebarMenu, SidebarMenuItem } from "../ui/sidebar";
+import { useAuth, getUserInitials } from "../../hooks/use-auth";
+import { cn } from "../../lib/utils";
 
 interface NavUserProps {
   isMobile?: boolean;

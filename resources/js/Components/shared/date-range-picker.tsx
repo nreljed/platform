@@ -1,9 +1,9 @@
 import * as React from "react";
 import { format } from "date-fns";
-import { Calendar } from "@/Components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
-import { Button } from "@/Components/ui/button";
-import { cn } from "@/lib/utils";
+import { Calendar } from "../ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Button } from "../ui/button";
+import { cn } from "../../lib/utils";
 import { CalendarDays } from "lucide-react";
 
 interface DateRange {

@@ -1,11 +1,11 @@
 import { useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
 import { MapPin } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/Components/ui/card";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { SettingsAccordionItem } from "@/Components/shared/settings-accordion";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../ui/card";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { SettingsAccordionItem } from "../../shared/settings-accordion";
 
 interface Address {
   first_name?: string;

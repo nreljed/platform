@@ -9,9 +9,9 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/Components/ui/command";
-import { Button } from "@/Components/ui/button";
-import { Kbd } from "@/Components/ui/kbd";
+} from "../ui/command";
+import { Button } from "../ui/button";
+import { Kbd } from "../ui/kbd";
 import {
   Search,
   LayoutDashboard,
@@ -22,8 +22,8 @@ import {
   Activity,
   Database,
 } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
-import { featureIcons } from "@/lib/icons";
+import { useAuth } from "../../hooks/use-auth";
+import { featureIcons } from "../../lib/icons";
 
 interface NavMenuItem {
   title: string;

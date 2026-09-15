@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Button } from "@/Components/ui/button";
-import { Field, FieldDescription, FieldError, FieldLabel } from "@/Components/ui/field";
-import { SettingsAccordion } from "@/Components/shared/settings-accordion";
-import { cn } from "@/lib/utils";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
+import { Field, FieldDescription, FieldError, FieldLabel } from "../ui/field";
+import { SettingsAccordion } from "./settings-accordion";
+import { cn } from "../../lib/utils";
 
 function Section({
   children,

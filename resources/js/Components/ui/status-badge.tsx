@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Badge } from "@/Components/ui/badge";
+import { Badge } from "./badge";
 import { cn } from "cn";
 
 const statusStyles = {

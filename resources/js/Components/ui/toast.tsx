@@ -10,7 +10,7 @@ import {
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
 
 import { cn } from "cn";
-import { Button } from "@/Components/ui/button";
+import { Button } from "./button";
 
 const toast = ToastPrimitive.createToastManager();
 

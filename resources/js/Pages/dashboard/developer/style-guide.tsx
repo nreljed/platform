@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { usePage, Link } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/Components/ui/card";
-import { Button } from "@/Components/ui/button";
-import { Badge } from "@/Components/ui/badge";
-import { StatusBadge, statusStyles } from "@/Components/ui/status-badge";
-import { Input } from "@/Components/ui/input";
-import { Textarea } from "@/Components/ui/textarea";
-import { Switch } from "@/Components/ui/switch";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Separator } from "@/Components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../../Components/ui/card";
+import { Button } from "../../../Components/ui/button";
+import { Badge } from "../../../Components/ui/badge";
+import { StatusBadge, statusStyles } from "../../../Components/ui/status-badge";
+import { Input } from "../../../Components/ui/input";
+import { Textarea } from "../../../Components/ui/textarea";
+import { Switch } from "../../../Components/ui/switch";
+import { Checkbox } from "../../../Components/ui/checkbox";
+import { Separator } from "../../../Components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../Components/ui/avatar";
 import {
   Field,
   FieldLabel,
@@ -18,8 +18,8 @@ import {
   FieldError,
   FieldContent,
   FieldTitle,
-} from "@/Components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
+} from "../../../Components/ui/field";
+import { RadioGroup, RadioGroupItem } from "../../../Components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -28,7 +28,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "../../../Components/ui/select";
 import {
   Combobox,
   ComboboxContent,
@@ -40,7 +40,7 @@ import {
   ComboboxList,
   ComboboxTrigger,
   ComboboxValue,
-} from "@/Components/ui/combobox";
+} from "../../../Components/ui/combobox";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -48,7 +48,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
+} from "../../../Components/ui/breadcrumb";
 import {
   Dialog,
   DialogClose,
@@ -58,7 +58,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/Components/ui/dialog";
+} from "../../../Components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -69,12 +69,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/Components/ui/alert-dialog";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/Components/ui/collapsible";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
-import { Section, SectionField } from "@/Components/shared/section";
-import { SettingsAccordion } from "@/Components/shared/settings-accordion";
-import { BrandLogo } from "@/Components/frontend/BrandLogo";
+} from "../../../Components/ui/alert-dialog";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../../../Components/ui/collapsible";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../Components/ui/tabs";
+import { Section, SectionField } from "../../../Components/shared/section";
+import { SettingsAccordion } from "../../../Components/shared/settings-accordion";
+import { BrandLogo } from "../../../Components/frontend/BrandLogo";
 import {
   Mail,
   Lock,

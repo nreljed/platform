@@ -13,15 +13,15 @@ import {
   Gauge,
   AlertTriangle,
 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "../../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
-import { SettingsAccordionItem } from "@/Components/shared/settings-accordion";
+} from "../../ui/dropdown-menu";
+import { SettingsAccordionItem } from "../../shared/settings-accordion";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,7 +31,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/Components/ui/alert-dialog";
+} from "../../ui/alert-dialog";
 import {
   Dialog,
   DialogContent,
@@ -40,17 +40,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/Components/ui/dialog";
+} from "../../ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
-import { toast } from "@/Components/ui/toast";
+} from "../../ui/select";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { toast } from "../../ui/toast";
 
 interface AiProvider {
   id: number;

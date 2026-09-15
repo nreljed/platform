@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Cropper, CropperImage, CropperArea } from "./cropper";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
-import { Slider } from "@/Components/ui/slider";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Button } from "../ui/button";
+import { Slider } from "../ui/slider";
 import { ZoomIn, ZoomOut, RotateCcw, RotateCw, Maximize2, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 const AVATAR_SIZE = 256;
 const AVATAR_QUALITY = 0.85;

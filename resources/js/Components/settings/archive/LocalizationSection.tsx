@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { router } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Section, SectionField } from "@/Components/shared/section";
-import { Input } from "@/Components/ui/input";
+import { toast } from "../../ui/toast";
+import { Section, SectionField } from "../../shared/section";
+import { Input } from "../../ui/input";
 import { Languages } from "lucide-react";
 
 interface LocalizationSectionProps {

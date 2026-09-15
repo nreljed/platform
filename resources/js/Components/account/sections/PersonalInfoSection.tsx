@@ -1,15 +1,15 @@
 import { useCallback, useMemo } from "react";
-import { Section, SectionField } from "@/Components/shared/section";
-import { Input } from "@/Components/ui/input";
-import { Textarea } from "@/Components/ui/textarea";
-import { Repeater } from "@/Components/shared/repeater";
+import { Section, SectionField } from "../../shared/section";
+import { Input } from "../../ui/input";
+import { Textarea } from "../../ui/textarea";
+import { Repeater } from "../../shared/repeater";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "../../ui/select";
 import { Building2, User } from "lucide-react";
 
 const SOCIAL_PRESETS = [

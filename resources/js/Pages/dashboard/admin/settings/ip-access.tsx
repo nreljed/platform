@@ -1,14 +1,14 @@
 import { Head, Link } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import AdminLayout from "../../../../Layouts/AdminLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { AdminSettingsNav } from "@/Components/settings/AdminSettingsNav";
-import { IpAccessSection } from "@/Components/settings/sections/IpAccessSection";
+} from "../../../../Components/ui/breadcrumb";
+import { AdminSettingsNav } from "../../../../Components/settings/AdminSettingsNav";
+import { IpAccessSection } from "../../../../Components/settings/sections/IpAccessSection";
 
 interface IpAccessProps {
   ipRules?: {

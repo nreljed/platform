@@ -1,25 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
 import { Head, Link, router, usePage } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import AdminLayout from "../../../Layouts/AdminLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+} from "../../../Components/ui/breadcrumb";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../Components/ui/card";
 
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Field, FieldError, FieldLabel, FieldDescription } from "@/Components/ui/field";
-import { Alert, AlertDescription, AlertTitle } from "@/Components/ui/alert";
-import { Separator } from "@/Components/ui/separator";
-import { CurrentPasswordInput } from "@/Components/shared/current-password-input";
-import { SettingsAccordion } from "@/Components/shared/settings-accordion";
-import { toast } from "@/Components/ui/toast";
+import { Badge } from "../../../Components/ui/badge";
+import { Button } from "../../../Components/ui/button";
+import { Input } from "../../../Components/ui/input";
+import { Checkbox } from "../../../Components/ui/checkbox";
+import { Field, FieldError, FieldLabel, FieldDescription } from "../../../Components/ui/field";
+import { Alert, AlertDescription, AlertTitle } from "../../../Components/ui/alert";
+import { Separator } from "../../../Components/ui/separator";
+import { CurrentPasswordInput } from "../../../Components/shared/current-password-input";
+import { SettingsAccordion } from "../../../Components/shared/settings-accordion";
+import { toast } from "../../../Components/ui/toast";
 import {
   AlertTriangle,
   Clock,

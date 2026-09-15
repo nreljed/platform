@@ -4,14 +4,14 @@ import { $getNodeByKey, $nodesOfType, type NodeKey } from "lexical";
 import { createPortal } from "react-dom";
 import { $isCodeNode, CodeNode } from "@lexical/code";
 import { Copy, Check } from "lucide-react";
-import { Button } from "@/Components/ui/button";
+import { Button } from "../../ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "../../ui/select";
 import { useFloatingPosition } from "../hooks/use-floating-position";
 
 const LANGUAGES = [

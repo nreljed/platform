@@ -1,13 +1,13 @@
 import * as React from "react";
 import { ChevronDown, Folder, FolderOpen, Search, Tag, X } from "lucide-react";
 
-import { Button } from "@/Components/ui/button";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Input } from "@/Components/ui/input";
-import { Label } from "@/Components/ui/label";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/Components/ui/collapsible";
-import { cn } from "@/lib/utils";
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "../ui/collapsible";
+import { cn } from "../../lib/utils";
 
 interface TaxonomyTerm {
   id: number | string;

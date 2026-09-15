@@ -8,15 +8,15 @@ import {
   $createRangeSelection,
   registerEventListener,
 } from "lexical";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/Components/ui/dialog";
+} from "../../ui/dialog";
 import { ArrowDown, ArrowUp, Replace, ReplaceAll, X } from "lucide-react";
 
 interface FindMatch {

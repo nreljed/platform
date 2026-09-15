@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { router } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Section, SectionField } from "@/Components/shared/section";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Label } from "@/Components/ui/label";
+import { toast } from "../../ui/toast";
+import { Section, SectionField } from "../../shared/section";
+import { Checkbox } from "../../ui/checkbox";
+import { Label } from "../../ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "../../ui/select";
 import { ShieldCheck } from "lucide-react";
 
 interface RegistrationSectionProps {

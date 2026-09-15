@@ -1,10 +1,10 @@
 import { Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Separator } from "@/Components/ui/separator";
-import { BrandLogo } from "@/Components/frontend/BrandLogo";
-import { NavUser } from "@/Components/navigation/nav-user";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
+import { BrandLogo } from "./BrandLogo";
+import { NavUser } from "../navigation/nav-user";
 
 export function SiteHeader() {
   const { props } = usePage();

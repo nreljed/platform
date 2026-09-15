@@ -1,18 +1,18 @@
 import { Head, usePage } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Switch } from "@/Components/ui/switch";
+import AdminLayout from "../../../../Layouts/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../Components/ui/card";
+import { Switch } from "../../../../Components/ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { Alert, AlertDescription } from "@/Components/ui/alert";
+} from "../../../../Components/ui/select";
+import { Alert, AlertDescription } from "../../../../Components/ui/alert";
 import { Shield, ShieldAlert, ShieldCheck, ShieldX } from "lucide-react";
 import { useState, useCallback, useMemo } from "react";
-import { toast } from "@/Components/ui/toast";
+import { toast } from "../../../../Components/ui/toast";
 
 interface RoleData {
   slug: string;

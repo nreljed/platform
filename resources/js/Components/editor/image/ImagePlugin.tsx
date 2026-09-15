@@ -7,7 +7,7 @@ import {
   DROP_COMMAND,
   DRAGSTART_COMMAND,
 } from "lexical";
-import { toast } from "@/Components/ui/toast";
+import { toast } from "../../ui/toast";
 import { $createImageNode, INSERT_IMAGE_COMMAND, ImageNode, type ImagePayload } from "./ImageNode";
 
 export async function uploadImageToServer(file: File): Promise<{ url: string; path: string }> {

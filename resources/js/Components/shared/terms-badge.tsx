@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Badge } from "@/Components/ui/badge";
+import { Badge } from "../ui/badge";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogCancel,
-} from "@/Components/ui/alert-dialog";
+} from "../ui/alert-dialog";
 
 interface TermsBadgeProps {
   terms?: Array<{ id?: number | string; name: string }>;

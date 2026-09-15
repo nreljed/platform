@@ -9,20 +9,20 @@ import {
   FileText,
   Search,
 } from "lucide-react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import AdminLayout from "../../../Layouts/AdminLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
-import { Card, CardContent } from "@/Components/ui/card";
-import { Input } from "@/Components/ui/input";
-import { NativeSelect, NativeSelectOption } from "@/Components/ui/native-select";
-import { cn } from "@/lib/utils";
+} from "../../../Components/ui/breadcrumb";
+import { Badge } from "../../../Components/ui/badge";
+import { Button } from "../../../Components/ui/button";
+import { Card, CardContent } from "../../../Components/ui/card";
+import { Input } from "../../../Components/ui/input";
+import { NativeSelect, NativeSelectOption } from "../../../Components/ui/native-select";
+import { cn } from "../../../lib/utils";
 
 /*
 ─── Types ───

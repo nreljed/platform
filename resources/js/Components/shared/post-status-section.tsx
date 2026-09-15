@@ -1,16 +1,16 @@
 import * as React from "react";
-import { useFormatDate } from "@/hooks/use-format-date";
-import { DateTimePicker } from "@/Components/shared/datetime-picker";
+import { useFormatDate } from "../../hooks/use-format-date";
+import { DateTimePicker } from "./datetime-picker";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { Label } from "@/Components/ui/label";
-import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
+} from "../ui/select";
+import { Label } from "../ui/label";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import { Calendar, Clock, Send, FileEdit, Trash2 } from "lucide-react";
 
 interface PostStatusSectionProps {

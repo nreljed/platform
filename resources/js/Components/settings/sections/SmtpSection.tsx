@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { router, usePage } from "@inertiajs/react";
-import { toast } from "@/Components/ui/toast";
-import { Section, SectionField } from "@/Components/shared/section";
-import { SettingsAccordionItem } from "@/Components/shared/settings-accordion";
-import { Input } from "@/Components/ui/input";
-import { Switch } from "@/Components/ui/switch";
-import { Label } from "@/Components/ui/label";
+import { toast } from "../../ui/toast";
+import { Section, SectionField } from "../../shared/section";
+import { SettingsAccordionItem } from "../../shared/settings-accordion";
+import { Input } from "../../ui/input";
+import { Switch } from "../../ui/switch";
+import { Label } from "../../ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
-import { Badge } from "@/Components/ui/badge";
+} from "../../ui/select";
+import { Badge } from "../../ui/badge";
 import { Mail, Server, Settings as SettingsIcon, Eye, EyeOff, ShieldCheck } from "lucide-react";
 
 interface SmtpSectionProps {

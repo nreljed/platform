@@ -1,15 +1,15 @@
 import { Head, Link } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import AdminLayout from "../../../../Layouts/AdminLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/Components/ui/breadcrumb";
-import { AdminSettingsNav } from "@/Components/settings/AdminSettingsNav";
-import { NotificationSection } from "@/Components/settings/sections/NotificationSection";
-import { DevelopmentNotificationTest } from "@/Components/settings/sections/DevelopmentNotificationTest";
+} from "../../../../Components/ui/breadcrumb";
+import { AdminSettingsNav } from "../../../../Components/settings/AdminSettingsNav";
+import { NotificationSection } from "../../../../Components/settings/sections/NotificationSection";
+import { DevelopmentNotificationTest } from "../../../../Components/settings/sections/DevelopmentNotificationTest";
 
 interface NotificationType {
   label: string;

@@ -50,7 +50,7 @@ import {
   Columns3,
   Snowflake,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -60,7 +60,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-} from "@/Components/ui/dropdown-menu";
+} from "../../ui/dropdown-menu";
 import { useContainerPosition } from "../hooks/use-container-position";
 
 const CELL_BG_COLORS = [

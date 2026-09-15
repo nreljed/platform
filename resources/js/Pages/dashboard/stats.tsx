@@ -1,15 +1,15 @@
 import { Deferred, Head } from "@inertiajs/react";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card";
+import AuthenticatedLayout from "../../Layouts/AuthenticatedLayout";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../Components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@/Components/ui/chart";
-import { featureIcons } from "@/lib/icons";
+} from "../../Components/ui/chart";
+import { featureIcons } from "../../lib/icons";
 
 type StatItem = {
   label: string;

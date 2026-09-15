@@ -1,11 +1,11 @@
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
-import { Field, FieldError, FieldGroup, FieldLabel, FieldDescription } from "@/Components/ui/field";
-import { Badge } from "@/Components/ui/badge";
-import { PasswordInput } from "@/Components/shared/password-input";
+import AdminLayout from "../../../../Layouts/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../Components/ui/card";
+import { Button } from "../../../../Components/ui/button";
+import { Input } from "../../../../Components/ui/input";
+import { Field, FieldError, FieldGroup, FieldLabel, FieldDescription } from "../../../../Components/ui/field";
+import { Badge } from "../../../../Components/ui/badge";
+import { PasswordInput } from "../../../../Components/shared/password-input";
 import {
   Combobox,
   ComboboxChip,
@@ -16,14 +16,14 @@ import {
   ComboboxItem,
   ComboboxList,
   ComboboxValue,
-} from "@/Components/ui/combobox";
-import { Checkbox } from "@/Components/ui/checkbox";
-import { Label } from "@/Components/ui/label";
-import { Separator } from "@/Components/ui/separator";
+} from "../../../../Components/ui/combobox";
+import { Checkbox } from "../../../../Components/ui/checkbox";
+import { Label } from "../../../../Components/ui/label";
+import { Separator } from "../../../../Components/ui/separator";
 import { ArrowLeft, Save, Check, X, Loader2, Shield, CalendarDays } from "lucide-react";
 import { FormEventHandler, useRef, useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/use-auth";
+import { cn } from "../../../../lib/utils";
+import { useAuth } from "../../../../hooks/use-auth";
 
 interface Role {
   id: number;

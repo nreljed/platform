@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Minus, Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/Components/ui/button";
+import { cn } from "../../lib/utils";
+import { Button } from "../ui/button";
 
 interface NumberInputProps {
   className?: string;
