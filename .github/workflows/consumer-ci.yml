@@ -85,7 +85,11 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: "26"
-          cache: ${{ vars.RUNNER_CI != 'self-hosted' && 'npm' || '' }}
+          # Cache pnpm workspaces (pinned by the root pnpm-lock.yaml) and npm
+          # apps (package-lock.json) from the calling repo accordingly.
+          cache: ${{ vars.RUNNER_CI != 'self-hosted' && (hashFiles('pnpm-workspace.yaml') != '' && 'pnpm' || 'npm') || '' }}
+          # Installs pnpm on any runner; npm apps ignore it.
+          pnpm-version: "11"
 
       - name: Cache Composer dependencies (GitHub-hosted only)
         if: vars.RUNNER_CI != 'self-hosted'
@@ -100,7 +104,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: node_modules
-          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json', 'pnpm-lock.yaml') }}
           restore-keys: npm-${{ runner.os }}-
 
       - name: Create .env + SQLite database
@@ -151,13 +155,26 @@ jobs:
         run: php artisan key:generate && php artisan migrate --force
 
       - name: Install npm dependencies
-        run: npm ci --legacy-peer-deps
+        run: |
+          if [ -f pnpm-workspace.yaml ] || [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          else
+            npm ci --legacy-peer-deps
+          fi
 
       - name: Check core dependency parity
         run: npm run check:core-deps
 
+      - name: Check cross-app platform consistency
+        run: npm run check:platform-consistency
+
       - name: npm audit
-        run: npm audit --audit-level=high
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm audit --audit-level=high
+          else
+            npm audit --audit-level=high
+          fi
 
       - name: ESLint
         if: ${{ !inputs.skip-npm-tests }}
