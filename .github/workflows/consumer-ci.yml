@@ -132,6 +132,10 @@ jobs:
           case "${PINNED}" in
             dev-*|9999999-*|'@dev') echo "dev build pinned — skipping fleet check"; exit 0 ;;
           esac
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "no GH_TOKEN (e.g. Dependabot PR) — skipping fleet check"
+            exit 0
+          fi
           LATEST=$(curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H "User-Agent: fleet-check" \
             "https://api.github.com/repos/nreljed/platform/releases/latest" 2>/dev/null \
             | php -r '$d=json_decode(stream_get_contents(STDIN),true);echo $d["tag_name"]??"";')
