@@ -1,12 +1,13 @@
 {
   "name": "@nreljed/platform",
-  "version": "0.1.48",
+  "version": "0.1.49",
   "description": "SaaS platform kernel — React frontend for Laravel dashboards, admin panels, auth, settings, media, deploy, and AI.",
   "license": "proprietary",
   "type": "module",
   "exports": {
-    "./vite-dedupes": "./vite.dedupe.js",
-    "./platform-aliases": "./platform.aliases.js"
+    "./app": "./resources/js/app.tsx",
+    "./dashboard": "./resources/js/dashboard.ts",
+    "./*": "./resources/js/*"
   },
   "peerDependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^2.0.1 || ^3.0.0",

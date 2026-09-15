@@ -63,8 +63,6 @@ class FeatureSettingsService
     /**
      * Persist the enabled state for a feature. Returns the previous state
      * (or the default when no override existed).
-     *
-     * @return bool
      */
     public function setEnabled(string $slug, bool $enabled, bool $default = true): bool
     {

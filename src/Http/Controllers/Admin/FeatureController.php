@@ -5,6 +5,7 @@ namespace Nreljed\Platform\Http\Controllers\Admin;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 use Nreljed\Platform\Enums\AuditAction;
 use Nreljed\Platform\Http\Controllers\Controller;
 use Nreljed\Platform\Services\AuditService;
@@ -26,7 +27,7 @@ use Nreljed\Platform\Services\FeatureSettingsService;
  */
 class FeatureController extends Controller
 {
-    public function index(FeatureRegistry $registry): \Inertia\Response
+    public function index(FeatureRegistry $registry): Response
     {
         return Inertia::render('dashboard/admin/settings/modules', [
             'modules' => $registry->getModuleList(),
@@ -36,8 +37,6 @@ class FeatureController extends Controller
 
     /**
      * Persist the provided feature on/off states and run disable cleanup.
-     *
-     * @return RedirectResponse
      */
     public function update(Request $request, FeatureRegistry $registry, FeatureSettingsService $settings): RedirectResponse
     {
