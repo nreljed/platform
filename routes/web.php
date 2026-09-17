@@ -7,6 +7,8 @@ use Inertia\Inertia;
 use Nreljed\Platform\Http\Controllers\Admin\AuditLogController;
 use Nreljed\Platform\Http\Controllers\Admin\BulkUserController;
 use Nreljed\Platform\Http\Controllers\Admin\DatabaseMaintenanceController;
+use Nreljed\Platform\Http\Controllers\Admin\DeployHistoryController;
+use Nreljed\Platform\Http\Controllers\Admin\DeployStatusController;
 use Nreljed\Platform\Http\Controllers\Admin\FeatureController;
 use Nreljed\Platform\Http\Controllers\Admin\ImpersonationController;
 use Nreljed\Platform\Http\Controllers\Admin\IpAccessRuleController;
@@ -59,7 +61,13 @@ require __DIR__.'/../src/Deploy/Routes/web.php';
 // CSP Report Endpoint — receives violation reports
 // ═══════════════════════════════════════════════════
 Route::post('/csp-report', function (Request $request) {
-    report(new Exception('CSP Violation: '.$request->input('csp-report.effective-directive', 'unknown')));
+    $body = $request->input('body', $request->input('csp-report', []));
+
+    $directive = data_get($body, 'effectiveDirective')
+        ?? data_get($body, 'effective-directive')
+        ?? 'unknown';
+
+    report(new Exception('CSP Violation: '.$directive));
 
     return response()->json(['status' => 'ok']);
 })->middleware('throttle:30,1')->name('csp.report');
@@ -191,6 +199,21 @@ Route::middleware(['auth', 'maintenance', 'throttle:60,1'])->prefix('dashboard/a
         Route::get('/database', [DatabaseMaintenanceController::class, 'index'])->name('database');
         Route::post('/database/reset', [DatabaseMaintenanceController::class, 'reset'])->name('database.reset');
         Route::post('/database/reseed', [DatabaseMaintenanceController::class, 'reseed'])->name('database.reseed');
+    });
+
+    // Deploy history (read-only releases list) - env-gated at controller level, permission-gated
+    Route::middleware('permission:manage-deploy-history')->group(function () {
+        Route::prefix('/deploy')->name('deploy.')->group(function () {
+            Route::get('/history', [DeployHistoryController::class, 'index'])->name('history');
+        });
+
+        // Deploy status (live progress + health poll) - permission-gated, env-gated at controller level
+        Route::middleware('permission:view-deploy-status')->group(function () {
+            Route::prefix('/deploy')->name('deploy.')->group(function () {
+                Route::get('/status', [DeployStatusController::class, 'index'])->name('status');
+                Route::get('/status/data', [DeployStatusController::class, 'check'])->name('status.data');
+            });
+        });
     });
 
     // Settings (general, registration, notifications, security, branding, IP rules)
