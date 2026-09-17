@@ -49,7 +49,8 @@ export default function DeployHistory({ releases }: DeployHistoryProps) {
           <div className="space-y-3">
             {releases.length === 0 && <p className="text-sm text-muted-foreground">No releases recorded.</p>}
             {releases.map((release) => {
-              const badge = statusBadge[release.status] ?? statusBadge.failed;
+              const badge =
+                statusBadge[release.status] ?? statusBadge.failed ?? { label: "Failed", variant: "destructive" };
               return (
                 <div
                   key={release.id}

@@ -71,7 +71,8 @@ export default function DeployStatus({ deploy }: DeployStatusProps) {
     return () => clearInterval(id);
   }, [poll]);
 
-  const badge = statusBadge[check?.status ?? "idle"] ?? statusBadge.failed;
+  const badge =
+    statusBadge[check?.status ?? "idle"] ?? statusBadge.failed ?? { label: "Failed", variant: "destructive" };
 
   return (
     <AdminLayout title="Deploy Status">
