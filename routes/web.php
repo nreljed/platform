@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Nreljed\Platform\Http\Controllers\AccountDataController;
 use Nreljed\Platform\Http\Controllers\Admin\AuditLogController;
 use Nreljed\Platform\Http\Controllers\Admin\BulkUserController;
 use Nreljed\Platform\Http\Controllers\Admin\DatabaseMaintenanceController;
@@ -167,6 +168,11 @@ Route::middleware(['auth', 'maintenance'])->group(function () {
         Route::put('/address', [UserAccountController::class, 'updateAddress'])->name('dashboard.account.address');
         Route::post('/avatar', [AvatarController::class, 'upload'])->name('dashboard.account.avatar.upload');
         Route::delete('/avatar', [AvatarController::class, 'destroy'])->name('dashboard.account.avatar.destroy');
+
+        // Data backup & restore (user-owned, per-module self-service)
+        Route::get('/data', [AccountDataController::class, 'index'])->name('dashboard.account.page.data');
+        Route::get('/data/export/{module}', [AccountDataController::class, 'export'])->name('dashboard.account.data.export');
+        Route::post('/data/restore/{module}', [AccountDataController::class, 'restore'])->middleware('throttle:10,1')->name('dashboard.account.data.restore');
     });
 
     // Media uploads (auth + verified)

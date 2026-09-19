@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Nreljed\Platform\Deploy\Services\DeployService;
 use Nreljed\Platform\Exceptions\DatabaseMaintenanceException;
 use Nreljed\Platform\Http\Controllers\Controller;
+use Nreljed\Platform\Services\DatabaseBackupService;
 use Nreljed\Platform\Services\DatabaseMaintenanceService;
 
 class DeployController extends Controller
@@ -284,6 +285,41 @@ class DeployController extends Controller
         }
     }
 
+    /**
+     * Stream the latest database backup as a gzip download.
+     *
+     * When no dump exists yet, the service creates one on demand before
+     * streaming. Returns a JSON error when the backup cannot be generated
+     * (e.g. missing mysqldump and PDO fallback failure).
+     */
+    public function backup(DatabaseBackupService $service): \Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\JsonResponse
+    {
+        @set_time_limit(120);
+
+        $path = $service->latestBackup();
+
+        if ($path === null || ! File::exists($path)) {
+            $output = [];
+
+            try {
+                $service->createBackup($output);
+                $path = $service->latestBackup();
+            } catch (\Throwable $e) {
+                $output[] = $e->getMessage();
+
+                return response()->json(['status' => 'error', 'error' => 'Backup generation failed.', 'output' => $output], 500);
+            }
+        }
+
+        if ($path === null || ! File::exists($path)) {
+            return response()->json(['status' => 'error', 'error' => 'No backup available after generation attempt.'], 500);
+        }
+
+        return response()->download($path, basename($path), [
+            'Content-Type' => 'application/gzip',
+        ]);
+    }
+
     public function upload(Request $request)
     {
 
@@ -383,11 +419,14 @@ class DeployController extends Controller
                 $output[] = "$cmd: ERROR ".$e->getMessage();
                 if (in_array($cmd, ['migrate', 'config:cache'])) {
                     $output[] = "Deploy aborted: $cmd failed";
+                    $this->deployService->rollbackToRetainedBackup($output, null, "$cmd failed: ".$e->getMessage());
 
                     return false;
                 }
             }
         }
+
+        $this->deployService->discardRetainedBackup($output);
 
         return true;
     }

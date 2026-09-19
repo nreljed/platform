@@ -39,6 +39,7 @@ final class FrontendPageInventoryContractTest extends TestCase
         'Auth/Reset-Password.tsx',
         'Auth/Verify-Email.tsx',
         'dashboard/account/advanced.tsx',
+        'dashboard/account/data.tsx',
         'dashboard/account/integrations.tsx',
         'dashboard/account/notifications.tsx',
         'dashboard/account/profile.tsx',
