@@ -46,8 +46,6 @@ final class FrontendPageInventoryContractTest extends TestCase
         'dashboard/account/security.tsx',
         'dashboard/admin/audit-logs/index.tsx',
         'dashboard/admin/database-maintenance.tsx',
-        'dashboard/admin/deploy-history.tsx',
-        'dashboard/admin/deploy-status.tsx',
         'dashboard/admin/logs.tsx',
         'dashboard/admin/permissions/manage.tsx',
         'dashboard/admin/roles/form.tsx',

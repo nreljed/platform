@@ -6,18 +6,10 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Process;
-use Illuminate\Support\Facades\Schema;
-use Nreljed\Platform\Models\DeployRelease;
 use Nreljed\Platform\Services\CoreVersionService;
 
 class DeployService
 {
-    /**
-     * Vendor backup retained after a swap, so a post-swap command failure can
-     * restore the previously live release. Set by swapStagedIntoPlace().
-     */
-    private ?string $retainedVendorBackup = null;
-
     public function __construct(private readonly CoreVersionService $coreVersion) {}
 
     /**
@@ -144,9 +136,6 @@ class DeployService
                 // leave the app dead (the shop outage caused by vendor/ purge
                 // dying mid-extract).
                 if (! $this->installZipFile($zipFile, $zipFiles, $output)) {
-                    $this->recordRelease($latestTag, DeployRelease::STATUS_FAILED, $output[array_key_last($output)] ?? 'Install failed');
-                    $this->discardRetainedBackup($output);
-
                     return $this->result('error', 'Install failed; previous version kept', output: $output, statusCode: 500);
                 }
 
@@ -154,6 +143,9 @@ class DeployService
                     File::put($envPath, $backupEnv);
                     $output[] = 'Restored .env';
                 }
+
+                File::put($versionFile, $latestTag);
+                $output[] = "New version: $latestTag";
 
                 $stale = $this->removeStaleFiles($zipFiles);
                 if ($stale['aborted']) {
@@ -183,26 +175,13 @@ class DeployService
                     try {
                         Artisan::call($cmd, $params);
                         $output[] = "$cmd: ".strtok(trim(Artisan::output()), "\n");
-                    } catch (\Throwable $e) {
+                    } catch (\Exception $e) {
                         $output[] = "$cmd: ERROR ".$e->getMessage();
                         if (in_array($cmd, ['migrate', 'config:cache'])) {
-                            // Post-swap failure — the new vendor is rolled back
-                            // to the previously live one, the version marker is
-                            // left untouched, and the release is recorded.
-                            $this->rollbackToRetainedBackup($output, $latestTag, "$cmd failed: ".$e->getMessage());
-
-                            return $this->result('rolledback', "Deploy failed ($cmd) — rolled back to previous version.", tag: $latestTag, output: $output, statusCode: 500);
+                            return $this->result('error', "$cmd failed", output: $output, statusCode: 500);
                         }
                     }
                 }
-
-                File::put($versionFile, $latestTag);
-                $output[] = "New version: $latestTag";
-
-                $this->recordRelease($latestTag, DeployRelease::STATUS_ACTIVE);
-                $this->discardRetainedBackup($output);
-
-                $this->verifyPostSwapHealth($output);
 
                 return $this->result('deployed', "Deployed $latestTag.", tag: $latestTag, output: $output);
             } finally {
@@ -235,10 +214,6 @@ class DeployService
      */
     public function installZipFile(string $zipPath, array &$zipFiles, array &$output): bool
     {
-        // A fresh install run must not inherit a backup retained by a previous
-        // attempt on the same request/worker.
-        $this->retainedVendorBackup = null;
-
         // The in-place install mutates the live tree — never run it on a
         // release-layout host where the app is served from releases/<active>.
         if ($this->usesReleaseLayout()) {
@@ -510,10 +485,7 @@ class DeployService
      * vendor; the old vendor is then moved aside and the new one renamed in —
      * a two-rename window of milliseconds total. If anything throws after the
      * old vendor was moved aside, it is immediately restored. The backup is
-     * NOT deleted here: it is stashed in $retainedVendorBackup so the caller
-     * can roll back a post-swap failure (e.g. failed migrate/config:cache) and
-     * explicitly discards it via discardRetainedBackup() once the release has
-     * fully landed.
+     * discarded only after the new tree is fully in place.
      *
      * @param  array<int, string>  $output
      */
@@ -543,113 +515,10 @@ class DeployService
         File::deleteDirectory($stage);
 
         if ($backup && File::isDirectory($backup)) {
-            $this->retainedVendorBackup = $backup;
+            File::deleteDirectory($backup);
         }
 
         $output[] = 'Swapped staged release into place';
-    }
-
-    /**
-     * Discard the retained pre-swap vendor backup once a release has fully
-     * landed (all post-swap commands succeeded). This is the point of no
-     * return — after this the release cannot be auto-rolled-back.
-     *
-     * @param  array<int, string>  $output
-     */
-    public function discardRetainedBackup(array &$output): void
-    {
-        if ($this->retainedVendorBackup && File::isDirectory($this->retainedVendorBackup)) {
-            File::deleteDirectory($this->retainedVendorBackup);
-            $output[] = 'Discarded retained vendor backup (release fully landed)';
-        }
-
-        $this->retainedVendorBackup = null;
-    }
-
-    /**
-     * Roll back a post-swap failure: restore the pre-swap vendor backup, clear
-     * caches, and record the release as rolled-back. The version marker was
-     * written only after the command loop, so it stays on the previous tag.
-     * $tag may be null on paths without a release tag (direct zip upload).
-     *
-     * @param  array<int, string>  $output
-     */
-    public function rollbackToRetainedBackup(array &$output, ?string $tag, string $error): void
-    {
-        if ($this->retainedVendorBackup && File::isDirectory($this->retainedVendorBackup)) {
-            $this->restoreVendorBackup($this->retainedVendorBackup, $output);
-            $this->retainedVendorBackup = null;
-            $output[] = "Rolled back to previous vendor/ after: $error";
-        } else {
-            $output[] = "Post-swap command failed but no retained vendor backup was available: $error";
-        }
-
-        if ($tag !== null && $tag !== '') {
-            $this->recordRelease($tag, DeployRelease::STATUS_ROLLED_BACK, $error);
-        }
-    }
-
-    /**
-     * Record a deploy outcome into the deploy_releases history table.
-     *
-     * Best-effort: a missing table or a failed write must never break a
-     * deploy — this is observability, not a deploy step.
-     */
-    private function recordRelease(string $tag, string $status, ?string $error = null): void
-    {
-        if ($tag === '') {
-            return;
-        }
-
-        try {
-            if (! Schema::hasTable('deploy_releases')) {
-                return;
-            }
-
-            $release = DeployRelease::updateOrCreate(
-                ['tag' => $tag],
-                [
-                    'status' => $status,
-                    'error' => $error,
-                    'deployed_at' => now(),
-                ],
-            );
-
-            if ($status === DeployRelease::STATUS_ROLLED_BACK) {
-                $release->forceFill([
-                    'rolled_back_at' => now(),
-                ])->save();
-            }
-        } catch (\Throwable) {
-            // Best-effort — never block a deploy over history tracking.
-        }
-    }
-
-    /**
-     * Optional post-swap smoke check: hit the app's own URL and confirm the
-     * server answers after a deploy. Best-effort only — a self-call can fail
-     * for reasons unrelated to the deploy (loopback networking, Cloudflare, a
-     * firewall), so a non-2xx/exception is logged without failing the deploy.
-     *
-     * @param  array<int, string>  $output
-     */
-    private function verifyPostSwapHealth(array &$output): void
-    {
-        $url = rtrim((string) config('app.url', ''), '/');
-
-        if ($url === '') {
-            return;
-        }
-
-        try {
-            $response = Http::timeout(15)
-                ->get($url.'/')
-                ->status();
-
-            $output[] = "Post-swap smoke check: HTTP $response";
-        } catch (\Throwable $e) {
-            $output[] = 'Post-swap smoke check skipped (self-call blocked): '.$e->getMessage();
-        }
     }
 
     /**
