@@ -10,6 +10,59 @@ what remains open. New sessions append at the top.
 
 ---
 
+## 2026-09-20 — Phase A security + Phase B dead-code strip (of the A→E audit)
+
+Commit creds: author `Nour Eljed <nreljed@outlook.com>`, pushed via gh to `nreljed/platform`.
+
+### Phase A — security ceiling (committed)
+- `591ac00` fix(deploy): route cleanup + token hardening (removed `/deploy/backup`,
+  Bearer-first `VerifyDeployToken`, optional `deploy.ip_allowlist` CIDR).
+- `6cf11d9` fix(auth/media/blog): close three HIGH gaps (role-duplicate `isSystem()`
+  guard, media unowned-file destroy gate, sanitized JSON-LD `</script>` breakout).
+- `9780d8e` docs(session-history): log Phase A commits.
+- `49af85d` fix(editor/settings): remove fully orphaned editor subtree and
+  LocalizationSection archive tree — **this is the Phase B cut** (below).
+
+### Phase B — dead-code strip (committed, single cut)
+Removed as verified-orphaned (zero inbound `import`/`use` anywhere in the tracked tree,
+their tails fully inside the cut trees):
+- `resources/js/Components/editor/**` (a 64-file Lexical editor subtree — unreached
+  legacy tree, superseded by the blog/ProseContent + theme kit).
+- `resources/js/Components/settings/archive/LocalizationSection.tsx` (orphaned since
+  settings reorganisation moved that UI into `settings/sections/`).
+
+Wam-check cleanups rolled into `49af85d` only. Verified by a two-pass reference scan
+(wholesale `import`/`use` grep) + `git ls-files` bookkeeping with zero bleeds.
+
+### Phase C status after B (diagnosed, not yet coded)
+- **queued-AI BYOK has a confirmed broken tag** (`AiTaskRunner::queue()`,
+  `src/Ai/Services/AiTaskRunner.php:140`): `queue()` calls `prepare()` then
+  `$agent->queue($prompt, provider, model)` — but `prepare()` only ever injects
+  the resolved BYOK key into the **current** process via `config()->set()` (the
+  SDK `ResolvesUserProvider` path). The queued job payload the worker gets
+  serialized carries provider/model only — **no user id, no key** — so a queued
+  run cannot re-resolve the caller's BYOK key on the worker. `prompt()`/`stream()`
+  work because they run in-process where the key is already injected.
+- Fix target + shape (Phase C, next session): give `queue()` a BYOK-safe job
+  (serialize a resolvable user identifier + resolved provider/model, re-resolve +
+  inject the key *inside* the worker process; never put the decrypted key bytes
+  into the job payload). `AiTaskRunner`+`AiService` live in
+  `packages/platform/src/Ai/...` (mono-published) AND `src/Ai/...` (platform) —
+  apply the fix to both mirrors.
+- Verify: consumer `tests/Feature/AiProviderFeatureTest.php` (`queue()`->worker
+  host) + `SeoAgentSchemaContractTest` + `UserAccountTest`.
+
+Remains open from the audit (NOT cut — live or Phase C targets):
+- PHP shortlist is NOT dead: `ContentAgent`/`ChatAgent` have live seeder/test refs;
+  `AiTokenUsageService` is a stale log title with no tracked file. No PHP deletions.
+- `AiTaskRunner` (queued-AI BYOK serialization bug) is a **Phase C** fix target — keep.
+- `BlogContentSeeder` / `UserAccountTest` string refs to `*Agent` are seed/test content —
+  keep so consumer-facing copy and tests stay green.
+
+Working tree clean at handoff except `?? storage/` (runtime cache, untracked by design).
+
+---
+
 ## 2026-09-20 — Full kernel audit (A→E hardening)
 
 Scope: whole `nreljed/platform` v0.1.54 — code, security, scalability, docs, CI, tests.
@@ -63,3 +116,31 @@ docs up to date going forward.
   `.env.example`/`.env.production.example` `# ... + /deploy/backup` comments.
 - `laravel/ai` 1.0 migration when GA (0.x → 1.x is breaking).
 - PHP floor decision (^8.4 vs ^8.3).
+---
+
+## 2026-09-20 — Phase C (queued-AI BYOK) — audit-complete, fix PLANNED not applied
+
+**What the audit proved (final, not re-derivable):**
+- SDK job `Laravel\Ai\Jobs\InvokeAgent` serializes FIVE props, incl. the whole `Agent $agent`
+  object. The platform agents implement `Laravel\Ai\Contracts\Agent` directly (no SDK base exists
+  to mirror), so the platform's OWN `AiTaskRunner::queue()` is the authoritative BYOK wiring —
+  and it `config()->set()`s the decrypted key onto the live agent/process, then queues that agent.
+  => the key was ALWAYS inside a serialized job payload, on a worker that can never re-resolve it.
+
+**Fix (Phase C target, to implement in a later session, both mirrors):**
+1. `AiTaskRunner::queue()` → stop injecting the key in-proc + stop queue-ing the SDK agent object.
+   Dispatch a NEW platform job carrying ONLY: `user_id, provider, model, prompt, agent FQCN`.
+2. The new job (worker-side `handle()`) re-runs the resolve-for-user path: find the user by id →
+   `AiService::resolveForUser($user, $provider)` → decrypt BYOK → `config()->set` the key in the
+   worker process → `new $fqcn()->prompt(...)`. Key NEVER rides a payload; it is re-resolved from
+   encrypted storage where the run actually happens. Caps re-checked by that same `prepare()` run.
+3. Regression net (must go green): consumer `tests/Feature/AiProviderFeatureTest.php` queued-BYOK
+   branch = platform `AiTaskRunner::queue()` → worker, asserting (a) the SAME private key the
+   in-proc `prompt()` used resolves on the worker, and (b) the serialized payload contains NO
+   decrypted-key string (add `assertDoesntContain` on the raw key for the BYOK branch).
+
+**Files:**
+- `platform/src/Ai/Services/AiTaskRunner.php` (queue() → dispatch platform BYOK job)
+- `platform/src/Ai/Jobs/` NEW `InvokeAgentByokJob` (payload = user_id/provider/model/prompt/agent, nothing else)
+- `platform/src/Ai/Services/AiService.php` (re-expose resolve-for-user for worker-side BYOK)
+- mono mirror `packages/platform/...` (same tree; mono is the git-deploy publisher)
