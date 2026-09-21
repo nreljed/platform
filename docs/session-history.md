@@ -10,6 +10,34 @@ what remains open. New sessions append at the top.
 
 ---
 
+## 2026-09-20 — v0.1.55 release: BYOK AiTaskRunner repair + lock-sync (continuation)
+
+What was released and why: the tag-vs-manifest version-consistency gate (`ci.yml`,
+`tag v0.1.55` vs `composer.json`/`package.json` `0.1.54`) was red because the version
+bump never reached the manifests. Repaired and shipped byte-true:
+
+- `d95b9e9` fix: collapse AiTaskRunner namespace onto its own line.
+- `387827e` fix(ai): repair AiTaskRunner with line-anchored `Nreljed\Platform\Ai\Services;`
+  so the `php -l` Lint PHP gate is green (worked-tree lint rc=0).
+- `6e84224` chore(release): bump manifests to 0.1.55 to match tag v0.1.55.
+- `d1d5081` chore(release): sync composer.lock content-hash to 0.1.55 so the
+  `composer validate` gate passes.
+
+### Verified (byte-true, trusted git + gh)
+- `local HEAD == origin/main == d1d508159df5b41d058008f43471451be7f6bb76`
+  == release `v0.1.55` targetCommitish; prerelease=false.
+- CI run `35617409809` at that head → `conclusion=success`. Release gate is green.
+- `composer json + lock + npm` all `0.1.55` at the released head.
+
+### Cleanup
+- Deleted 7 untracked Playwright residue files under `storage/debug/playwright-output/`
+  (console/page scratch) — byte-proven untracked, zero impact on git history.
+
+### Remains open
+- Consumer repo re-sync + `AiTaskRunner` queued-BYOK doctor (Phase C target as before).
+
+---
+
 ## 2026-09-20 — Phase A security + Phase B dead-code strip (of the A→E audit)
 
 Commit creds: author `Nour Eljed <nreljed@outlook.com>`, pushed via gh to `nreljed/platform`.
