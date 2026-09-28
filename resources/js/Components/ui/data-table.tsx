@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "./table";
 import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTableToolbar, type DataTableFilter } from "./data-table-toolbar";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
 import { Skeleton } from "./skeleton";
@@ -59,6 +59,12 @@ interface DataTableProps<TData extends RowData> {
   filterOptions?: { label: string; value: string }[];
   filterKey?: string;
   filterTitle?: string;
+  /**
+   * Extra faceted filters, for tables that narrow on more than one column.
+   * The `filterKey` / `filterTitle` / `filterOptions` triple above stays
+   * supported and is rendered first.
+   */
+  filters?: DataTableFilter[];
   defaultPageSize?: number;
   pageSizeOptions?: number[];
   bulkActions?: BulkAction[];
@@ -70,6 +76,8 @@ interface DataTableProps<TData extends RowData> {
 
 const SKELETON_ROWS = 5;
 
+export type { DataTableFilter };
+
 export function DataTable<TData extends RowData>({
   columns,
   data,
@@ -78,6 +86,7 @@ export function DataTable<TData extends RowData>({
   filterOptions,
   filterKey,
   filterTitle,
+  filters,
   defaultPageSize = 10,
   pageSizeOptions = [10, 20, 50, 100],
   bulkActions,
@@ -173,6 +182,7 @@ export function DataTable<TData extends RowData>({
         filterOptions={filterOptions}
         filterKey={filterKey}
         filterTitle={filterTitle}
+        filters={filters}
         loading={loading}
         toolbarRight={toolbarRight}
       />
