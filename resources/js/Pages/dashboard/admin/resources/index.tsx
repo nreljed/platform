@@ -48,9 +48,9 @@ export default function ResourceIndexPage({ resource: serialized, data }: Resour
           <ResourceIndex
             resource={resource}
             data={data}
-            createRoute={routes.create}
-            editRoute={routes.edit}
-            destroyRoute={routes.destroy}
+            createRoute={routes?.create}
+            editRoute={routes?.edit}
+            destroyRoute={routes?.destroy}
           />
         ) : (
           <p className="text-sm text-muted-foreground">
