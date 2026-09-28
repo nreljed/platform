@@ -112,9 +112,6 @@ final class ResourceSchemaContractTest extends TestCase
         );
     }
 
-    /**
-     * @param  string  $relative
-     */
     private function read(string $relative): string
     {
         $content = file_get_contents($this->root.'/'.$relative);

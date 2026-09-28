@@ -163,7 +163,7 @@ final class ResourceDefinitionContractTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            "form.0.fields[0].type must be one of [text|textarea|number|money|select|boolean|date|datetime|slug|json|media|password|hidden]",
+            'form.0.fields[0].type must be one of [text|textarea|number|money|select|boolean|date|datetime|slug|json|media|password|hidden]',
             implode("\n", $definition->violations()),
         );
     }

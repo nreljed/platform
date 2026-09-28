@@ -372,7 +372,7 @@ class ResourceDefinition
 
                 $type = $field['type'] ?? null;
                 if (! is_string($type) || ! in_array($type, self::FIELD_TYPES, true)) {
-                    $issues[] = $fieldWhere.'.type must be one of ['.implode('|', self::FIELD_TYPES).']'." (got ".var_export($type, true).')';
+                    $issues[] = $fieldWhere.'.type must be one of ['.implode('|', self::FIELD_TYPES).']'.' (got '.var_export($type, true).')';
                 }
 
                 foreach (['label', 'help', 'placeholder'] as $stringKey) {
