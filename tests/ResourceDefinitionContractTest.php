@@ -18,6 +18,7 @@ final class ResourceDefinitionContractTest extends TestCase
         $this->assertSame([], $definition->getForm());
         $this->assertSame([], $definition->getRelations());
         $this->assertSame([], $definition->getRoutes());
+        $this->assertSame([], $definition->getPermissions());
     }
 
     public function test_to_array_round_trips_through_from_array(): void
@@ -41,6 +42,10 @@ final class ResourceDefinitionContractTest extends TestCase
                 'index' => 'dashboard.products.index',
                 'edit' => 'dashboard.products.edit',
             ],
+            permissions: [
+                'view' => 'products.view',
+                'create' => 'products.create',
+            ],
         );
 
         $this->assertSame(
@@ -60,7 +65,7 @@ final class ResourceDefinitionContractTest extends TestCase
         );
 
         $this->assertSame(
-            ['key', 'label', 'singular', 'table', 'form', 'relations', 'routes'],
+            ['key', 'label', 'singular', 'table', 'form', 'relations', 'routes', 'permissions'],
             array_keys($definition->toArray()),
         );
     }
@@ -73,6 +78,7 @@ final class ResourceDefinitionContractTest extends TestCase
         $this->assertSame('', $definition->getLabel());
         $this->assertNull($definition->getSingular());
         $this->assertSame([], $definition->getRoutes());
+        $this->assertSame([], $definition->getPermissions());
     }
 
     public function test_the_generator_output_is_schema_valid(): void
@@ -198,6 +204,39 @@ final class ResourceDefinitionContractTest extends TestCase
         $this->assertContains('table.columns[0].name must be a non-empty accessor key', $violations);
         $this->assertContains('routes.edit must be a non-empty route name (string), got int', $violations);
         $this->assertContains('routes declares unknown slot [rename]', $violations);
+    }
+
+    public function test_permission_slots_reject_unknown_slots_and_empty_slugs(): void
+    {
+        $definition = new ResourceDefinition(
+            key: 'products',
+            label: 'Products',
+            permissions: ['read' => 'products.view', 'view' => ''],
+        );
+
+        $violations = $definition->violations();
+
+        $this->assertContains('permissions declares unknown slot [read]', $violations);
+        $this->assertContains('permissions.view must be a non-empty permission slug (string), got an empty string', $violations);
+
+        $this->assertSame(['view', 'create', 'edit', 'delete'], ResourceDefinition::PERMISSION_KEYS);
+    }
+
+    public function test_valid_permissions_pass_validation(): void
+    {
+        $definition = new ResourceDefinition(
+            key: 'products',
+            label: 'Products',
+            permissions: [
+                'view' => 'products.view',
+                'create' => 'products.create',
+                'edit' => 'products.edit',
+                'delete' => 'products.delete',
+            ],
+        );
+
+        $this->assertSame([], $definition->violations());
+        $definition->assertValid('shop-module');
     }
 
     public function test_assert_valid_attributes_the_owner_slug(): void

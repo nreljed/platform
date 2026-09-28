@@ -50,6 +50,9 @@ class ResourceDefinition
     /** Route slots the ResourceIndex/ResourceForm runtime can resolve. */
     public const ROUTE_KEYS = ['index', 'create', 'store', 'edit', 'update', 'destroy'];
 
+    /** Permission slots a descriptor may declare. Anything else is a typo. */
+    public const PERMISSION_KEYS = ['view', 'create', 'edit', 'delete'];
+
     /** `table` keys a PHP descriptor may carry (the serializable ones). */
     private const TABLE_KEYS = [
         'columns',
@@ -88,6 +91,7 @@ class ResourceDefinition
         protected readonly array $form = [],
         protected readonly array $relations = [],
         protected readonly array $routes = [],
+        protected readonly array $permissions = [],
     ) {}
 
     /**
@@ -103,6 +107,7 @@ class ResourceDefinition
             form: $config['form'] ?? [],
             relations: $config['relations'] ?? [],
             routes: $config['routes'] ?? [],
+            permissions: $config['permissions'] ?? [],
         );
     }
 
@@ -154,6 +159,19 @@ class ResourceDefinition
     }
 
     /**
+     * Optional gate slugs for the resource surface. When a slot is declared
+     * the owning feature should register the matching route behind it
+     * (`permission:` middleware) — the slots here mirror the RBAC catalog so
+     * the sidebar can filter and the dashboard checks them.
+     *
+     * @return array{view?: string, create?: string, edit?: string, delete?: string}
+     */
+    public function getPermissions(): array
+    {
+        return $this->permissions;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function toArray(): array
@@ -166,6 +184,7 @@ class ResourceDefinition
             'form' => $this->form,
             'relations' => $this->relations,
             'routes' => $this->routes,
+            'permissions' => $this->permissions,
         ];
     }
 
@@ -187,6 +206,7 @@ class ResourceDefinition
         $issues = array_merge($issues, $this->tableViolations());
         $issues = array_merge($issues, $this->formViolations());
         $issues = array_merge($issues, $this->relationViolations());
+        $issues = array_merge($issues, $this->permissionViolations());
 
         foreach ($this->routes as $slot => $route) {
             if (! in_array($slot, self::ROUTE_KEYS, true)) {
@@ -227,6 +247,29 @@ class ResourceDefinition
             : "Resource [{$this->key}] has ".count($issues).' schema violation(s):';
 
         throw new InvalidArgumentException($owner.PHP_EOL.implode(PHP_EOL, $issues));
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function permissionViolations(): array
+    {
+        $issues = [];
+
+        foreach ($this->permissions as $slot => $slug) {
+            if (! in_array($slot, self::PERMISSION_KEYS, true)) {
+                $issues[] = "permissions declares unknown slot [{$slot}]";
+
+                continue;
+            }
+
+            if (! is_string($slug) || $slug === '') {
+                $issues[] = 'permissions.'.$slot.' must be a non-empty permission slug (string), got '
+                    .(is_string($slug) ? 'an empty string' : get_debug_type($slug));
+            }
+        }
+
+        return $issues;
     }
 
     /**

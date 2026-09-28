@@ -2,6 +2,7 @@
 
 namespace Nreljed\Platform\Services;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Nreljed\Platform\Contracts\FeatureProvider;
 use Nreljed\Platform\Support\DataBackupCapability;
@@ -14,6 +15,9 @@ class FeatureRegistry
 
     /** @var array<string, mixed> */
     protected array $memoized = [];
+
+    /** @var array<string, string> */
+    protected array $adminResourceOwners = [];
 
     public function __construct()
     {
@@ -138,6 +142,31 @@ class FeatureRegistry
 
                     $items[] = $item;
                 }
+            }
+
+            // Emit one sidebar item per admin resource that declares an index
+            // route. The generic kernel pages (dashboard/admin/resources/*)
+            // render the payload; the provider's own route + controller stay
+            // authoritative. Only resources with a resolvable index route get
+            // an item — a descriptor awaiting its routes stays invisible.
+            $owners = $this->getAdminResourceOwners();
+
+            foreach ($this->getAllAdminResources() as $descriptor) {
+                $indexRoute = $descriptor->getRoutes()['index'] ?? null;
+
+                if (! is_string($indexRoute) || $indexRoute === '' || ! Route::has($indexRoute)) {
+                    continue;
+                }
+
+                $permissions = $descriptor->getPermissions();
+
+                $items[] = array_filter([
+                    'title' => $descriptor->getLabel(),
+                    'url' => route($indexRoute),
+                    'feature_slug' => $owners[$descriptor->getKey()] ?? null,
+                    'permission' => $permissions['view'] ?? null,
+                    'groupLabel' => 'Resources',
+                ], fn ($value) => $value !== null);
             }
 
             return $items;
@@ -303,8 +332,57 @@ class FeatureRegistry
                 }
             }
 
+            $this->adminResourceOwners = $keys;
+
             return $resources;
         });
+    }
+
+    /**
+     * Resolve a single validated descriptor by its globally unique key.
+     */
+    public function getAdminResource(string $key): ?ResourceDefinition
+    {
+        foreach ($this->getAllAdminResources() as $descriptor) {
+            if ($descriptor->getKey() === $key) {
+                return $descriptor;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Serialize every declared descriptor for the admin inventory page and
+     * the shared Inertia prop. Keyed by resource key so the frontend can
+     * address a resource without re-querying providers.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public function getAllAdminResourcesArray(): array
+    {
+        return $this->remember('admin_resources_array', function () {
+            $resources = [];
+
+            foreach ($this->getAllAdminResources() as $descriptor) {
+                $resources[$descriptor->getKey()] = $descriptor->toArray();
+            }
+
+            return $resources;
+        });
+    }
+
+    /**
+     * Map resource key → owning feature slug. Populated while the validated
+     * aggregate is built, so duplicate keys fail before a nav item is emitted.
+     *
+     * @return array<string, string>
+     */
+    public function getAdminResourceOwners(): array
+    {
+        $this->getAllAdminResources();
+
+        return $this->adminResourceOwners;
     }
 
     public function getAllGalleryConfigs(): array

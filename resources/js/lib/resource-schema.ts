@@ -289,3 +289,88 @@ export function isFieldVisible(field: FieldDefinition, record: ResourceRecord): 
 
     return field.visibleWhen ? field.visibleWhen(record) : true;
 }
+
+/*
+ * ─── Serialized descriptor bridge (kernel §5.2) ───────────────────────────
+ *
+ * A PHP `ResourceDefinition` (`src/Support/ResourceDefinition.php`) serializes
+ * to `SerializedResource` and arrives as an Inertia page prop. `toResource()`
+ * rehydrates it into the runtime `ResourceDefinition` the generic
+ * `dashboard/admin/resources/{index,form}` pages render.
+ *
+ * The bridge is lossy on purpose:
+ *  - `relations` are dropped — a PHP descriptor can never carry a React
+ *    component, so a serialized "relation" is a stub, not a row of the
+ *    VariationsManager. Live side-car tables stay in the owning feature's own
+ *    page (or an `extra` prop its controller passes next to the descriptor).
+ *  - `edit`/`update`/`destroy` become URL builders bound to the literal
+ *    `record` route param (matching `ResourceRenderer::RECORD_PARAM`), because
+ *    the PHP side declares only route *names*.
+ */
+
+/** The exact shape `ResourceDefinition::toArray()` (and `fromArray`) emits. */
+export interface SerializedResource {
+    key: string;
+    label: string;
+    singular?: string | null;
+    table?: Record<string, unknown>;
+    form?: Array<Record<string, unknown>>;
+    relations?: Array<Record<string, unknown>>;
+    routes?: Partial<Record<RouteSlot, string | null>>;
+    permissions?: Partial<Record<"view" | "create" | "edit" | "delete", string | null>>;
+}
+
+type RouteSlot = "index" | "create" | "store" | "edit" | "update" | "destroy";
+
+/** Literal route parameter the generic pages bind for record-scoped URLs. */
+export const RESOURCE_RECORD_PARAM = "record";
+
+type RouteRef = (name: string, params?: Record<string, unknown>) => string;
+
+/**
+ * Rehydrate a serialized PHP descriptor into a runtime `ResourceDefinition`.
+ * The default `routeRef` is Ziggy's global `route`; tests inject a spy.
+ */
+export function toResource(
+    serialized: SerializedResource,
+    routeRef: RouteRef = (name, params) => route(name, params),
+): ResourceDefinition {
+    const routes = serialized.routes ?? {};
+
+    const recordUrl = (name: string | null | undefined): ((row: ResourceRecord) => string) | undefined => {
+        return name && name !== "" ? (row) => routeRef(name, { [RESOURCE_RECORD_PARAM]: row.id }) : undefined;
+    };
+
+    return {
+        key: serialized.key,
+        label: serialized.label,
+        singular: serialized.singular ?? undefined,
+        table: (serialized.table ?? undefined) as ResourceTable | undefined,
+        form: (serialized.form ?? undefined) as ResourceSection[] | undefined,
+        routes: {
+            index: routes.index ?? undefined,
+            create: routes.create ?? undefined,
+            store: routes.store ?? undefined,
+            edit: recordUrl(routes.edit),
+            update: recordUrl(routes.update),
+            destroy: recordUrl(routes.destroy),
+        },
+    };
+}
+
+/** Build an admin URL from a declared route name, or `undefined` when unknown. */
+export function resolveResourceRoute(
+    name: string | null | undefined,
+    params?: Record<string, unknown>,
+    routeRef: RouteRef = (planned, plannedParams) => route(planned, plannedParams),
+): string | undefined {
+    if (!name || name === "") {
+        return undefined;
+    }
+
+    try {
+        return routeRef(name, params);
+    } catch {
+        return undefined;
+    }
+}
