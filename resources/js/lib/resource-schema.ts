@@ -49,6 +49,7 @@ export type FieldType =
     | "media"
     | "password"
     | "hidden"
+    | "relation"
     | "dynamic";
 
 export interface FieldOption {
@@ -86,6 +87,13 @@ export interface FieldDefinition {
     help?: string;
     placeholder?: string;
     options?: FieldOption[];
+    /**
+     * Static or lazy option source for `relation` fields. A serialized PHP
+     * descriptor always passes a route *name* here; `toResource()` resolves it
+     * against Ziggy, so the runtime definition holds a URL. A TS-side resource
+     * may set a URL directly. GET must return `{ value, label }[]`.
+     */
+    optionsUrl?: string;
     defaultValue?: unknown;
     /** Grid span within a section. 1-4; defaults to 1. */
     colSpan?: 1 | 2 | 3 | 4;
@@ -138,8 +146,18 @@ export interface ResourceRowAction<TData extends ResourceRecord = ResourceRecord
     label: string;
     /** Resolve the Inertia route for a row, e.g. (row) => `admin/products/${row.id}/edit`. */
     route?: (row: TData) => string;
+    /** HTTP verb the route resolves to. Non-`get` actions submit, they do not navigate. */
+    method?: "get" | "post" | "put" | "delete";
     /** Destructive actions get a confirm dialog and destructive styling. */
     destructive?: boolean;
+    /**
+     * Confirm-dialog message for non-destructive actions that deserve a second
+     * look (approve, publish, regenerate). Opens the same dialog `destructive`
+     * does, with the action's own copy instead of "This cannot be undone."
+     */
+    confirm?: string;
+    /** Serialized PHP descriptors declare this instead of `route`; `toResource()` resolves it. */
+    routeName?: string;
     /** Show this action at all - lets a row gate its own menu. */
     show?: (row: TData) => boolean;
     icon?: ComponentType<{ className?: string }>;
@@ -330,6 +348,15 @@ type RouteRef = (name: string, params?: Record<string, unknown>) => string;
 /**
  * Rehydrate a serialized PHP descriptor into a runtime `ResourceDefinition`.
  * The default `routeRef` is Ziggy's global `route`; tests inject a spy.
+ *
+ * Besides the literal `record` route slots, the bridge resolves two
+ * route-name surfaces the PHP side cannot express as closures but the runtime
+ * needs as URLs:
+ *  - `table.rowActions` entries declare `routeName`; each becomes a `route`
+ *    builder bound to `{ record: row.id }` (interim Route URL) carrying the
+ *    declared verb (`method`) and optional `confirm` copy.
+ *  - field `optionsUrl` (the `relation` field's lazy option source) is
+ *    resolved from a route name to a URL.
  */
 export function toResource(
     serialized: SerializedResource,
@@ -341,12 +368,40 @@ export function toResource(
         return name && name !== "" ? (row) => routeRef(name, { [RESOURCE_RECORD_PARAM]: row.id }) : undefined;
     };
 
+    const table = serialized.table ?? undefined;
+
     return {
         key: serialized.key,
         label: serialized.label,
         singular: serialized.singular ?? undefined,
-        table: (serialized.table ?? undefined) as ResourceTable | undefined,
-        form: (serialized.form ?? undefined) as ResourceSection[] | undefined,
+        table: table
+            ? ({ ...table, rowActions: mapSerializedRowActions(table.rowActions, routeRef) } as ResourceTable<ResourceRecord>)
+            : undefined,
+        form: (serialized.form ?? undefined)?.map(
+            (section) =>
+                ({
+                    ...section,
+                    // Relation lazy option sources come through as route names; the
+                    // runtime reads `optionsUrl` as a fetchable URL. A value that
+                    // already is a URL is left alone - the bridge only resolves names.
+                    fields: ((section.fields ?? []) as Array<Record<string, unknown>>).map((field) => {
+                        const optionsUrl = field.optionsUrl;
+
+                        if (typeof optionsUrl !== "string" || optionsUrl === "") {
+                            return field as unknown as FieldDefinition;
+                        }
+
+                        const alreadyResolved = optionsUrl.startsWith("/") || /^https?:\/\//i.test(optionsUrl);
+
+                        return {
+                            ...field,
+                            optionsUrl: alreadyResolved
+                                ? optionsUrl
+                                : (resolveResourceRoute(optionsUrl, undefined, routeRef) ?? optionsUrl),
+                        } as unknown as FieldDefinition;
+                    }),
+                }) as ResourceSection,
+        ),
         routes: {
             index: routes.index ?? undefined,
             create: routes.create ?? undefined,
@@ -356,6 +411,49 @@ export function toResource(
             destroy: recordUrl(routes.destroy),
         },
     };
+}
+
+/** Row-action shape a serialized PHP descriptor emits for `table.rowActions`. */
+interface SerializedRowAction {
+    label: string;
+    routeName?: string;
+    method?: "get" | "post" | "put" | "delete";
+    destructive?: boolean;
+    confirm?: string;
+}
+
+/**
+ * Turn `routeName` row actions into runtime `route` builders bound to the
+ * `record` param. Actions that already carry a `route` (TS-declared) pass
+ * through untouched, so `toResource` is safe against both shapes.
+ */
+export function mapSerializedRowActions(
+    rowActions: unknown,
+    routeRef: RouteRef = (name, params) => route(name, params),
+): ResourceRowAction[] | undefined {
+    if (!Array.isArray(rowActions)) {
+        return undefined;
+    }
+
+    return rowActions.map((declared) => {
+        const action = declared as Partial<SerializedRowAction>;
+
+        if (typeof action.routeName === "string" && action.routeName !== "") {
+            const name = action.routeName;
+            const routeBuilder: (row: ResourceRecord) => string = (row) =>
+                routeRef(name, { [RESOURCE_RECORD_PARAM]: row.id });
+
+            return {
+                label: action.label ?? "",
+                route: routeBuilder,
+                method: action.method ?? "get",
+                ...(action.destructive !== undefined ? { destructive: action.destructive } : {}),
+                ...(typeof action.confirm === "string" && action.confirm !== "" ? { confirm: action.confirm } : {}),
+            };
+        }
+
+        return action as ResourceRowAction;
+    });
 }
 
 /** Build an admin URL from a declared route name, or `undefined` when unknown. */

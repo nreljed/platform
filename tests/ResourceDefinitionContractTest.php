@@ -169,7 +169,7 @@ final class ResourceDefinitionContractTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            'form.0.fields[0].type must be one of [text|textarea|number|money|select|boolean|date|datetime|slug|json|media|password|hidden]',
+            'form.0.fields[0].type must be one of [text|textarea|number|money|select|boolean|date|datetime|slug|json|media|password|hidden|relation]',
             implode("\n", $definition->violations()),
         );
     }
@@ -185,7 +185,7 @@ final class ResourceDefinitionContractTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            'form.0.fields[0].type must be one of [text|textarea|number|money|select|boolean|date|datetime|slug|json|media|password|hidden]',
+            'form.0.fields[0].type must be one of [text|textarea|number|money|select|boolean|date|datetime|slug|json|media|password|hidden|relation]',
             implode("\n", $definition->violations()),
         );
     }
@@ -253,5 +253,129 @@ final class ResourceDefinitionContractTest extends TestCase
             );
             $this->assertStringContainsString('relations[0].key must be a non-empty string', $exception->getMessage());
         }
+    }
+
+    public function test_relation_field_with_static_options_is_accepted(): void
+    {
+        $definition = new ResourceDefinition(
+            key: 'webhooks',
+            label: 'Webhooks',
+            form: [
+                ['title' => 'Details', 'fields' => [
+                    ['name' => 'events', 'type' => 'relation', 'label' => 'Events', 'required' => true, 'options' => [
+                        ['label' => 'Order created', 'value' => 'order.created'],
+                        ['label' => 'Order paid', 'value' => 'order.paid'],
+                    ]],
+                ]],
+            ],
+        );
+
+        $this->assertSame([], $definition->violations());
+        $definition->assertValid('shop-module');
+    }
+
+    public function test_relation_field_with_lazy_options_url_is_accepted(): void
+    {
+        $definition = new ResourceDefinition(
+            key: 'coupons',
+            label: 'Coupons',
+            form: [
+                ['title' => 'Discount', 'fields' => [
+                    ['name' => 'product_ids', 'type' => 'relation', 'optionsUrl' => 'dashboard.shop.products.options'],
+                ]],
+            ],
+        );
+
+        $this->assertSame([], $definition->violations());
+        $definition->assertValid('shop-module');
+    }
+
+    public function test_relation_field_without_an_options_source_is_rejected(): void
+    {
+        $definition = new ResourceDefinition(
+            key: 'coupons',
+            label: 'Coupons',
+            form: [
+                ['title' => 'Discount', 'fields' => [['name' => 'product_ids', 'type' => 'relation']]],
+            ],
+        );
+
+        $this->assertStringContainsString(
+            'form.0.fields[0] is a relation field and must declare an options source: options or optionsUrl',
+            implode("\n", $definition->violations()),
+        );
+    }
+
+    public function test_options_url_must_be_a_non_empty_route_name(): void
+    {
+        $definition = new ResourceDefinition(
+            key: 'coupons',
+            label: 'Coupons',
+            form: [
+                ['title' => 'Discount', 'fields' => [
+                    ['name' => 'product_ids', 'type' => 'relation', 'optionsUrl' => ''],
+                ]],
+            ],
+        );
+
+        $violations = $definition->violations();
+
+        $this->assertContains('form.0.fields[0].optionsUrl must be a non-empty route name (string)', $violations);
+    }
+
+    public function test_valid_row_actions_pass_validation(): void
+    {
+        $definition = new ResourceDefinition(
+            key: 'reviews',
+            label: 'Reviews',
+            table: [
+                'columns' => [['name' => 'id', 'header' => 'ID']],
+                'rowActions' => [
+                    ['label' => 'Approve', 'routeName' => 'dashboard.shop.reviews.approve', 'method' => 'post', 'confirm' => 'Approve this review?'],
+                    ['label' => 'Delete', 'routeName' => 'dashboard.shop.reviews.destroy', 'method' => 'delete', 'destructive' => true],
+                    ['label' => 'Show', 'routeName' => 'dashboard.shop.reviews.show', 'method' => 'get'],
+                ],
+            ],
+        );
+
+        $this->assertSame([], $definition->violations());
+        $definition->assertValid('shop-module');
+    }
+
+    public function test_row_action_shape_is_validate_d(): void
+    {
+        $definition = new ResourceDefinition(
+            key: 'reviews',
+            label: 'Reviews',
+            table: [
+                'columns' => [['name' => 'id', 'header' => 'ID']],
+                'rowActions' => [
+                    ['routeName' => 'dashboard.shop.reviews.approve', 'method' => 'patch'],
+                    ['label' => 'Purge', 'method' => 'post'],
+                    ['label' => 'Logo', 'routeName' => 'dashboard.shop.reviews.logo', 'confirm' => 3],
+                    ['label' => 'Broken', 'routeName' => 'dashboard.shop.reviews.broken', 'destructive' => 'yes', 'icon' => 'swatch'],
+                ],
+            ],
+        );
+
+        $joined = implode("\n", $definition->violations());
+
+        $this->assertStringContainsString('table.rowActions[0].label must be a non-empty string', $joined);
+        $this->assertStringContainsString('table.rowActions[0].method must be one of [get|post|put|delete]', $joined);
+        $this->assertStringContainsString('table.rowActions[1].routeName must be a non-empty route name', $joined);
+        $this->assertStringContainsString('table.rowActions[2].confirm must be a non-empty string when present', $joined);
+        $this->assertStringContainsString('table.rowActions[3].destructive must be a boolean', $joined);
+        $this->assertStringContainsString('table.rowActions[3].icon is not expressible in a PHP descriptor row action', $joined);
+    }
+
+    public function test_row_actions_with_no_columns_are_rejected(): void
+    {
+        $definition = new ResourceDefinition(
+            key: 'reviews',
+            label: 'Reviews',
+            table: ['rowActions' => [['label' => 'Approve', 'routeName' => 'dashboard.shop.reviews.approve']]],
+        );
+
+        $this->assertContains('table.columns must be an array', $definition->violations());
     }
 }

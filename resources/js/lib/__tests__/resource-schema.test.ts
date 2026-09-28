@@ -249,6 +249,82 @@ describe("toResource", () => {
 
         expect(resource.relations).toBeUndefined();
     });
+
+    it("resolves serialized row actions into record-bound routes with verb, confirm and destructive flags", () => {
+        const resource = toResource(
+            {
+                key: "shop/reviews",
+                label: "Reviews",
+                table: {
+                    columns: [{ name: "id", header: "ID" }],
+                    rowActions: [
+                        {
+                            label: "Approve",
+                            routeName: "dashboard.shop.reviews.approve",
+                            method: "post",
+                            confirm: "Approve this review?",
+                        },
+                        { label: "Delete", routeName: "dashboard.shop.reviews.destroy", method: "delete", destructive: true },
+                        { label: "Show", routeName: "dashboard.shop.reviews.show" },
+                    ],
+                },
+            },
+            routeRef,
+        );
+
+        const approve = resource.table?.rowActions?.[0]!;
+        const destroy = resource.table?.rowActions?.[1]!;
+        const show = resource.table?.rowActions?.[2]!;
+
+        expect(approve.route?.({ id: 7 })).toBe(`dashboard.shop.reviews.approve?${RESOURCE_RECORD_PARAM}=7`);
+        expect(approve.method).toBe("post");
+        expect(approve.confirm).toBe("Approve this review?");
+        expect(approve.destructive).toBeUndefined();
+
+        expect(destroy.route?.({ id: 9 })).toBe(`dashboard.shop.reviews.destroy?${RESOURCE_RECORD_PARAM}=9`);
+        expect(destroy.method).toBe("delete");
+        expect(destroy.destructive).toBe(true);
+
+        // A serialized action with no verb walks (GET) — same as a TS-declared one.
+        expect(show.method).toBe("get");
+    });
+
+    it("resolves a relation field optionsUrl route name into a URL", () => {
+        const resource = toResource(
+            {
+                key: "shop/coupons",
+                label: "Coupons",
+                form: [
+                    {
+                        title: "Discount",
+                        fields: [{ name: "product_ids", type: "relation", optionsUrl: "dashboard.shop.products.options" }],
+                    },
+                ],
+            },
+            routeRef,
+        );
+
+        // The routeRef appends no args, so a name resolves to exactly itself.
+        expect(resource.form?.[0]?.fields[0]?.optionsUrl).toBe("dashboard.shop.products.options");
+    });
+
+    it("leaves an already-resolved optionsUrl URL untouched", () => {
+        const resource = toResource(
+            {
+                key: "shop/coupons",
+                label: "Coupons",
+                form: [
+                    {
+                        title: "Discount",
+                        fields: [{ name: "product_ids", type: "relation", optionsUrl: "/shop/products/options" }],
+                    },
+                ],
+            },
+            routeRef,
+        );
+
+        expect(resource.form?.[0]?.fields[0]?.optionsUrl).toBe("/shop/products/options");
+    });
 });
 
 describe("resolveResourceRoute", () => {

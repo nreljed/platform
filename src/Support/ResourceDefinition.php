@@ -45,6 +45,7 @@ class ResourceDefinition
         'media',
         'password',
         'hidden',
+        'relation',
     ];
 
     /** Route slots the ResourceIndex/ResourceForm runtime can resolve. */
@@ -61,7 +62,11 @@ class ResourceDefinition
         'filters',
         'defaultPageSize',
         'pageSizeOptions',
+        'rowActions',
     ];
+
+    /** `rowAction` keys a PHP descriptor may carry. */
+    private const ROW_ACTION_KEYS = ['label', 'routeName', 'method', 'destructive', 'confirm'];
 
     /** `column` keys a PHP descriptor may carry. `cell` is a closure. */
     private const COLUMN_KEYS = ['name', 'header', 'className', 'sortable', 'hideable', 'align'];
@@ -75,6 +80,7 @@ class ResourceDefinition
         'help',
         'placeholder',
         'options',
+        'optionsUrl',
         'defaultValue',
         'colSpan',
         'hidden',
@@ -333,6 +339,51 @@ class ResourceDefinition
             }
         }
 
+        $rowActions = $this->table['rowActions'] ?? null;
+        if ($rowActions !== null) {
+            if (! is_array($rowActions)) {
+                $issues[] = 'table.rowActions must be an array';
+            } else {
+                foreach ($rowActions as $index => $action) {
+                    $where = "table.rowActions[{$index}]";
+
+                    if (! is_array($action)) {
+                        $issues[] = $where.' must be an array';
+
+                        continue;
+                    }
+
+                    foreach ($action as $key => $value) {
+                        if (! in_array($key, self::ROW_ACTION_KEYS, true)) {
+                            $issues[] = $where.'.'.$key.' is not expressible in a PHP descriptor row action';
+                        }
+                    }
+
+                    $label = $action['label'] ?? null;
+                    if (! is_string($label) || $label === '') {
+                        $issues[] = $where.'.label must be a non-empty string';
+                    }
+
+                    $routeName = $action['routeName'] ?? null;
+                    if (! is_string($routeName) || $routeName === '') {
+                        $issues[] = $where.'.routeName must be a non-empty route name (the kernel binds the {"record"} param)';
+                    }
+
+                    if (isset($action['method']) && ! in_array($action['method'], ['get', 'post', 'put', 'delete'], true)) {
+                        $issues[] = $where.'.method must be one of [get|post|put|delete]';
+                    }
+
+                    if (isset($action['destructive']) && ! is_bool($action['destructive'])) {
+                        $issues[] = $where.'.destructive must be a boolean';
+                    }
+
+                    if (isset($action['confirm']) && (! is_string($action['confirm']) || $action['confirm'] === '')) {
+                        $issues[] = $where.'.confirm must be a non-empty string when present';
+                    }
+                }
+            }
+        }
+
         foreach (['searchKey', 'searchPlaceholder'] as $stringKey) {
             if (isset($this->table[$stringKey]) && (! is_string($this->table[$stringKey]) || $this->table[$stringKey] === '')) {
                 $issues[] = "table.{$stringKey} must be a non-empty string";
@@ -416,6 +467,14 @@ class ResourceDefinition
                 $type = $field['type'] ?? null;
                 if (! is_string($type) || ! in_array($type, self::FIELD_TYPES, true)) {
                     $issues[] = $fieldWhere.'.type must be one of ['.implode('|', self::FIELD_TYPES).']'.' (got '.var_export($type, true).')';
+                }
+
+                if ($type === 'relation' && ($field['options'] ?? null) === null && ($field['optionsUrl'] ?? null) === null) {
+                    $issues[] = $fieldWhere.' is a relation field and must declare an options source: options or optionsUrl';
+                }
+
+                if (isset($field['optionsUrl']) && (! is_string($field['optionsUrl']) || $field['optionsUrl'] === '')) {
+                    $issues[] = $fieldWhere.'.optionsUrl must be a non-empty route name (string)';
                 }
 
                 foreach (['label', 'help', 'placeholder'] as $stringKey) {
