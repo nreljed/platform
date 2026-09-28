@@ -41,7 +41,12 @@ import {
 } from "./alert-dialog";
 import { AlertTriangleIcon, ChevronDownIcon } from "lucide-react";
 
-interface BulkAction {
+/**
+ * Exported so a declarative resource schema (lib/resource-schema.ts) can build
+ * `bulkActions` without restating this shape and drifting from the renderer that
+ * consumes it.
+ */
+export interface BulkAction {
   label: string;
   value: string;
   show?: (_statuses: string[]) => boolean;
@@ -51,7 +56,7 @@ interface BulkAction {
   confirmLabel?: string;
 }
 
-interface DataTableProps<TData extends RowData> {
+export interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<AppTableFeatures, TData, CellData>[];
   data: TData[];
   searchKey?: string;
