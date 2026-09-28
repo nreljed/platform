@@ -5,6 +5,7 @@ namespace Nreljed\Platform\Services;
 use Illuminate\Support\ServiceProvider;
 use Nreljed\Platform\Contracts\FeatureProvider;
 use Nreljed\Platform\Support\DataBackupCapability;
+use Nreljed\Platform\Support\ResourceDefinition;
 
 class FeatureRegistry
 {
@@ -263,13 +264,47 @@ class FeatureRegistry
      * condition the `remember` docblock requires. A feature toggled at runtime
      * re-registers providers, so the cache is dropped with them.
      *
-     * @return array<int, array<string, mixed>>
+     * The kernel guarantee (plan 5.4): a descriptor that drifts off the
+     * shipped schema (a misspelled column key, an unknown field type, a route
+     * slot that is not a route name, a resource key colliding with another
+     * feature) fails loudly here, so no module can silently fork the shared
+     * admin surface. `assertValid()` carries the owning feature's slug so the
+     * failure names the module that must fix it.
+     *
+     * @return array<int, ResourceDefinition>
      */
     public function getAllAdminResources(): array
     {
-        return $this->remember('admin_resources', fn () => array_merge(
-            ...array_map(fn (FeatureProvider $provider) => $provider->getAdminResources(), $this->enabledProviders())
-        ));
+        return $this->remember('admin_resources', function () {
+            $resources = [];
+            $keys = [];
+
+            foreach ($this->enabledProviders() as $provider) {
+                foreach ($provider->getAdminResources() as $descriptor) {
+                    if (! $descriptor instanceof ResourceDefinition) {
+                        throw new \RuntimeException(
+                            "Feature [{$provider->slug()}] returned a non-ResourceDefinition from getAdminResources(); "
+                            .'the method must return descriptor objects, not raw arrays.'
+                        );
+                    }
+
+                    $descriptor->assertValid($provider->slug());
+
+                    $key = $descriptor->getKey();
+                    if (isset($keys[$key])) {
+                        throw new \RuntimeException(
+                            "Duplicate admin resource key [{$key}] declared by features "
+                            ."[{$keys[$key]}] and [{$provider->slug()}]."
+                        );
+                    }
+
+                    $keys[$key] = $provider->slug();
+                    $resources[] = $descriptor;
+                }
+            }
+
+            return $resources;
+        });
     }
 
     public function getAllGalleryConfigs(): array
@@ -707,6 +742,52 @@ class FeatureRegistry
                         ];
                     }
                 }
+            }
+
+            // Resource descriptors are validated loudly when the registry
+            // aggregates them, but surface them here too so the system health
+            // page reports the drift instead of leaving it to the next
+            // dashboard render to 500 on.
+            foreach ($provider->getAdminResources() as $descriptor) {
+                if (! $descriptor instanceof ResourceDefinition) {
+                    $issues[] = [
+                        'severity' => 'critical',
+                        'provider' => $slug,
+                        'message' => 'getAdminResources() returned a raw array instead of a ResourceDefinition.',
+                    ];
+
+                    continue;
+                }
+
+                foreach ($descriptor->violations() as $violation) {
+                    $issues[] = [
+                        'severity' => 'high',
+                        'provider' => $slug,
+                        'message' => "Resource [{$descriptor->getKey()}]: {$violation}",
+                    ];
+                }
+            }
+        }
+
+        // Resource keys must be globally unique across enabled features so the
+        // registry lookup and the frontend inventory cannot be ambiguous.
+        $descriptorKeys = [];
+        foreach ($this->enabledProviders() as $provider) {
+            foreach ($provider->getAdminResources() as $descriptor) {
+                if (! $descriptor instanceof ResourceDefinition) {
+                    continue;
+                }
+
+                $key = $descriptor->getKey();
+                if (isset($descriptorKeys[$key]) && $descriptorKeys[$key] !== $provider->slug()) {
+                    $issues[] = [
+                        'severity' => 'critical',
+                        'provider' => $provider->slug(),
+                        'message' => "Duplicate admin resource key [{$key}] already declared by [{$descriptorKeys[$key]}].",
+                    ];
+                }
+
+                $descriptorKeys[$key] = $provider->slug();
             }
         }
 
