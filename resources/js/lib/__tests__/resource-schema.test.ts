@@ -7,7 +7,10 @@ import {
     isFieldVisible,
     readPath,
     relation,
+    RESOURCE_RECORD_PARAM,
+    resolveResourceRoute,
     toColumnDef,
+    toResource,
     type FieldDefinition,
     type ResourceRecord,
 } from "../resource-schema";
@@ -177,6 +180,101 @@ describe("isFieldVisible", () => {
         // Hidden means "not shown", not "not rendered" - a slug or a token still
         // has to reach the server.
         expect(isFieldVisible({ name: "id", type: "hidden", hidden: true, visibleWhen: () => false }, {})).toBe(true);
+    });
+});
+
+describe("toResource", () => {
+    const routeRef = (name: string, params?: Record<string, unknown>) =>
+        `${name}${params ? `?${Object.entries(params).map(([k, v]) => `${k}=${v}`).join("&")}` : ""}`;
+
+    it("rehydrates scalar, table and form keys", () => {
+        const resource = toResource(
+            {
+                key: "shop/tax-rates",
+                label: "Tax Rates",
+                singular: "Tax Rate",
+                table: { columns: [{ name: "name", header: "Name" }], searchKey: "name" },
+                form: [{ title: "Details", fields: [{ name: "name", type: "text" }] }],
+            },
+            routeRef,
+        );
+
+        expect(resource.key).toBe("shop/tax-rates");
+        expect(resource.label).toBe("Tax Rates");
+        expect(resource.singular).toBe("Tax Rate");
+        expect(resource.table?.searchKey).toBe("name");
+        expect(resource.form?.[0]?.fields[0]?.name).toBe("name");
+    });
+
+    it("binds edit/update/destroy URLs on the literal record param", () => {
+        const resource = toResource(
+            {
+                key: "shop/tax-rates",
+                label: "Tax Rates",
+                routes: {
+                    index: "dashboard.shop.tax-rates.index",
+                    create: "dashboard.shop.tax-rates.create",
+                    store: "dashboard.shop.tax-rates.store",
+                    edit: "dashboard.shop.tax-rates.edit",
+                    update: "dashboard.shop.tax-rates.update",
+                    destroy: "dashboard.shop.tax-rates.destroy",
+                },
+            },
+            routeRef,
+        );
+
+        expect(resource.routes?.index).toBe("dashboard.shop.tax-rates.index");
+        expect(resource.routes?.create).toBe("dashboard.shop.tax-rates.create");
+        expect(resource.routes?.store).toBe("dashboard.shop.tax-rates.store");
+        expect(resource.routes?.edit?.({ id: 7 })).toBe(`dashboard.shop.tax-rates.edit?${RESOURCE_RECORD_PARAM}=7`);
+        expect(resource.routes?.update?.({ id: 7 })).toBe(`dashboard.shop.tax-rates.update?${RESOURCE_RECORD_PARAM}=7`);
+        expect(resource.routes?.destroy?.({ id: 7 })).toBe(`dashboard.shop.tax-rates.destroy?${RESOURCE_RECORD_PARAM}=7`);
+    });
+
+    it("leaves record routes undefined when the name is absent or empty", () => {
+        const resource = toResource(
+            { key: "shop/tax-rates", label: "Tax Rates", routes: { edit: "", destroy: undefined } },
+            routeRef,
+        );
+
+        expect(resource.routes?.edit).toBeUndefined();
+        expect(resource.routes?.destroy).toBeUndefined();
+    });
+
+    it("drops relations — a PHP descriptor can never carry a React component", () => {
+        const resource = toResource(
+            { key: "shop/tax-rates", label: "Tax Rates", relations: [{ key: "lines" }] },
+            routeRef,
+        );
+
+        expect(resource.relations).toBeUndefined();
+    });
+});
+
+describe("resolveResourceRoute", () => {
+    const routeRef = (name: string) => `/${name.replaceAll(".", "/")}`;
+
+    it("builds a URL from a declared route name", () => {
+        expect(resolveResourceRoute("dashboard.shop.tax-rates.index", undefined, routeRef)).toBe(
+            "/dashboard/shop/tax-rates/index",
+        );
+    });
+
+    it("returns undefined for an absent name", () => {
+        expect(resolveResourceRoute(undefined, undefined, routeRef)).toBeUndefined();
+        expect(resolveResourceRoute("", undefined, routeRef)).toBeUndefined();
+    });
+
+    it("returns undefined rather than throwing for an unknown name", () => {
+        expect(
+            resolveResourceRoute(
+                "dashboard.ghost.index",
+                undefined,
+                () => {
+                    throw new Error("Ziggy: route not found");
+                },
+            ),
+        ).toBeUndefined();
     });
 });
 
