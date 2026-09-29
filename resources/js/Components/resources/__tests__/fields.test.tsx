@@ -278,6 +278,93 @@ describe("relation field", () => {
     });
 });
 
+describe("select field with lazy optionsUrl", () => {
+    function selectContext(field: FieldDefinition, value: unknown = "") {
+        const setValue = vi.fn();
+        const context: FieldContext = {
+            field,
+            record: { [field.name]: value } as ResourceRecord,
+            value,
+            setValue,
+            setField: () => undefined,
+        };
+
+        return { context, setValue };
+    }
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it("loads options from optionsUrl and stores the picked value", async () => {
+        const fetchSpy = vi.fn().mockResolvedValue({
+            ok: true,
+            json: async () => [
+                { label: "Standard", value: 1 },
+                { label: "Express", value: 2 },
+            ],
+        });
+        vi.stubGlobal("fetch", fetchSpy);
+
+        const { context, setValue } = selectContext({
+            name: "method_id",
+            type: "select",
+            label: "Method",
+            optionsUrl: "/shop/shipping-methods/options",
+        });
+
+        render(<ResourceField context={context} />);
+
+        await waitFor(() => {
+            expect(fetchSpy).toHaveBeenCalledWith("/shop/shipping-methods/options", expect.objectContaining({ headers: expect.anything() }));
+        });
+
+        const option = await screen.findByText("Express");
+
+        fireEvent.change(screen.getByRole("combobox"), { target: { value: "2" } });
+
+        expect(setValue).toHaveBeenCalledWith("2");
+        expect(option).toBeDefined();
+    });
+
+    it("surfaces a failed options load without breaking the select", async () => {
+        vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Failed to load options (500)")));
+
+        const { context } = selectContext({
+            name: "method_id",
+            type: "select",
+            label: "Method",
+            optionsUrl: "/shop/shipping-methods/options",
+        });
+
+        render(<ResourceField context={context} />);
+
+        const error = await screen.findByText("Failed to load options (500)");
+
+        expect(error).toBeDefined();
+    });
+
+    it("keeps working from a static options list when no optionsUrl is declared", () => {
+        const { context, setValue } = selectContext({
+            name: "method_id",
+            type: "select",
+            label: "Method",
+            options: [
+                { label: "Standard", value: 1 },
+                { label: "Express", value: 2 },
+            ],
+        });
+
+        render(<ResourceField context={context} />);
+
+        expect(screen.getByText("Standard")).toBeDefined();
+
+        fireEvent.change(screen.getByRole("combobox"), { target: { value: "1" } });
+
+        expect(setValue).toHaveBeenCalledWith("1");
+    });
+});
+
 describe("money field", () => {
     function moneyContext(field: FieldDefinition, record: ResourceRecord = {}, value: unknown = undefined) {
         const setValue = vi.fn();

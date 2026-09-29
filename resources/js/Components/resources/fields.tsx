@@ -258,23 +258,28 @@ function MoneyInput({ field, id, name, disabled, value, setValue, setField, reco
 }
 
 function SelectInput({ field, id, name, disabled, value, setValue }: FieldControlProps) {
+    const { options, loaded, error } = useOptions(field);
+
     return (
-        <NativeSelect
-            id={id}
-            name={name}
-            disabled={disabled}
-            value={value == null ? "" : String(value)}
-            onChange={(event) => setValue(event.target.value)}
-        >
-            {field.placeholder ? (
-                <NativeSelectOption value="">{field.placeholder}</NativeSelectOption>
-            ) : null}
-            {(field.options ?? []).map((option) => (
-                <NativeSelectOption key={String(option.value)} value={String(option.value)}>
-                    {option.label}
-                </NativeSelectOption>
-            ))}
-        </NativeSelect>
+        <div className="space-y-2">
+            <NativeSelect
+                id={id}
+                name={name}
+                disabled={disabled || (!field.options && !loaded)}
+                value={value == null ? "" : String(value)}
+                onChange={(event) => setValue(event.target.value)}
+            >
+                {field.placeholder ? (
+                    <NativeSelectOption value="">{field.placeholder}</NativeSelectOption>
+                ) : null}
+                {options.map((option) => (
+                    <NativeSelectOption key={String(option.value)} value={String(option.value)}>
+                        {option.label}
+                    </NativeSelectOption>
+                ))}
+            </NativeSelect>
+            {!field.options?.length && error ? <p className="text-xs text-destructive">{error}</p> : null}
+        </div>
     );
 }
 
@@ -295,8 +300,10 @@ type RelationItem = { value: string | number; label: string };
 
 /**
  * Resolve a field's option list: static `options` when declared, otherwise a
- * lazy GET from `optionsUrl`. Shared by `relation` (multi-value picker) and
- * `money` (currency list), so the two call the same endpoint shape with the
+ * lazy GET from `optionsUrl`. Shared by `relation` (multi-value picker),
+ * `money` (currency list) and `select` (single-value picker over a lively
+ * catalog), so they call the same endpoint shape with the same loading and
+ * error copy instead of drifting.
  * same loading and error copy instead of drifting.
  */
 function useOptions(field: FieldDefinition): { options: FieldOption[]; loaded: boolean; error: string | undefined } {
