@@ -294,7 +294,7 @@ jobs:
         run: |
           php artisan key:generate
           php artisan migrate --force
-          php artisan db:seed --class=Nreljed\Platform\Database\Seeders\RolesAndPermissionsSeeder --force
+          php artisan db:seed --class='Nreljed\Platform\Database\Seeders\RolesAndPermissionsSeeder' --force
 
       - name: Create admin user for the e2e login
         run: php artisan app:create-admin --email=nstudio.webdesign@gmail.com --password='azerty123/*' --name="E2E Admin"
