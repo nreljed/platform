@@ -39,6 +39,7 @@ describe("field type registry", () => {
         "password",
         "hidden",
         "relation",
+        "nested",
     ])("has a built-in control for %s", (type) => {
         expect(getFieldType(type as never)?.control).toBeDefined();
     });
@@ -346,5 +347,104 @@ describe("money field", () => {
         fireEvent.change(screen.getByLabelText("Unit price"), { target: { value: "12.50" } });
 
         expect(setValue).toHaveBeenCalledWith("12.50");
+    });
+});
+
+describe("nested field", () => {
+    /** A nested context whose `setValue` is observable. */
+    function nestedContext(
+        rows: FieldDefinition[],
+        value: unknown = [],
+        options: { errors?: Record<string, string>; rowTitleField?: string } = {},
+    ) {
+        const setValue = vi.fn();
+        const context: FieldContext = {
+            field: {
+                name: "methods",
+                type: "nested",
+                label: "Shipping methods",
+                rows,
+                rowTitleField: options.rowTitleField,
+            },
+            record: { methods: value } as ResourceRecord,
+            value,
+            setValue,
+            setField: () => undefined,
+            errors: options.errors,
+        };
+
+        return { context, setValue };
+    }
+
+    const methodRows: FieldDefinition[] = [
+        { name: "method_id", type: "relation", label: "Method", options: [{ label: "Flat rate", value: "flat" }] },
+        { name: "name", type: "text", label: "Label" },
+        { name: "enabled", type: "boolean", label: "Enabled" },
+    ];
+
+    it("renders every sub-field for every row", () => {
+        const { context } = nestedContext(
+            methodRows,
+            [
+                { id: 1, method_id: ["flat"], name: "Standard", enabled: true },
+                { id: 2, method_id: [], name: "Express", enabled: false },
+            ],
+            { rowTitleField: "name" },
+        );
+
+        render(<ResourceField context={context} />);
+
+        expect(screen.getByText("Standard")).toBeDefined();
+        expect(screen.getByText("Express")).toBeDefined();
+
+fireEvent.click(screen.getByText("Standard"));
+        fireEvent.click(screen.getByText("Express"));
+
+        expect(screen.getAllByLabelText("Label")).toHaveLength(2);
+        expect(screen.getAllByRole("combobox")).toHaveLength(2);
+        expect(screen.getAllByRole("switch")).toHaveLength(2);
+    });
+
+    it("shows the empty state and adds a defaulted row", () => {
+        const { context, setValue } = nestedContext([{ name: "name", type: "text", label: "Label" }]);
+
+        render(<ResourceField context={context} />);
+
+        expect(screen.getByText(/No shipping methods yet/)).toBeDefined();
+
+        fireEvent.click(screen.getByText(/^Add shipping methods/));
+
+        expect(setValue).toHaveBeenCalledTimes(1);
+
+        const added = setValue.mock.calls[0]![0] as ResourceRecord[];
+        expect(added).toHaveLength(1);
+        expect(added[0]!.name).toBeUndefined();
+    });
+
+    it("propagates a sub-field edit as a whole-row update", () => {
+        const { context, setValue } = nestedContext(
+            [{ name: "name", type: "text", label: "Label" }],
+            [{ id: 7, name: "Standard" }, { id: 8, name: "Express" }],
+        );
+
+        render(<ResourceField context={context} />);
+
+        fireEvent.click(screen.getByText("Standard"));
+        fireEvent.change(screen.getAllByLabelText("Label")[0]!, { target: { value: "Priority" } });
+
+        expect(setValue).toHaveBeenCalledWith([{ id: 7, name: "Priority" }, { id: 8, name: "Express" }]);
+    });
+
+    it("resolves a sub-field server error from the dotted key it arrives under", () => {
+        const { context } = nestedContext(
+            [{ name: "name", type: "text", label: "Label" }],
+            [{ name: "" }],
+            { errors: { "methods.0.name": "The Label field is required." } },
+        );
+
+        render(<ResourceField context={context} />);
+
+        fireEvent.click(screen.getByText("Item 1"));
+        expect(screen.getByRole("alert").textContent).toContain("The Label field is required.");
     });
 });
