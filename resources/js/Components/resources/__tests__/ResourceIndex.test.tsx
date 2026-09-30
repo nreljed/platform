@@ -52,7 +52,10 @@ function lastDataTableProps() {
         data: Widget[];
         bulkActions?: { label: string; value: string; needsInput?: boolean }[];
         onBulkAction?: unknown;
-        onBulkInput?: (action: { label: string; value: string; needsInput?: boolean }, ids: (number | string)[]) => void;
+        onBulkInput?: (
+            action: { label: string; value: string; needsInput?: boolean; destructive?: boolean },
+            ids: (number | string)[],
+        ) => void;
         searchKeys?: string[];
         searchKey?: string;
     };
@@ -202,13 +205,11 @@ describe("ResourceIndex translation", () => {
             lastDataTableProps().onBulkInput?.({ label: "Add Categories", value: "add_category", needsInput: true }, [1, 2]);
         });
 
-        act(() => {
-            screen.getByRole("button", { name: "Add Categories", hidden: true });
-        });
-
+        /* The dialog renders a footer button carrying the action's own label,
+         * so the last match is the submit and not the trigger. */
         const submitButtons = screen.getAllByRole("button", { name: "Add Categories" });
         act(() => {
-            fireEvent.click(submitButtons[submitButtons.length - 1]);
+            fireEvent.click(submitButtons[submitButtons.length - 1]!);
         });
 
         expect(onBulkSubmit).toHaveBeenCalledWith("add_category", [1, 2], {});
@@ -242,7 +243,7 @@ describe("ResourceIndex translation", () => {
 
         const buttons = screen.getAllByRole("button", { name: "Remove Categories" });
         act(() => {
-            fireEvent.click(buttons[buttons.length - 1]);
+            fireEvent.click(buttons[buttons.length - 1]!);
         });
 
         /* Still unconfirmed - nothing may be sent until the user agrees. */
