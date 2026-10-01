@@ -57,8 +57,8 @@ describe("relation", () => {
 
 describe("toColumnDef", () => {
     /** Read a flag off a translated column; the `ColumnDef` union hides them. */
-    const flag = (column: ReturnType<typeof toColumnDef>, key: "accessorKey" | "enableSorting" | "enableHiding" | "header") =>
-        (column as unknown as Record<string, unknown>)[key];
+const flag = (column: ReturnType<typeof toColumnDef>, key: "id" | "accessorKey" | "enableSorting" | "enableHiding" | "header") =>
+    (column as unknown as Record<string, unknown>)[key];
 
     it("maps a declared name onto an accessorKey", () => {
         const column = toColumnDef({ name: "email" });
@@ -147,6 +147,26 @@ describe("toColumnDef", () => {
 
         expect((column.header as (c: unknown) => unknown)(context)).toBe("Email");
         expect(seen).toBe(context);
+    });
+
+    it("omits the accessor for a display-only id", () => {
+        // A column whose cell composes several row fields has no single value
+        // to resolve. Giving it `accessorKey` would make TanStack treat a
+        // missing path as sortable, so the header becomes a sort control over
+        // `undefined` - the reader clicks it and nothing moves.
+        const display = toColumnDef({ id: "stock", headerCell: "Stock" });
+        const accessor = toColumnDef({ name: "stock_quantity", header: "Stock" });
+
+        expect(flag(display, "id")).toBe("stock");
+        expect(flag(display, "accessorKey")).toBeUndefined();
+        expect(flag(accessor, "id")).toBe("stock_quantity");
+        expect(flag(accessor, "accessorKey")).toBe("stock_quantity");
+    });
+
+    it("prefers an explicit id over the accessor name", () => {
+        const column = toColumnDef({ id: "stock", name: "stock_quantity" });
+
+        expect(flag(column, "id")).toBe("stock");
     });
 
     it("prefers headerCell over the plain header", () => {
@@ -403,6 +423,36 @@ describe("toResource", () => {
 
         // A serialized action with no verb walks (GET) — same as a TS-declared one.
         expect(show.method).toBe("get");
+    });
+
+    it("carries a serialized PATCH row action through", () => {
+        // The PHP descriptor whitelist allows "patch" and the TS row-action type
+        // allows it, but the serialized union once omitted it - so a PHP
+        // resource declaring a status PATCH was narrowed away by the type
+        // even though the runtime passed it through untouched.
+        const resource = toResource(
+            {
+                key: "shop/products",
+                label: "Products",
+                table: {
+                    columns: [{ name: "id", header: "ID" }],
+                    rowActions: [
+                        {
+                            label: "Publish",
+                            routeName: "dashboard.shop.products.update-status",
+                            method: "patch",
+                            confirm: "Publish this product?",
+                        },
+                    ],
+                },
+            },
+            routeRef,
+        );
+
+        const publish = resource.table?.rowActions?.[0]!;
+
+        expect(publish.method).toBe("patch");
+        expect(publish.confirm).toBe("Publish this product?");
     });
 
     it("resolves a relation field optionsUrl route name into a URL", () => {
