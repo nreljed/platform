@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildPayload } from "../../Components/resources/ResourceForm";
+import { jsx } from "react/jsx-runtime";
 import {
     defineResource,
     flattenFields,
@@ -56,7 +57,7 @@ describe("relation", () => {
 
 describe("toColumnDef", () => {
     /** Read a flag off a translated column; the `ColumnDef` union hides them. */
-    const flag = (column: ReturnType<typeof toColumnDef>, key: "accessorKey" | "enableSorting" | "enableHiding") =>
+    const flag = (column: ReturnType<typeof toColumnDef>, key: "accessorKey" | "enableSorting" | "enableHiding" | "header") =>
         (column as unknown as Record<string, unknown>)[key];
 
     it("maps a declared name onto an accessorKey", () => {
@@ -109,6 +110,49 @@ describe("toColumnDef", () => {
         (column.cell as (context: unknown) => unknown)({ row: { original: { id: 7, total: 12 } } });
 
         expect(seen).toEqual([7, 12]);
+    });
+
+    it("uses the plain header when no headerCell is declared", () => {
+        const column = toColumnDef({ name: "email", header: "Email" });
+
+        expect(flag(column, "header")).toBe("Email");
+    });
+
+    it("renders a headerCell ReactNode as the header", () => {
+        // The node is asserted on its own identity, not on JSX structure: this
+        // file has no JSX runtime (see the import above), and what matters is
+        // that the declared node reaches the renderer rather than being dropped.
+        const node = jsx("span", { children: "Email" });
+        const column = toColumnDef({ name: "email", headerCell: node });
+
+        expect((column.header as () => unknown)()).toBe(node);
+    });
+
+    it("calls a headerCell function with the header context", () => {
+        // The context is what carries the TanStack `column`, and without it a
+        // descriptor cannot build a sortable header button - the header would be
+        // text the reader cannot click.
+        let seen: unknown;
+
+        const column = toColumnDef({
+            name: "email",
+            headerCell: (context) => {
+                seen = context;
+
+                return "Email";
+            },
+        });
+
+        const context = { column: { id: "email" } };
+
+        expect((column.header as (c: unknown) => unknown)(context)).toBe("Email");
+        expect(seen).toBe(context);
+    });
+
+    it("prefers headerCell over the plain header", () => {
+        const column = toColumnDef({ name: "email", header: "Email", headerCell: "E-mail" });
+
+        expect((column.header as () => unknown)()).toBe("E-mail");
     });
 });
 

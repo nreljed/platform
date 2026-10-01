@@ -161,6 +161,8 @@ export interface ResourceColumn<TData extends ResourceRecord = ResourceRecord> {
     /** Accessor key, or a custom `cell` when the value is not directly on the row. */
     name?: keyof TData & string;
     header?: string;
+    /** Custom header renderer. When omitted, a sortable header is rendered if `sortable` is true. */
+    headerCell?: ReactNode | ((column: unknown) => ReactNode);
     /** Cell renderer. Receives the row; `value` is the column's resolved value. */
     cell?: (row: TData, value: unknown) => ReactNode;
     /** CSS class applied to both header and body cells (TanStack v9 has no `className`). */
@@ -222,6 +224,8 @@ export interface ResourceHeaderAction {
     accept?: string;
     /** Ask before sending. */
     confirm?: string;
+    /** Icon to render in the button, if desired. */
+    icon?: ComponentType<{ className?: string }>;
 }
 
 /**
@@ -352,7 +356,11 @@ export function toColumnDef<TData extends ResourceRecord>(column: ResourceColumn
     return {
         id: column.name,
         accessorKey: column.name,
-        header: column.header,
+        header: column.headerCell
+            ? (typeof column.headerCell === "function"
+                  ? (props: unknown) => (column.headerCell as (p: unknown) => ReactNode)(props)
+                  : () => column.headerCell as ReactNode)
+            : column.header,
         enableSorting: column.sortable ?? true,
         enableHiding: column.hideable ?? true,
         cell: column.cell ? (context: { row: { original: TData } }) => column.cell!(context.row.original, (context.row.original as ResourceRecord)[column.name as string]) : undefined,
