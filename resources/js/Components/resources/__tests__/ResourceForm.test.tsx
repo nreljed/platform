@@ -316,9 +316,9 @@ describe("ResourceForm relation contract", () => {
         expect(submit.mock.calls[0]![0]).toHaveProperty("default_attributes", [3, 7]);
     });
 
-    it("gives the relation the live record, not the one it was created with", () => {
+    it("gives the relation the live form state, not a snapshot of the record", () => {
         const resource = defineResource({
-            ...makeResource([{ fields: [{ name: "name", type: "text" }] }]),
+            ...makeResource([{ fields: [{ name: "type", type: "text" }] }]),
             relations: [
                 {
                     key: "echo",
@@ -327,11 +327,14 @@ describe("ResourceForm relation contract", () => {
             ],
         } as never);
 
-        const { rerender } = render(<ResourceForm resource={resource} record={{ type: "simple" }} action="/widgets" />);
+        render(<ResourceForm resource={resource} record={{ type: "simple" }} action="/widgets" />);
 
         expect(screen.getByText("type: simple")).toBeDefined();
 
-        rerender(<ResourceForm resource={resource} record={{ type: "variable" }} action="/widgets" />);
+        // `useForm` seeds once and then holds live state, which is what a relation
+        // needs: a section that reacts to the record being edited (a variation
+        // table keyed off `type`) has to see the edit, not the initial payload.
+        fireEvent.change(screen.getByLabelText("Type"), { target: { value: "variable" } });
 
         expect(screen.getByText("type: variable")).toBeDefined();
     });
