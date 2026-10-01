@@ -207,7 +207,14 @@ export function ResourceForm({
             {resource.relations?.map((declared) => {
                 const RelationComponent = declared.component;
 
-                return <RelationComponent key={declared.key} record={form.data} errors={form.errors} />;
+                return (
+                    <RelationComponent
+                        key={declared.key}
+                        record={form.data}
+                        errors={form.errors}
+                        setField={(path, value) => setData(path, value)}
+                    />
+                );
             })}
 
             <div className="flex items-center gap-2">
