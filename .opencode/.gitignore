@@ -1,0 +1,4 @@
+# Install output only. config/, command/, and any plugins are tracked.
+node_modules
+package-lock.json
+bun.lock
