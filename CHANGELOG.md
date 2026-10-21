@@ -4,6 +4,13 @@ All notable changes to `nreljed/platform` will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.87] - 2026-10-21
+
+### Fixed
+
+- **Feature origin detection survives a linked install.** `FeatureRegistry::resolveProviderOrigin()` compared the provider's file path against `base_path()`. When the platform is installed through a path repository, a symlink or a Windows junction, PHP resolves the real path, so the file no longer sits under the application and every platform-bundled feature was reported as `unknown` on the system-health page. The registry now compares against the real path of the installed `nreljed/platform` package (and the workspace mirror) before falling back to the path-relative checks.
+- **Every top-level nav item carries an icon.** A module without a collapsible group has its resource descriptors emitted flat, and those items had no icon - a blank row in the sidebar. The registry now falls back to the generic file icon for any nav item that arrives without one.
+
 ## [0.1.86] - 2026-10-20
 
 ### Added
