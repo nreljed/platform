@@ -159,6 +159,23 @@ class PlatformServiceProvider extends ServiceProvider
     protected function configureSchedules(): void
     {
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
+            // Drain the queue from the scheduler.
+            //
+            // Laravel's default `QUEUE_CONNECTION=database` is what a shared
+            // host actually ends up with, and shared hosting has no daemon
+            // supervisor to run `queue:work` - so every `Mail::queue()` and
+            // every dispatched Job was written to the `jobs` table and stayed
+            // there forever, with no error anywhere to notice. Draining from
+            // `schedule:run` (the one thing shared hosts DO cron) keeps queued
+            // work flowing; `--stop-when-empty` means the minute is otherwise
+            // free, and `--max-time` keeps a slow batch from overlapping the
+            // next tick.
+            $schedule->command('queue:work', [
+                '--stop-when-empty' => true,
+                '--max-time' => 50,
+                '--tries' => 3,
+            ])->everyMinute()->withoutOverlapping();
+
             if (config('deploy.auto_enabled', true)) {
                 $schedule->command('deploy:auto')
                     ->everyFiveMinutes()
