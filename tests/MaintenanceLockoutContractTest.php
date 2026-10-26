@@ -107,6 +107,18 @@ final class MaintenanceLockoutContractTest extends TestCase
             .'hold the scheduler slot for the whole --max-time window on every tick.',
         );
 
+        // The flag is valueless. Passing it as `'--stop-when-empty' => true`
+        // renders `--stop-when-empty="1"`, which Symfony rejects with "The
+        // --stop-when-empty option does not accept a value" - the drain would
+        // fail on every tick, which is worse than no drain at all because it
+        // looks configured.
+        $this->assertMatchesRegularExpression(
+            "/'queue:work',\\s*\\[\\s*'--stop-when-empty',/",
+            $source,
+            'Pass --stop-when-empty as a list item, not as `=> true`: the schedule renders '
+            .'`=> true` flags as --flag="1", which Symfony rejects.',
+        );
+
         $this->assertMatchesRegularExpression(
             "/'queue:work'[\s\S]{0,400}->everyMinute\(\)/",
             $source,

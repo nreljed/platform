@@ -170,8 +170,12 @@ class PlatformServiceProvider extends ServiceProvider
             // work flowing; `--stop-when-empty` means the minute is otherwise
             // free, and `--max-time` keeps a slow batch from overlapping the
             // next tick.
+            // `--stop-when-empty` is a valueless switch, so it is passed as a
+            // list item: a `'--flag' => true` entry renders as
+            // `--stop-when-empty="1"`, which Symfony rejects with "does not
+            // accept a value" - the drain would fail on every single tick.
             $schedule->command('queue:work', [
-                '--stop-when-empty' => true,
+                '--stop-when-empty',
                 '--max-time' => 50,
                 '--tries' => 3,
             ])->everyMinute()->withoutOverlapping();
