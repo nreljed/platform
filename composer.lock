@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b97e24e326f25b636c944461d6b45052",
+    "content-hash": "a5062a97ac77e12feb301830045d2b96",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1567,16 +1567,16 @@
         },
         {
             "name": "laravel/ai",
-            "version": "v0.10.3",
+            "version": "v0.11.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ai.git",
-                "reference": "c3848aae389f45c605eefb0dda5bd5fa7df76eaa"
+                "reference": "6c76e9177ebc538b9de369eaf9d87719ddcd2013"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ai/zipball/c3848aae389f45c605eefb0dda5bd5fa7df76eaa",
-                "reference": "c3848aae389f45c605eefb0dda5bd5fa7df76eaa",
+                "url": "https://api.github.com/repos/laravel/ai/zipball/6c76e9177ebc538b9de369eaf9d87719ddcd2013",
+                "reference": "6c76e9177ebc538b9de369eaf9d87719ddcd2013",
                 "shasum": ""
             },
             "require": {
@@ -1639,7 +1639,7 @@
                 "issues": "https://github.com/laravel/ai/issues",
                 "source": "https://github.com/laravel/ai"
             },
-            "time": "2026-08-06T13:39:04+00:00"
+            "time": "2026-10-19T16:53:35+00:00"
         },
         {
             "name": "laravel/framework",
