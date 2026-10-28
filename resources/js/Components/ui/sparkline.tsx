@@ -1,6 +1,4 @@
 "use client";
-
-import * as React from "react";
 import { Line, LineChart, ResponsiveContainer } from "recharts";
 import { cn } from "cn";
 
