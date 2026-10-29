@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b97e24e326f25b636c944461d6b45052",
+    "content-hash": "a5062a97ac77e12feb301830045d2b96",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1567,16 +1567,16 @@
         },
         {
             "name": "laravel/ai",
-            "version": "v0.10.3",
+            "version": "v0.11.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ai.git",
-                "reference": "c3848aae389f45c605eefb0dda5bd5fa7df76eaa"
+                "reference": "6c76e9177ebc538b9de369eaf9d87719ddcd2013"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ai/zipball/c3848aae389f45c605eefb0dda5bd5fa7df76eaa",
-                "reference": "c3848aae389f45c605eefb0dda5bd5fa7df76eaa",
+                "url": "https://api.github.com/repos/laravel/ai/zipball/6c76e9177ebc538b9de369eaf9d87719ddcd2013",
+                "reference": "6c76e9177ebc538b9de369eaf9d87719ddcd2013",
                 "shasum": ""
             },
             "require": {
@@ -1639,20 +1639,20 @@
                 "issues": "https://github.com/laravel/ai/issues",
                 "source": "https://github.com/laravel/ai"
             },
-            "time": "2026-08-06T13:39:04+00:00"
+            "time": "2026-10-19T16:53:35+00:00"
         },
         {
             "name": "laravel/framework",
-            "version": "v13.38.0",
+            "version": "v13.39.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "c42f9abd4a3d2f9a3cd6be109255ddce8092ceb8"
+                "reference": "d52c3b3129e4c8e213c97cdc68f94b0b7d27f181"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/c42f9abd4a3d2f9a3cd6be109255ddce8092ceb8",
-                "reference": "c42f9abd4a3d2f9a3cd6be109255ddce8092ceb8",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/d52c3b3129e4c8e213c97cdc68f94b0b7d27f181",
+                "reference": "d52c3b3129e4c8e213c97cdc68f94b0b7d27f181",
                 "shasum": ""
             },
             "require": {
@@ -1870,7 +1870,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-10-20T10:45:58+00:00"
+            "time": "2026-10-27T14:04:39+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -5457,16 +5457,16 @@
         },
         {
             "name": "symfony/mime",
-            "version": "v8.1.5",
+            "version": "v8.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "1b36ccfd7ccb9ad1d6eafb9024b3dd3d9606b15f"
+                "reference": "8d1232052c9cdef170ed9608b3147bca4f61ff69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/1b36ccfd7ccb9ad1d6eafb9024b3dd3d9606b15f",
-                "reference": "1b36ccfd7ccb9ad1d6eafb9024b3dd3d9606b15f",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/8d1232052c9cdef170ed9608b3147bca4f61ff69",
+                "reference": "8d1232052c9cdef170ed9608b3147bca4f61ff69",
                 "shasum": ""
             },
             "require": {
@@ -5519,7 +5519,7 @@
                 "mime-type"
             ],
             "support": {
-                "source": "https://github.com/symfony/mime/tree/v8.1.5"
+                "source": "https://github.com/symfony/mime/tree/v8.1.10"
             },
             "funding": [
                 {
@@ -5539,7 +5539,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-22T09:06:25+00:00"
+            "time": "2026-10-28T17:58:38+00:00"
         },
         {
             "name": "symfony/options-resolver",
