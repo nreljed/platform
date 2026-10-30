@@ -321,7 +321,8 @@ jobs:
         run: npm run build
 
       - name: Install Playwright browser
-        run: npx playwright install chromium ${{ inputs.hosted-runner && '--with-deps' || '' }}
+        if: ${{ inputs.hosted-runner }}
+        run: npx playwright install chromium --with-deps
 
       - name: Start Laravel dev server
         run: |
