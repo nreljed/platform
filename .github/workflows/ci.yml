@@ -79,7 +79,13 @@ jobs:
     permissions:
       contents: write
     steps:
+      # Full history + tags: the contract gate below diffs the outgoing tag
+      # against the previous release, which is invisible under the default
+      # single-commit shallow fetch.
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Verify tag matches package versions
         shell: bash
@@ -105,7 +111,10 @@ jobs:
             gh release create "$TAG" --title "platform $TAG" --generate-notes -R nreljed/platform
           fi
 
-      - name: Contract-frozen gate (FeatureProvider)
+      - name: Contract-frozen gate (src/Contracts)
+        # Compares the REQUIRED METHOD SET, not the file bytes: a docblock or
+        # formatting change is not a breaking change, while adding a method to
+        # an existing interface is. New interfaces are additive and allowed.
         shell: bash
         run: |
           set -euo pipefail
@@ -113,17 +122,21 @@ jobs:
           NEW_VER="${NEW_TAG#v}"
           OLD_TAG="$(git tag --merged HEAD | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' \
             | grep -v "^${NEW_TAG}$" | sort -V | tail -1 || true)"
-          if [ -z "$OLD_TAG" ] || git diff --quiet "$OLD_TAG" HEAD -- src/Contracts/FeatureProvider.php; then
-            echo "FeatureProvider contract unchanged since $OLD_TAG — OK"
+          if [ -z "$OLD_TAG" ]; then
+            echo "no previous release tag - contract gate skipped"
+            exit 0
+          fi
+          if php scripts/contract-signature.php --diff "$OLD_TAG" HEAD; then
+            echo "contract compatible with $OLD_TAG - OK"
             exit 0
           fi
           OLD_MAJOR="${OLD_TAG#v}"; OLD_MAJOR="${OLD_MAJOR%%.*}"
           NEW_MAJOR="${NEW_VER%%.*}"
           if [ "$NEW_MAJOR" -gt "$OLD_MAJOR" ]; then
-            echo "contract changed with MAJOR bump ($OLD_TAG -> $NEW_TAG) — OK"
+            echo "breaking contract change shipped with a MAJOR bump ($OLD_TAG -> $NEW_TAG) - OK"
             exit 0
           fi
-          echo "FeatureProvider contract modified without a MAJOR bump (old $OLD_TAG, new v$NEW_VER)"
+          echo "::error::src/Contracts changed incompatibly without a MAJOR bump (old $OLD_TAG, new v$NEW_VER)"
           exit 1
 
       - name: Notify consumers (core-updated)
