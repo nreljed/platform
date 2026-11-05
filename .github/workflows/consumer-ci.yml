@@ -253,7 +253,10 @@ jobs:
         shell: bash
     env:
       COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GH_TOKEN }}"}}'
-      APP_URL: http://127.0.0.1:8010
+      # APP_URL is deliberately NOT pinned here. Every repo in the fleet runs its
+      # own runner on ONE physical machine, so a shared fixed port lets one job's
+      # dev server answer another job's requests. The "Start Laravel dev server"
+      # step reserves a free loopback port per run and exports APP_URL.
     steps:
       - uses: actions/checkout@v7
 
@@ -325,16 +328,59 @@ jobs:
         run: npx playwright install chromium --with-deps
 
       - name: Start Laravel dev server
+        # Never hardcode the port. All three consumer runners live on ONE laptop,
+        # so a fixed 8010 means one job's server can answer another job's
+        # requests - which is exactly how mono #167 and booking #132 went red on
+        # 2026-11-05 while shop passed in the same window: their `php artisan
+        # serve` failed to bind, the readiness curl hit the *other* app's server,
+        # and login there used credentials that do not exist in that database.
+        # Reserve an ephemeral port, publish it to later steps, and retry if the
+        # OS hands us one that is already taken.
         run: |
-          php artisan serve --host=127.0.0.1 --port=8010 >storage/logs/e2e-server.log 2>&1 &
-          for i in $(seq 1 45); do
-            if curl -fsS "${APP_URL}/login" -o /dev/null 2>/dev/null; then
-              echo "server ready after ~${i}s"
+          for attempt in $(seq 1 10); do
+            PORT=$(php -r '$s = @stream_socket_server("tcp://127.0.0.1:0", $errno, $errstr);
+              if (!$s) { exit(1); }
+              $name = stream_socket_get_name($s, false);
+              fclose($s);
+              echo substr(strrchr($name, ":"), 1);')
+            if [ -z "$PORT" ]; then
+              echo "::error::could not reserve a loopback port"
+              exit 1
+            fi
+
+            URL="http://127.0.0.1:${PORT}"
+            echo "attempt ${attempt}: starting server on ${URL}"
+            php artisan serve --host=127.0.0.1 --port="${PORT}" >storage/logs/e2e-server.log 2>&1 &
+            SERVER_PID=$!
+
+            ready=0
+            for i in $(seq 1 45); do
+              if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+                break
+              fi
+              if curl -fsS "${URL}/login" -o /dev/null 2>/dev/null; then
+                ready=1
+                break
+              fi
+              sleep 1
+            done
+
+            if [ "$ready" = "1" ]; then
+              echo "server ready on ${URL} after ~${i}s (bash pid ${SERVER_PID})"
+              echo "APP_URL=${URL}" >> "$GITHUB_ENV"
+              echo "E2E_PORT=${PORT}" >> "$GITHUB_ENV"
               exit 0
             fi
-            sleep 1
+
+            echo "::warning::server did not come up on ${URL} (pid ${SERVER_PID})"
+            tail -20 storage/logs/e2e-server.log || true
+            if grep -qi "Address already in use" storage/logs/e2e-server.log 2>/dev/null; then
+              echo "::warning::port ${PORT} was already in use; retrying on a new one"
+            fi
+            kill "$SERVER_PID" 2>/dev/null || true
+            wait "$SERVER_PID" 2>/dev/null || true
           done
-          echo "::error::Laravel server did not start"
+          echo "::error::Laravel server did not start after 10 port attempts"
           tail -50 storage/logs/e2e-server.log || true
           exit 1
 
@@ -374,3 +420,47 @@ jobs:
 
       - name: Playwright auth smoke
         run: npm run test:e2e -- e2e/auth.spec.ts
+
+      - name: Upload e2e diagnostics
+        # A failing smoke used to leave nothing behind: no screenshot, no trace
+        # and no server log, so the only evidence was the timeout line. Keep the
+        # three things that actually explain a failure - what the page looked
+        # like, the trace of the click, and what the single-threaded dev server
+        # was doing while the browser waited.
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-diagnostics
+          path: |
+            storage/logs/e2e-server.log
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Stop Laravel dev server
+        # Always stop it. `php artisan serve ... &` outlives the step on Windows:
+        # a leaked `php -S 127.0.0.1:8010` from the shop workspace was still
+        # resident hours later and served another repo's e2e run. Kill by PORT,
+        # not by pid: `$!` in Git Bash is an MSYS pid that taskkill does not
+        # understand ("process not found"), while the port is unique per run so
+        # there is no risk of reaping a sibling job's server.
+        if: always()
+        run: |
+          if [ -z "${E2E_PORT:-}" ]; then
+            echo "no port recorded; nothing to stop"
+            exit 0
+          fi
+          echo "stopping whatever listens on port ${E2E_PORT}"
+          if command -v powershell >/dev/null 2>&1; then
+            powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort ${E2E_PORT} -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Write-Host ('stopping pid ' + \$_.OwningProcess); Stop-Process -Id \$_.OwningProcess -Force -ErrorAction SilentlyContinue }" || true
+          elif command -v lsof >/dev/null 2>&1; then
+            lsof -ti "tcp:${E2E_PORT}" | xargs -r kill -9 || true
+          else
+            fuser -k "${E2E_PORT}/tcp" || true
+          fi
+          sleep 2
+          STILL=$(powershell -NoProfile -Command "(Get-NetTCPConnection -LocalPort ${E2E_PORT} -State Listen -ErrorAction SilentlyContinue | Measure-Object).Count" 2>/dev/null | tr -d '\r' || echo 0)
+          echo "listeners left on port ${E2E_PORT}: ${STILL:-0}"
+          if [ "${STILL:-0}" != "0" ]; then
+            echo "::warning::port ${E2E_PORT} is still bound after cleanup"
+          fi
