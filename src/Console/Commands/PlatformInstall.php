@@ -11,7 +11,8 @@ class PlatformInstall extends Command
 {
     protected $signature = 'platform:install
         {--migrate : Run pending migrations before the wiring report}
-        {--seed : Seed roles & permissions and bootstrap the admin user}';
+        {--seed : Seed roles & permissions and bootstrap the admin user}
+        {--scaffold : Write a starter resources/js/page-config.ts if missing}';
 
     protected $description = 'Verify a consuming app is wired to the platform and bootstrap its data';
 
@@ -57,11 +58,57 @@ class PlatformInstall extends Command
         $this->components->info('Platform is wired correctly.');
 
         if (! is_file(resource_path('js/page-config.ts'))) {
-            $this->newLine();
-            $this->components->warn('Frontend: no resources/js/page-config.ts. Add it and spread the register{Name}Pages() kits (docs/new-project.md step 5).');
+            if ($this->option('scaffold')) {
+                $this->scaffoldPageConfig();
+            } else {
+                $this->newLine();
+                $this->components->warn('Frontend: no resources/js/page-config.ts. Run with --scaffold to generate a starter, then spread the register{Name}Pages() kits (docs/new-project.md).');
+            }
         }
 
+        $this->printFrontendWiring();
+
         return Command::SUCCESS;
+    }
+
+    protected function scaffoldPageConfig(): void
+    {
+        $dir = resource_path('js');
+        if (! is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $path = $dir.'/page-config.ts';
+        $template = <<<'TS'
+import type { FoundationAppConfig, PageImport } from "@nreljed/platform/app";
+import { registerCoreTemplates } from "@nreljed/platform/dashboard";
+
+// Spread additional module kits here, e.g.:
+// import { registerBlogPages } from "@nreljed/blog/pages";
+// import { registerShopPages } from "@nreljed/shop-module/pages";
+
+export const pageConfig: FoundationAppConfig = {
+  basePages: {
+    ...registerCoreTemplates(),
+    // ...registerBlogPages(),
+    // ...registerShopPages(),
+  },
+  pageOverrides: {},
+};
+TS;
+
+        file_put_contents($path, $template);
+        $this->components->info('Scaffolded resources/js/page-config.ts');
+    }
+
+    protected function printFrontendWiring(): void
+    {
+        $this->newLine();
+        $this->components->info('Frontend wiring (add to vite.config.js + tsconfig.json):');
+        $this->line("  Vite aliases: '@nreljed/platform' -> './vendor/nreljed/platform/resources/js'");
+        $this->line("  Vite aliases: '@nreljed/blog'     -> './vendor/nreljed/blog/src/Resources/js'");
+        $this->line("  tsconfig paths: '@nreljed/platform/*' -> './vendor/nreljed/platform/resources/js/*'");
+        $this->line("  CSS: @import '../../vendor/nreljed/platform/resources/css/core.css';");
     }
 
     /**
