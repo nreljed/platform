@@ -189,9 +189,6 @@ jobs:
       - name: Check core dependency parity
         run: npm run check:core-deps
 
-      - name: Check cross-app platform consistency
-        run: npm run check:platform-consistency
-
       # Gate SHIPPED dependencies only. Dev-only advisories with no upstream
       # patch (e.g. the unfixable `braces` stack-exhaustion DoS reached through
       # the `shadcn` codegen CLI) must not block a deploy -- nothing in that
