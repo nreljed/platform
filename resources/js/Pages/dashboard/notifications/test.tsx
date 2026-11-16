@@ -14,6 +14,17 @@ import {
   SelectValue,
 } from "../../../Components/ui/select";
 import { Separator } from "../../../Components/ui/separator";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../Components/ui/alert-dialog";
 import { SettingsAccordion } from "../../../Components/shared/settings-accordion";
 import { SystemStatusCards } from "./system-status-cards";
 import { QuickSendSection } from "./quick-send-section";
@@ -460,14 +471,39 @@ export default function NotificationsTest() {
                       <Button variant="outline" onClick={resetForm} disabled={sending !== null}>
                         Reset
                       </Button>
-                      <Button variant="destructive" onClick={clearMine} disabled={sending !== null}>
-                        {sending === "clear" ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                          <Trash2 className="mr-2 h-4 w-4" />
-                        )}
-                        Clear mine
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger
+                          render={
+                            <Button variant="destructive" disabled={sending !== null}>
+                              {sending === "clear" ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              ) : (
+                                <Trash2 className="mr-2 h-4 w-4" />
+                              )}
+                              Clear mine
+                            </Button>
+                          }
+                        />
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Clear all your notifications?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This permanently deletes every notification in your inbox. This
+                              action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              variant="destructive"
+                              onClick={() => clearMine()}
+                              disabled={sending !== null}
+                            >
+                              Clear notifications
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </div>
