@@ -2,6 +2,8 @@ import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Link, Head, router, usePage } from "@inertiajs/react";
 import type { RequestPayload } from "@inertiajs/core";
 import { toast } from "../../../Components/ui/toast";
+import { StickySaveBar } from "../../../Components/settings/StickySaveBar";
+import { deepEqual } from "../../../hooks/use-settings-form";
 import { Loader2 } from "lucide-react";
 import AuthenticatedLayout from "../../../Layouts/AuthenticatedLayout";
 import {
@@ -111,8 +113,14 @@ export default function Profile() {
   const [uploading, setUploading] = useState(false);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const [formData, setFormData] = useState<Record<string, unknown> | null>(initialFormData);
+  const [savedFormData, setSavedFormData] = useState<Record<string, unknown> | null>(
+    initialFormData,
+  );
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [profileProcessing, setProfileProcessing] = useState(false);
   const isLoading = formData === null;
+
+  const profileDirty = !deepEqual(formData, savedFormData);
 
   useEffect(() => {
     if (status) toast.add({ title: status, type: "success" });
@@ -135,6 +143,7 @@ export default function Profile() {
         }
       }
       payload._update_type = "profile";
+      setProfileProcessing(true);
       router.patch(route("dashboard.account.profile"), payload as RequestPayload, {
         preserveScroll: true,
         preserveState: true,
@@ -142,11 +151,15 @@ export default function Profile() {
         onSuccess: (page: unknown) => {
           const pg = page as { props: Record<string, unknown> };
           const freshUser = pg.props.user as Record<string, unknown> | undefined;
-          if (freshUser) setFormData(buildFormData(freshUser));
+          const fresh = freshUser ? buildFormData(freshUser) : formData;
+          if (fresh) setFormData(fresh);
+          setSavedFormData(fresh);
+          setProfileProcessing(false);
           toast.add({ title: "Profile updated successfully!", type: "success" });
         },
         onError: (errors) => {
           setFormErrors(errors as Record<string, string>);
+          setProfileProcessing(false);
           toast.add({ title: "Failed to update profile.", type: "error" });
         },
       });
@@ -313,10 +326,21 @@ export default function Profile() {
               data={formData as Record<string, unknown>}
               onChange={handleFieldChange}
               errors={formErrors}
-              loading={false}
+              loading={profileProcessing}
               onSubmit={handleProfileSubmit}
               asAccordion
               accordionDefaultOpen={false}
+            />
+
+            <StickySaveBar
+              dirty={profileDirty}
+              processing={profileProcessing}
+              onSave={() => handleProfileSubmit({ preventDefault: () => {} } as React.FormEvent)}
+              onDiscard={() => {
+                setFormData(savedFormData);
+                setFormErrors({});
+              }}
+              saveLabel="Save profile"
             />
 
             {profileSections.includes("address") && (
