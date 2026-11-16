@@ -12,6 +12,8 @@ import {
   SelectValue,
 } from "../../ui/select";
 import { ShieldCheck } from "lucide-react";
+import { StickySaveBar } from "../StickySaveBar";
+import { deepEqual } from "../../../hooks/use-settings-form";
 
 interface RegistrationSectionProps {
   settings: Record<string, string>;
@@ -24,7 +26,7 @@ export function RegistrationSection({
   roles = [],
   asAccordion,
 }: RegistrationSectionProps) {
-  const [data, setData] = useState(() => {
+  const buildInitial = () => {
     const firstRole = roles[0]?.slug ?? "";
     const storedRole = settings.default_role ?? firstRole;
     const validRole = roles.some((r) => r.slug === storedRole) ? storedRole : firstRole;
@@ -33,9 +35,13 @@ export function RegistrationSection({
       default_role: validRole || "",
       require_email_verification: settings.require_email_verification ?? "0",
     };
-  });
+  };
+  const [data, setData] = useState(buildInitial);
+  const [saved, setSaved] = useState(buildInitial);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const dirty = !deepEqual(data, saved);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +51,7 @@ export function RegistrationSection({
       preserveScroll: true,
       preserveState: true,
       onSuccess: () => {
+        setSaved(data);
         toast.add({ title: "Registration settings saved.", type: "success" });
         setLoading(false);
       },
@@ -56,9 +63,15 @@ export function RegistrationSection({
     });
   };
 
+  const discard = () => {
+    setData(saved);
+    setErrors({});
+  };
+
   return (
-    <Section
-      title="Registration"
+    <>
+      <Section
+        title="Registration"
       description="Configure public registration settings."
       icon={ShieldCheck}
       onSubmit={handleSubmit}
@@ -140,5 +153,13 @@ export function RegistrationSection({
         </div>
       </SectionField>
     </Section>
+      <StickySaveBar
+        dirty={dirty}
+        processing={loading}
+        onSave={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
+        onDiscard={discard}
+        saveLabel="Save registration"
+      />
+    </>
   );
 }

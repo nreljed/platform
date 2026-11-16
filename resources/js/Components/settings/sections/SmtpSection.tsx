@@ -15,6 +15,8 @@ import {
 } from "../../ui/select";
 import { Badge } from "../../ui/badge";
 import { Mail, Server, Settings as SettingsIcon, Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { StickySaveBar } from "../StickySaveBar";
+import { deepEqual } from "../../../hooks/use-settings-form";
 
 interface SmtpSectionProps {
   asAccordion?: boolean;
@@ -24,7 +26,7 @@ export function SmtpSection({ asAccordion }: SmtpSectionProps) {
   const page = usePage();
   const emailSettings = (page.props.emailSettings ?? {}) as Record<string, unknown>;
 
-  const [data, setData] = useState({
+  const buildInitial = () => ({
     mailer: (emailSettings.mailer as string) ?? "smtp",
     smtp_host: (emailSettings.smtp_host as string) ?? "",
     smtp_port: String(emailSettings.smtp_port ?? "587"),
@@ -41,9 +43,18 @@ export function SmtpSection({ asAccordion }: SmtpSectionProps) {
     force_from_email: Boolean(emailSettings.force_from_email ?? true),
     force_from_name: Boolean(emailSettings.force_from_name ?? true),
   });
+  const [data, setData] = useState(buildInitial);
+  const [saved, setSaved] = useState(buildInitial);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
+
+  const dirty = !deepEqual(data, saved);
+
+  const discard = () => {
+    setData(saved);
+    setErrors({});
+  };
   const hasEncryptedPassword = emailSettings.has_encrypted_password === true;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -66,6 +77,7 @@ export function SmtpSection({ asAccordion }: SmtpSectionProps) {
       preserveScroll: true,
       preserveState: true,
       onSuccess: () => {
+        setSaved(data);
         toast.add({ title: "SMTP settings saved.", type: "success" });
         setLoading(false);
       },
@@ -78,8 +90,9 @@ export function SmtpSection({ asAccordion }: SmtpSectionProps) {
   };
 
   return (
-    <Section
-      title="SMTP Configuration"
+    <>
+      <Section
+        title="SMTP Configuration"
       description="Configure the mail server used for outgoing emails."
       icon={Server}
       onSubmit={handleSubmit}
@@ -374,5 +387,13 @@ export function SmtpSection({ asAccordion }: SmtpSectionProps) {
         </SettingsAccordionItem>
       </div>
     </Section>
+      <StickySaveBar
+        dirty={dirty}
+        processing={loading}
+        onSave={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
+        onDiscard={discard}
+        saveLabel="Save SMTP"
+      />
+    </>
   );
 }
