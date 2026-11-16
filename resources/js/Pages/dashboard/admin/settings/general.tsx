@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Head, router, Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import AdminLayout from "../../../../Layouts/AdminLayout";
 import {
   Breadcrumb,
@@ -12,65 +12,59 @@ import { AdminSettingsNav } from "../../../../Components/settings/AdminSettingsN
 import { GeneralSection } from "../../../../Components/settings/sections/GeneralSection";
 import { FormattingSection } from "../../../../Components/settings/sections/FormattingSection";
 import { DateFormatSection } from "../../../../Components/settings/sections/DateFormatSection";
-import { toast } from "../../../../Components/ui/toast";
+import { StickySaveBar } from "../../../../Components/settings/StickySaveBar";
+import { SectionSaveIcon } from "../../../../Components/settings/SectionSaveIcon";
+import { PreviewCard } from "../../../../Components/settings/PreviewCard";
+import { useSettingsForm } from "../../../../hooks/use-settings-form";
+import { useFormatting } from "../../../../hooks/use-formatting";
 
 interface GeneralProps {
   settings?: Record<string, string>;
 }
 
 export default function GeneralSettings({ settings = {} }: GeneralProps) {
+  const genForm = useSettingsForm<Record<string, unknown>>({
+    initial: settings as Record<string, unknown>,
+    submitUrl: route("dashboard.admin.settings.update"),
+    successMessage: "General settings saved.",
+  });
+
+  const fmtForm = useSettingsForm<Record<string, unknown>>({
+    initial: settings as Record<string, unknown>,
+    submitUrl: route("dashboard.admin.settings.update"),
+    successMessage: "Formatting settings saved.",
+  });
+
+  // Split the shared settings object: general keys vs formatting keys.
+  // Both forms share the same source, so we keep them in sync via onChange.
   const [genData, setGenData] = useState(settings);
   const [fmtData, setFmtData] = useState(settings);
-  const [genErrors, setGenErrors] = useState({});
-  const [fmtErrors, setFmtErrors] = useState({});
-  const [genLoading, setGenLoading] = useState(false);
-  const [fmtLoading, setFmtLoading] = useState(false);
 
-  const handleGenSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (genLoading) return;
-    setGenLoading(true);
-    setGenErrors({});
-    router.put(route("dashboard.admin.settings.update"), genData, {
-      preserveScroll: true,
-      preserveState: true,
-      replace: true,
-      onSuccess: (page: unknown) => {
-        const pg = page as { props?: { settings?: Record<string, string> } };
-        if (pg.props?.settings) setGenData(pg.props.settings);
-        toast.add({ title: "General settings saved.", type: "success" });
-        setGenLoading(false);
-      },
-      onError: (errs) => {
-        setGenErrors(errs);
-        toast.add({ title: "Failed to save.", type: "error" });
-        setGenLoading(false);
-      },
-    });
+  // Keep useSettingsForm values in sync with local state used by sections.
+  const handleGenChange = (field: string, value: string) => {
+    setGenData((p) => ({ ...p, [field]: value }));
+    genForm.setField(field, value);
+  };
+  const handleFmtChange = (field: string, value: string) => {
+    setFmtData((p) => ({ ...p, [field]: value }));
+    fmtForm.setField(field, value);
   };
 
-  const handleFmtSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (fmtLoading) return;
-    setFmtLoading(true);
-    setFmtErrors({});
-    router.put(route("dashboard.admin.settings.update"), fmtData, {
-      preserveScroll: true,
-      preserveState: true,
-      replace: true,
-      onSuccess: (page: unknown) => {
-        const pg = page as { props?: { settings?: Record<string, string> } };
-        if (pg.props?.settings) setFmtData(pg.props.settings);
-        toast.add({ title: "Formatting settings saved.", type: "success" });
-        setFmtLoading(false);
-      },
-      onError: (errs) => {
-        setFmtErrors(errs);
-        toast.add({ title: "Failed to save.", type: "error" });
-        setFmtLoading(false);
-      },
-    });
+  const combinedDirty = genForm.isDirty || fmtForm.isDirty;
+  const combinedProcessing = genForm.processing || fmtForm.processing;
+
+  const handleSaveAll = () => {
+    if (genForm.isDirty) genForm.submit();
+    if (fmtForm.isDirty) fmtForm.submit();
   };
+  const handleDiscardAll = () => {
+    genForm.discard();
+    fmtForm.discard();
+    setGenData(settings);
+    setFmtData(settings);
+  };
+
+  const fmt = useFormatting();
 
   return (
     <AdminLayout title="Settings">
@@ -97,23 +91,59 @@ export default function GeneralSettings({ settings = {} }: GeneralProps) {
           <div className="flex-1 min-w-0 space-y-6">
             <GeneralSection
               data={genData}
-              onChange={(f, v) => setGenData((p) => ({ ...p, [f]: v }))}
-              errors={genErrors}
-              loading={genLoading}
-              onSubmit={handleGenSubmit}
+              onChange={handleGenChange}
+              errors={genForm.errors}
+              loading={genForm.processing}
+              onSubmit={(e) => {
+                e.preventDefault();
+                genForm.submit();
+              }}
               asAccordion
+              trailing={
+                <SectionSaveIcon
+                  dirty={genForm.isDirty}
+                  errorCount={Object.keys(genForm.errors).length}
+                />
+              }
             />
             <FormattingSection
               data={fmtData}
-              onChange={(f, v) => setFmtData((p) => ({ ...p, [f]: v }))}
-              errors={fmtErrors}
-              loading={fmtLoading}
-              onSubmit={handleFmtSubmit}
+              onChange={handleFmtChange}
+              errors={fmtForm.errors}
+              loading={fmtForm.processing}
+              onSubmit={(e) => {
+                e.preventDefault();
+                fmtForm.submit();
+              }}
+              trailing={
+                <SectionSaveIcon
+                  dirty={fmtForm.isDirty}
+                  errorCount={Object.keys(fmtForm.errors).length}
+                />
+              }
+            />
+            <PreviewCard
+              label="Live price preview"
+              value={fmt.formatPrice(1234.56)}
+              hint="Updates from your currency & separator settings."
             />
             <DateFormatSection settings={settings} asAccordion />
           </div>
         </div>
       </div>
+      <StickySaveBar
+        dirty={combinedDirty}
+        processing={combinedProcessing}
+        onSave={handleSaveAll}
+        onDiscard={handleDiscardAll}
+        description={
+          genForm.isDirty && fmtForm.isDirty
+            ? "General + formatting changes"
+            : genForm.isDirty
+              ? "General settings"
+              : "Formatting settings"
+        }
+      />
     </AdminLayout>
   );
 }

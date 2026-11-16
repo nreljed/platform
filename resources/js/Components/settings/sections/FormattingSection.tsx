@@ -86,9 +86,10 @@ interface FormattingSectionProps {
   errors: Record<string, unknown>;
   loading?: boolean;
   onSubmit?: (_e: React.FormEvent) => void;
+  trailing?: React.ReactNode;
 }
 
-function FormattingSection({ data, onChange, errors, loading, onSubmit }: FormattingSectionProps) {
+function FormattingSection({ data, onChange, errors, loading, onSubmit, trailing }: FormattingSectionProps) {
   return (
     <div className="space-y-6">
       <Section
@@ -98,6 +99,7 @@ function FormattingSection({ data, onChange, errors, loading, onSubmit }: Format
         asAccordion
         onSubmit={onSubmit}
         loading={loading}
+        trailing={trailing}
       >
         <SectionField
           label="Default Currency"
