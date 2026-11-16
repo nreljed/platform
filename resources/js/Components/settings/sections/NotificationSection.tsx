@@ -12,6 +12,8 @@ import {
   SelectValue,
 } from "../../ui/select";
 import { Bell } from "lucide-react";
+import { StickySaveBar } from "../StickySaveBar";
+import { deepEqual } from "../../../hooks/use-settings-form";
 
 interface NotificationSectionProps {
   settings: Record<string, string>;
@@ -19,12 +21,16 @@ interface NotificationSectionProps {
 }
 
 export function NotificationSection({ settings, asAccordion }: NotificationSectionProps) {
-  const [data, setData] = useState({
+  const buildInitial = () => ({
     default_notification_channel: settings.default_notification_channel ?? "in_app",
     email_notifications_enabled: settings.email_notifications_enabled ?? "1",
   });
+  const [data, setData] = useState(buildInitial);
+  const [saved, setSaved] = useState(buildInitial);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const dirty = !deepEqual(data, saved);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +40,7 @@ export function NotificationSection({ settings, asAccordion }: NotificationSecti
       preserveScroll: true,
       preserveState: true,
       onSuccess: () => {
+        setSaved(data);
         toast.add({ title: "Notification settings saved.", type: "success" });
         setLoading(false);
       },
@@ -45,9 +52,15 @@ export function NotificationSection({ settings, asAccordion }: NotificationSecti
     });
   };
 
+  const discard = () => {
+    setData(saved);
+    setErrors({});
+  };
+
   return (
-    <Section
-      title="Notifications"
+    <>
+      <Section
+        title="Notifications"
       description="Configure notification defaults for new users."
       icon={Bell}
       onSubmit={handleSubmit}
@@ -90,5 +103,13 @@ export function NotificationSection({ settings, asAccordion }: NotificationSecti
         </div>
       </SectionField>
     </Section>
+      <StickySaveBar
+        dirty={dirty}
+        processing={loading}
+        onSave={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
+        onDiscard={discard}
+        saveLabel="Save notifications"
+      />
+    </>
   );
 }
