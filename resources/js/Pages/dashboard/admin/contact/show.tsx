@@ -12,6 +12,17 @@ import {
 } from "../../../../Components/ui/select";
 import { Separator } from "../../../../Components/ui/separator";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../../Components/ui/alert-dialog";
+import {
   ArrowLeft,
   Mail,
   Trash2,
@@ -64,8 +75,9 @@ export default function AdminContactShow() {
   };
 
   const destroy = () => {
-    if (!window.confirm("Delete this contact message permanently?")) return;
-    router.delete(route("dashboard.admin.contact.destroy", submission.id));
+    router.delete(route("dashboard.admin.contact.destroy", submission.id), {
+      preserveScroll: true,
+    });
   };
 
   return (
@@ -94,10 +106,32 @@ export default function AdminContactShow() {
             </SelectContent>
           </Select>
 
-          <Button variant="destructive" size="sm" onClick={destroy}>
-            <Trash2 className="size-4" />
-            Delete
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger
+              render={
+                <Button variant="destructive" size="sm">
+                  <Trash2 className="size-4" />
+                  Delete
+                </Button>
+              }
+            />
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete this contact message?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This permanently deletes the message from{" "}
+                  <span className="text-foreground font-medium">{submission.name}</span>. This
+                  action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction variant="destructive" onClick={destroy}>
+                  Delete message
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
 
