@@ -16,6 +16,7 @@ Registered by `PlatformServiceProvider::loadConsoleRoutes()`.
 | `make:feature`              | Scaffold a single `FeatureProvider` class inside an existing app (contract + trait, no package). Use `make:module` for a full module package.                                                 |
 | `make:module`               | Scaffold a complete feature module package (composer.json, package.json, provider, routes, page kit, optional migrations/tests) and, with `--activate`, patch the host app. See [Feature Provider](feature-provider.md#start-here-php-artisan-makemodule). |
 | `make:resource`             | Scaffold a `ResourceDefinition` descriptor for the shared CRUD/admin UI.                                                                                                                       |
+| `feature:toggle`            | Enable or disable a feature/module programmatically. Usage: `php artisan feature:toggle enable <slug>` or `php artisan feature:toggle disable <slug>`. Feature slugs: `public-site`, `posts`, `shop`, `ai`. Disabling runs the provider's `onDisable()` cleanup. |
 
 ## Hosts
 
