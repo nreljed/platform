@@ -33,6 +33,7 @@ interface GeneralSectionProps {
   loading?: boolean;
   onSubmit?: (_e: React.FormEvent) => void;
   asAccordion?: boolean;
+  trailing?: React.ReactNode;
 }
 
 function GeneralSection({
@@ -42,6 +43,7 @@ function GeneralSection({
   loading,
   onSubmit,
   asAccordion,
+  trailing,
 }: GeneralSectionProps) {
   return (
     <Section
@@ -54,6 +56,7 @@ function GeneralSection({
       fieldErrors={errors as Record<string, string[]>}
       submitLabel="Save Changes"
       asAccordion={asAccordion}
+      trailing={trailing}
     >
       <SectionField
         label="Application Name"
