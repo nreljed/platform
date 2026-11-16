@@ -39,7 +39,25 @@ Base groups (always included): `general`, `registration`, `notifications`, `secu
 - Feature `ShopSettingsService` / `ShopSettingsController` — a domain group (`shop`) built on
   this exact service (see Shop package `docs/settings.md`).
 
+## Feature toggling
+
+Features (modules) are enabled/disabled **programmatically**, not via a UI.
+Use the `feature:toggle` command:
+
+```bash
+php artisan feature:toggle enable shop      # enable the Shop feature
+php artisan feature:toggle disable shop     # disable it (runs onDisable() cleanup)
+```
+
+Feature slugs: `public-site`, `posts`, `shop`, `ai`, `marketing`.
+
+Defaults come from `config/features.php` (`features.enabled.<slug>`). Runtime
+overrides are persisted in the `settings` table (group `core`, key
+`feature_enabled.<slug>`) via `FeatureSettingsService`. Disabling a feature
+removes its routes, nav, settings, and permissions but preserves data.
+
 ## Related
 
-- [Architecture](architecture.md) — boot-time wiring.
-- Shop package `docs/settings.md` — example of a feature settings group.
+- [Architecture](architecture.md) - boot-time wiring.
+- [Commands](commands.md) - full command reference.
+- Shop package `docs/settings.md` - example of a feature settings group.
