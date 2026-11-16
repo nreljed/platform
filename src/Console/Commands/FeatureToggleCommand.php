@@ -30,7 +30,7 @@ class FeatureToggleCommand extends Command
 
         if (! isset($bySlug[$slug])) {
             $this->error("Unknown feature: {$slug}");
-            $this->line('Available features: ' . implode(', ', array_keys($bySlug)));
+            $this->line('Available features: '.implode(', ', array_keys($bySlug)));
 
             return self::FAILURE;
         }
@@ -40,7 +40,7 @@ class FeatureToggleCommand extends Command
         $previous = $settings->setEnabled($slug, $wanted, true);
 
         if ($previous === $wanted) {
-            $this->info("Feature '{$slug}' is already " . ($wanted ? 'enabled' : 'disabled') . '.');
+            $this->info("Feature '{$slug}' is already ".($wanted ? 'enabled' : 'disabled').'.');
 
             return self::SUCCESS;
         }
@@ -49,7 +49,7 @@ class FeatureToggleCommand extends Command
             $provider->onDisable();
         }
 
-        $this->info("Feature '{$slug}' " . ($wanted ? 'enabled' : 'disabled') . '.');
+        $this->info("Feature '{$slug}' ".($wanted ? 'enabled' : 'disabled').'.');
 
         return self::SUCCESS;
     }
