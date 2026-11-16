@@ -10,7 +10,6 @@ import {
   Wrench,
   Menu,
   TerminalSquare,
-  Puzzle,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -56,12 +55,10 @@ const NAV_ITEMS: NavCategory[] = [
     label: "Developer",
     items: [{ icon: TerminalSquare, label: "Developer", route: "dashboard.admin.settings.dev" }],
   },
-  {
-    label: "System",
-    items: [
-      { icon: Puzzle, label: "Modules", route: "dashboard.admin.settings.modules.index" },
-    ],
-  },
+  // Modules management removed from UI — features are enabled/disabled
+  // programmatically via `php artisan feature:enable` / `feature:disable`
+  // (or the `features.enabled.*` config defaults). Per-feature settings
+  // pages remain in each module's own nav.
 ];
 
 interface FeatureSettingsLink {
