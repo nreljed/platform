@@ -25,6 +25,7 @@ function Section({
   accordionValue,
   accordionDefaultOpen = false,
   accordionPersist = false,
+  trailing,
 }: {
   children: React.ReactNode;
   title: string;
@@ -43,6 +44,7 @@ function Section({
   columns?: number;
   asAccordion?: boolean;
   accordionValue?: string;
+  trailing?: React.ReactNode;
   accordionDefaultOpen?: boolean;
   accordionPersist?: boolean;
 }) {
@@ -66,7 +68,7 @@ function Section({
 
   const successDisplay =
     showSuccess && !hasError ? (
-      <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-500">
+      <div className="flex items-center gap-2 text-sm text-status-success">
         <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
         </svg>
@@ -112,6 +114,7 @@ function Section({
               content,
               defaultOpen: accordionDefaultOpen,
               persist: accordionPersist,
+              trailing,
             },
           ]}
         />
