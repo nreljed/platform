@@ -125,7 +125,7 @@ export function useSettingsForm<T extends Record<string, unknown>>(
         preserveScroll: true,
         preserveState: true,
         replace: true,
-        onSuccess: (page) => {
+        onSuccess: (page: any) => {
           const props = (page as { props?: Record<string, unknown> }).props;
           // Prefer server-provided fresh settings when available.
           const fresh =
@@ -138,7 +138,7 @@ export function useSettingsForm<T extends Record<string, unknown>>(
           toast.add({ title: successMessage, type: "success" });
           onSuccess?.();
         },
-        onError: (errs) => {
+        onError: (errs: any) => {
           const mapped = (errs ?? {}) as Record<string, string>;
           setErrors(mapped);
           toast.add({ title: errorMessage, type: "error" });
