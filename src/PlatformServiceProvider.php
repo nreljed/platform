@@ -156,6 +156,7 @@ class PlatformServiceProvider extends ServiceProvider
             Console\Commands\PlatformInstall::class,
             Console\Commands\PurgeNotifications::class,
             Console\Commands\PruneAuditLogs::class,
+            Console\Commands\FeatureToggleCommand::class,
         ]);
     }
 
