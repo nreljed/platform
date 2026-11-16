@@ -1,6 +1,5 @@
 import * as React from "react";
 import { cn } from "../../lib/utils";
-import { Card, CardContent } from "../ui/card";
 import { Eye } from "lucide-react";
 
 interface PreviewCardProps {

@@ -121,7 +121,7 @@ export function useSettingsForm<T extends Record<string, unknown>>(
       if (processing) return;
       setProcessing(true);
       setErrors({});
-      router[method](submitUrl, values as Record<string, unknown>, {
+      (router as any)[method](submitUrl, values, {
         preserveScroll: true,
         preserveState: true,
         replace: true,
