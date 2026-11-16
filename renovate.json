@@ -33,7 +33,7 @@
       "automergeStrategy": "squash"
     },
     {
-      "matchManagers": ["npm", "pnpm"],
+      "matchManagers": ["npm"],
       "groupName": "npm-deps",
       "automerge": true,
       "automergeType": "pr",
