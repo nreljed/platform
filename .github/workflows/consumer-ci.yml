@@ -234,6 +234,13 @@ jobs:
         if: ${{ !inputs.skip-php-tests }}
         run: vendor/bin/pint --test
 
+      # Static analysis is opt-in per consumer: only runs when the repo ships a
+      # phpstan.neon (i.e. larastan is in require-dev). Consumers without one
+      # skip it; see each app's docs/MODERNIZATION-PLAN.md for the rollout plan.
+      - name: PHPStan
+        if: ${{ !inputs.skip-php-tests && hashFiles('phpstan.neon') != '' }}
+        run: vendor/bin/phpstan analyse --no-progress
+
   # Opt-in browser smoke (run-e2e). Standalone apps (laravel.shop, laravel.booking)
   # enable it from their ci.yml; the workspace app leaves it off. Each consumer
   # ships its own harness: playwright.config.ts, e2e/helpers/auth.ts,
