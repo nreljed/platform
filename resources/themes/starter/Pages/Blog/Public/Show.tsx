@@ -114,14 +114,14 @@ export default function BlogShow({ post, preview = false }: BlogShowProps) {
 
       <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         {preview && (
-          <div className="mb-8 flex items-center justify-between gap-2 rounded-lg border border-amber-300/60 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <div className="mb-8 flex items-center justify-between gap-2 rounded-lg border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
             <span className="flex items-center gap-2 font-medium">
               <Eye className="h-4 w-4" />
               Draft preview — this post is not publicly visible yet.
             </span>
             <Link
               href={route("dashboard.posts.edit", post.id)}
-              className="inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-background px-2.5 py-1 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-amber-100"
+              className="inline-flex items-center gap-1.5 rounded-md border border-warning/30 bg-background px-2.5 py-1 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-warning/20"
             >
               <Pencil className="h-3 w-3" />
               Edit
