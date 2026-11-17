@@ -132,28 +132,28 @@ const actionLabels: Record<string, string> = {
 };
 
 const actionColors: Record<string, string> = {
-  login: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-  logout: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200",
-  impersonation_start: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
-  impersonation_stop: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
-  password_change: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-  password_reset: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-  password_reset_sent: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
-  email_change: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-  email_verified: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  account_created: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  account_delete: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-  settings_changed: "bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200",
-  role_assigned: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200",
-  role_revoked: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200",
-  permission_assigned: "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200",
-  permission_revoked: "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200",
+  login: "bg-status-info text-status-info dark:bg-status-info dark:text-status-info",
+  logout: "bg-muted text-muted-foreground",
+  impersonation_start: "bg-warning text-warning dark:bg-warning dark:text-warning",
+  impersonation_stop: "bg-warning text-warning dark:bg-warning dark:text-warning",
+  password_change: "bg-accent-purple text-accent-purple dark:bg-accent-purple dark:text-accent-purple",
+  password_reset: "bg-accent-purple text-accent-purple dark:bg-accent-purple dark:text-accent-purple",
+  password_reset_sent: "bg-warning text-warning dark:bg-warning dark:text-warning",
+  email_change: "bg-accent-purple text-accent-purple dark:bg-accent-purple dark:text-accent-purple",
+  email_verified: "bg-status-success text-status-success dark:bg-status-success dark:text-status-success",
+  account_created: "bg-status-success text-status-success dark:bg-status-success dark:text-status-success",
+  account_delete: "bg-status-error text-status-error dark:bg-status-error dark:text-status-error",
+  settings_changed: "bg-muted text-muted-foreground",
+  role_assigned: "bg-accent-purple text-accent-purple dark:bg-accent-purple dark:text-accent-purple",
+  role_revoked: "bg-accent-purple text-accent-purple dark:bg-accent-purple dark:text-accent-purple",
+  permission_assigned: "bg-accent-cyan text-accent-cyan dark:bg-accent-cyan dark:text-accent-cyan",
+  permission_revoked: "bg-accent-cyan text-accent-cyan dark:bg-accent-cyan dark:text-accent-cyan",
 };
 
 const severityColors: Record<string, string> = {
-  critical: "bg-red-500",
-  warning: "bg-amber-500",
-  info: "bg-blue-500",
+  critical: "bg-status-error",
+  warning: "bg-warning",
+  info: "bg-status-info",
 };
 
 const severityLabels: Record<string, string> = {
@@ -255,7 +255,7 @@ function DetailRow({ log }: { log: AuditLog }) {
             <span
               className={cn(
                 "inline-block size-1.5 rounded-full shrink-0",
-                severityColors[log.severity] ?? "bg-blue-500",
+                severityColors[log.severity] ?? "bg-status-info",
               )}
             />
             {new Date(log.created_at).toLocaleDateString()}
@@ -399,8 +399,8 @@ export default function AdminAuditLogsIndex() {
       <div className="grid grid-cols-3 gap-4 mb-6">
         <Card>
           <CardContent className="flex items-center gap-3 pt-6">
-            <div className="rounded-lg bg-blue-100 dark:bg-blue-900 p-2.5">
-              <ScrollText className="size-5 text-blue-700 dark:text-blue-300" />
+            <div className="rounded-lg bg-status-info dark:bg-status-info p-2.5">
+              <ScrollText className="size-5 text-status-info dark:text-status-info" />
             </div>
             <div>
               <p className="text-2xl font-bold">{stats.total.toLocaleString()}</p>
@@ -410,8 +410,8 @@ export default function AdminAuditLogsIndex() {
         </Card>
         <Card>
           <CardContent className="flex items-center gap-3 pt-6">
-            <div className="rounded-lg bg-green-100 dark:bg-green-900 p-2.5">
-              <Info className="size-5 text-green-700 dark:text-green-300" />
+            <div className="rounded-lg bg-status-success dark:bg-status-success p-2.5">
+              <Info className="size-5 text-status-success dark:text-status-success" />
             </div>
             <div>
               <p className="text-2xl font-bold">{stats.today.toLocaleString()}</p>
@@ -421,8 +421,8 @@ export default function AdminAuditLogsIndex() {
         </Card>
         <Card>
           <CardContent className="flex items-center gap-3 pt-6">
-            <div className="rounded-lg bg-red-100 dark:bg-red-900 p-2.5">
-              <ShieldAlert className="size-5 text-red-700 dark:text-red-300" />
+            <div className="rounded-lg bg-status-error dark:bg-status-error p-2.5">
+              <ShieldAlert className="size-5 text-status-error dark:text-status-error" />
             </div>
             <div>
               <p className="text-2xl font-bold">{stats.critical.toLocaleString()}</p>

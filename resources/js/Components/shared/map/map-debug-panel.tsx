@@ -99,7 +99,7 @@ function DebugFieldRow({
     <div className="flex items-center justify-between gap-2 px-3 py-1 text-sm">
       <div className="flex items-center gap-1.5">
         <span
-          className={`size-1.5 rounded-full shrink-0 ${present ? "bg-green-500" : "bg-muted-foreground/30"}`}
+          className={`size-1.5 rounded-full shrink-0 ${present ? "bg-status-success" : "bg-muted-foreground/30"}`}
         />
         <span className="text-muted-foreground font-medium">{label}</span>
       </div>
@@ -139,7 +139,7 @@ export function MapDebugPanel({ data, zoom, defaultOpen = false, className }: Ma
           <BugIcon className="size-4 text-muted-foreground" />
           Location Debug Data
           {hasData && (
-            <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold text-green-600 border-green-200 bg-green-50 dark:text-green-400 dark:border-green-800 dark:bg-green-950">
+            <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold text-status-success border-status-success bg-status-success dark:text-status-success dark:border-status-success dark:bg-status-success">
               LIVE
             </span>
           )}
@@ -170,7 +170,7 @@ export function MapDebugPanel({ data, zoom, defaultOpen = false, className }: Ma
                   label="Zoom"
                   value={
                     zoom != null ? (
-                      <span className="text-blue-600 dark:text-blue-400 font-semibold">{zoom}</span>
+                      <span className="text-status-info dark:text-status-info font-semibold">{zoom}</span>
                     ) : (
                       "\u{2014}"
                     )
@@ -180,7 +180,7 @@ export function MapDebugPanel({ data, zoom, defaultOpen = false, className }: Ma
                   label="Within bounds"
                   value={
                     data!.withinBounds ? (
-                      <span className="text-green-600 dark:text-green-400 font-semibold">
+                      <span className="text-status-success dark:text-status-success font-semibold">
                         \u2713 Yes
                       </span>
                     ) : (
@@ -196,11 +196,11 @@ export function MapDebugPanel({ data, zoom, defaultOpen = false, className }: Ma
                   }
                   value={
                     data!.countryCodeMatch ? (
-                      <span className="text-green-600 dark:text-green-400 font-semibold">
+                      <span className="text-status-success dark:text-status-success font-semibold">
                         \u2713 Yes
                       </span>
                     ) : (
-                      <span className="text-amber-500 dark:text-amber-400 font-semibold">
+                      <span className="text-warning dark:text-warning font-semibold">
                         \u2717 No
                       </span>
                     )
@@ -241,7 +241,7 @@ export function MapDebugPanel({ data, zoom, defaultOpen = false, className }: Ma
                   label="Region (matched)"
                   value={
                     data!.matchedRegion ? (
-                      <span className="text-green-600 dark:text-green-400">
+                      <span className="text-status-success dark:text-status-success">
                         {data!.matchedRegion}
                       </span>
                     ) : (
@@ -253,7 +253,7 @@ export function MapDebugPanel({ data, zoom, defaultOpen = false, className }: Ma
                   label="Locality (matched)"
                   value={
                     data!.matchedCity ? (
-                      <span className="text-green-600 dark:text-green-400">
+                      <span className="text-status-success dark:text-status-success">
                         {data!.matchedCity}
                       </span>
                     ) : (
@@ -294,11 +294,11 @@ export function MapDebugPanel({ data, zoom, defaultOpen = false, className }: Ma
                     label="Confidence"
                     value={
                       data!.overpassConfidence === "high" ? (
-                        <span className="text-green-600 dark:text-green-400 font-semibold">
+                        <span className="text-status-success dark:text-status-success font-semibold">
                           High
                         </span>
                       ) : data!.overpassConfidence === "medium" ? (
-                        <span className="text-amber-600 dark:text-amber-400">Medium</span>
+                        <span className="text-warning dark:text-warning">Medium</span>
                       ) : data!.overpassConfidence === "low" ? (
                         <span className="text-destructive">Low</span>
                       ) : (

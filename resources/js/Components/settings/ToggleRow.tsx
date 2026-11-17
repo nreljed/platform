@@ -40,7 +40,7 @@ export function ToggleRow({
           <p className="text-xs text-muted-foreground">{description}</p>
         )}
         {inactive && dependsOnLabel && (
-          <p className="text-xs text-amber-600 dark:text-amber-500">
+          <p className="text-xs text-warning dark:text-warning">
             Enable {dependsOnLabel} first.
           </p>
         )}

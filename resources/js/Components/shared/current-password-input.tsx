@@ -81,7 +81,7 @@ export function CurrentPasswordInput({
           aria-describedby={hasError ? `${id}-error` : undefined}
           className={
             hasError
-              ? "border-red-500 focus:border-red-500 dark:border-red-400 dark:focus:border-red-400 pr-10"
+              ? "border-status-error focus:border-status-error dark:border-status-error dark:focus:border-status-error pr-10"
               : "pr-10"
           }
           autoComplete="off"

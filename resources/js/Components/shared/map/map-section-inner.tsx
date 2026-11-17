@@ -626,7 +626,7 @@ export default function MapSectionInner({
           </Alert>
         )}
 
-        <div className="relative h-96 w-full overflow-hidden rounded-lg border border-border bg-slate-50 dark:bg-slate-900">
+        <div className="relative h-96 w-full overflow-hidden rounded-lg border border-border bg-muted">
           <Map
             ref={(instance: unknown) => setMap(instance as L.Map | null)}
             center={effectiveCenter}

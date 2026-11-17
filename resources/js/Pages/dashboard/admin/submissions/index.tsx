@@ -277,8 +277,8 @@ export default function AdminSubmissionsIndex() {
       <div className="grid grid-cols-2 gap-4 mb-6 sm:grid-cols-4">
         <Card>
           <CardContent className="flex items-center gap-3 pt-6">
-            <div className="rounded-lg bg-blue-100 dark:bg-blue-900 p-2.5">
-              <Mail className="size-5 text-blue-700 dark:text-blue-300" aria-hidden="true" />
+            <div className="rounded-lg bg-status-info dark:bg-status-info p-2.5">
+              <Mail className="size-5 text-status-info dark:text-status-info" aria-hidden="true" />
             </div>
             <div>
               <p className="text-2xl font-bold tabular-nums">{stats.total.toLocaleString()}</p>
@@ -288,8 +288,8 @@ export default function AdminSubmissionsIndex() {
         </Card>
         <Card>
           <CardContent className="flex items-center gap-3 pt-6">
-            <div className="rounded-lg bg-amber-100 dark:bg-amber-900 p-2.5">
-              <Inbox className="size-5 text-amber-700 dark:text-amber-300" aria-hidden="true" />
+            <div className="rounded-lg bg-warning dark:bg-warning p-2.5">
+              <Inbox className="size-5 text-warning dark:text-warning" aria-hidden="true" />
             </div>
             <div>
               <p className="text-2xl font-bold tabular-nums">{stats.new.toLocaleString()}</p>
@@ -299,8 +299,8 @@ export default function AdminSubmissionsIndex() {
         </Card>
         <Card>
           <CardContent className="flex items-center gap-3 pt-6">
-            <div className="rounded-lg bg-green-100 dark:bg-green-900 p-2.5">
-              <Mail className="size-5 text-green-700 dark:text-green-300" aria-hidden="true" />
+            <div className="rounded-lg bg-status-success dark:bg-status-success p-2.5">
+              <Mail className="size-5 text-status-success dark:text-status-success" aria-hidden="true" />
             </div>
             <div>
               <p className="text-2xl font-bold tabular-nums">{stats.read.toLocaleString()}</p>
@@ -310,8 +310,8 @@ export default function AdminSubmissionsIndex() {
         </Card>
         <Card>
           <CardContent className="flex items-center gap-3 pt-6">
-            <div className="rounded-lg bg-cyan-100 dark:bg-cyan-900 p-2.5">
-              <Archive className="size-5 text-cyan-700 dark:text-cyan-300" aria-hidden="true" />
+            <div className="rounded-lg bg-accent-cyan dark:bg-accent-cyan p-2.5">
+              <Archive className="size-5 text-accent-cyan dark:text-accent-cyan" aria-hidden="true" />
             </div>
             <div>
               <p className="text-2xl font-bold tabular-nums">{stats.archived.toLocaleString()}</p>
@@ -533,7 +533,7 @@ export default function AdminSubmissionsIndex() {
                           className={cn(
                             "inline-block size-1.5 rounded-full shrink-0",
                             submission.status === "new"
-                              ? "bg-amber-500"
+                              ? "bg-warning"
                               : "bg-muted-foreground/40",
                           )}
                           aria-hidden="true"

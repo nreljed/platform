@@ -169,7 +169,7 @@ export default function AdminUsersForm() {
                             !isEditing && usernameStatus === "taken" && "border-destructive",
                             !isEditing &&
                               usernameStatus === "available" &&
-                              "border-green-500 dark:border-green-400",
+                              "border-status-success dark:border-status-success",
                           )}
                           aria-invalid={usernameStatus === "taken" ? "true" : undefined}
                         />
@@ -182,7 +182,7 @@ export default function AdminUsersForm() {
                               <X className="size-4 text-destructive" />
                             )}
                             {usernameStatus === "available" && (
-                              <Check className="size-4 text-green-500 dark:text-green-400" />
+                              <Check className="size-4 text-status-success dark:text-status-success" />
                             )}
                           </span>
                         )}
@@ -232,7 +232,7 @@ export default function AdminUsersForm() {
                             !isEditing && emailStatus === "taken" && "border-destructive",
                             !isEditing &&
                               emailStatus === "available" &&
-                              "border-green-500 dark:border-green-400",
+                              "border-status-success dark:border-status-success",
                           )}
                           aria-invalid={emailStatus === "taken" ? "true" : undefined}
                         />
@@ -243,7 +243,7 @@ export default function AdminUsersForm() {
                             )}
                             {emailStatus === "taken" && <X className="size-4 text-destructive" />}
                             {emailStatus === "available" && (
-                              <Check className="size-4 text-green-500 dark:text-green-400" />
+                              <Check className="size-4 text-status-success dark:text-status-success" />
                             )}
                           </span>
                         )}

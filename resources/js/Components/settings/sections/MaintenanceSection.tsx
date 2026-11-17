@@ -165,7 +165,7 @@ export function MaintenanceSection({ settings, asAccordion }: MaintenanceSection
           </SectionField>
         )}
         {data.maintenance_mode === "1" && (
-          <div className="rounded-md bg-blue-50 p-3 text-sm text-blue-700 dark:bg-blue-950 dark:text-blue-300 flex items-start gap-2">
+          <div className="rounded-md bg-status-info p-3 text-sm text-status-info dark:bg-status-info dark:text-status-info flex items-start gap-2">
             <Mail className="h-4 w-4 mt-0.5 shrink-0" />
             <span>
               Recovery emails are sent to all admin accounts when maintenance is first enabled.

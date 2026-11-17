@@ -88,9 +88,9 @@ export default function Login({
         <form onSubmit={handleSubmit}>
           <CardContent className="grid gap-4">
             {showPasswordChangedMessage && (
-              <Alert className="border-green-500 bg-green-50 dark:bg-green-950 dark:border-green-800">
-                <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-                <AlertDescription className="text-green-700 dark:text-green-300">
+              <Alert className="border-status-success bg-status-success dark:bg-status-success dark:border-status-success">
+                <CheckCircle className="h-4 w-4 text-status-success dark:text-status-success" />
+                <AlertDescription className="text-status-success dark:text-status-success">
                   Your password has been changed successfully. Please sign in with your new
                   password.
                 </AlertDescription>

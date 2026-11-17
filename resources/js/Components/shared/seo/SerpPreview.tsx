@@ -28,14 +28,14 @@ function SerpPreview({
   return (
     <div
       className={cn(
-        "rounded-lg border border-border bg-white p-4 dark:bg-gray-900",
+        "rounded-lg border border-border bg-white p-4 dark:bg-muted",
         isMobile ? "max-w-[320px]" : "max-w-[600px]",
         className,
       )}
     >
       <div className="space-y-1">
         <div className="flex items-center gap-2">
-          <div className="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700" />
+          <div className="h-6 w-6 rounded-full bg-muted" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm text-[#202124] dark:text-[#e8eaed]">{url}</p>
           </div>
@@ -45,7 +45,7 @@ function SerpPreview({
           className={cn(
             "text-lg font-medium leading-snug",
             "text-[#1a0dab] dark:text-[#8ab4f8]",
-            titleTruncated && "text-red-600 dark:text-red-400",
+            titleTruncated && "text-status-error dark:text-status-error",
           )}
         >
           {displayTitle}
@@ -60,12 +60,12 @@ function SerpPreview({
           className={cn(
             "text-sm leading-relaxed",
             "text-[#4d5156] dark:text-[#969ba1]",
-            descTruncated && "text-orange-600 dark:text-orange-400",
+            descTruncated && "text-warning dark:text-warning",
           )}
         >
           {displayDescription}
           {descTruncated && (
-            <span className="ml-1 text-xs text-orange-500 dark:text-orange-400">
+            <span className="ml-1 text-xs text-warning dark:text-warning">
               ({displayDescription.length}/{maxDescWidth})
             </span>
           )}

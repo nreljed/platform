@@ -123,7 +123,7 @@ export function EmailSection({
       defaultOpen={accordionDefaultOpen}
     >
       {mustVerifyEmail && !emailVerified && (
-        <div className="mb-4 flex flex-col gap-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300">
+        <div className="mb-4 flex flex-col gap-3 rounded-md border border-warning bg-warning p-3 text-sm text-warning dark:border-warning dark:bg-warning dark:text-warning">
           <div className="flex items-center gap-2 font-medium">
             <AlertTriangle className="h-4 w-4" />
             Your email address is not verified
@@ -143,7 +143,7 @@ export function EmailSection({
         </div>
       )}
       {success && (
-        <div className="mb-4 flex items-center gap-2 text-sm font-medium text-green-600 dark:text-green-500">
+        <div className="mb-4 flex items-center gap-2 text-sm font-medium text-status-success dark:text-status-success">
           <CheckCircle2 className="h-4 w-4" />
           {success === "verification-link-sent"
             ? "A new verification link has been sent to your email address."
@@ -157,8 +157,8 @@ export function EmailSection({
             className={cn(
               "ml-auto",
               emailVerified
-                ? "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
-                : "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
+                ? "bg-status-success text-status-success dark:bg-status-success dark:text-status-success"
+                : "bg-warning text-warning dark:bg-warning dark:text-warning",
             )}
           >
             {emailVerified ? "Verified" : "Unverified"}
