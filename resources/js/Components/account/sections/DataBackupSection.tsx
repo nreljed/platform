@@ -143,13 +143,13 @@ export function DataBackupSection({ modules }: DataBackupSectionProps) {
               <div className="flex flex-wrap items-center gap-2 mt-2 text-xs text-muted-foreground">
                 {module.supports_export && (
                   <Badge variant="outline" className="gap-1 font-normal">
-                    <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                    <CheckCircle2 className="h-3 w-3 text-status-success" />
                     Backup available
                   </Badge>
                 )}
                 {module.supports_restore && (
                   <Badge variant="outline" className="gap-1 font-normal">
-                    <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                    <CheckCircle2 className="h-3 w-3 text-status-success" />
                     Restore available
                   </Badge>
                 )}

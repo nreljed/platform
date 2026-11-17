@@ -50,7 +50,7 @@ export function SettingsField({
         </FieldLabel>
         {description && <FieldDescription>{description}</FieldDescription>}
         {!enabled && disabledHint && (
-          <FieldDescription className="text-amber-600 dark:text-amber-500">
+          <FieldDescription className="text-warning dark:text-warning">
             {disabledHint}
           </FieldDescription>
         )}

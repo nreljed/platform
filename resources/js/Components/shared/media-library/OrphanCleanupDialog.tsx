@@ -155,7 +155,7 @@ export function OrphanCleanupDialog({
             </div>
 
             {missing === 0 && orphanFiles === 0 && (
-              <p className="px-1 text-sm text-emerald-600 dark:text-emerald-500">
+              <p className="px-1 text-sm text-status-success dark:text-status-success">
                 All clean — no orphaned media found in this folder.
               </p>
             )}

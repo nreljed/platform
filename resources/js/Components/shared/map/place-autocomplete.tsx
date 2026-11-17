@@ -283,7 +283,7 @@ function PlaceAutocomplete({
                 controlledOnChange?.("");
                 onClear?.();
               }}
-              className="bg-transparent! hover:bg-slate-100 dark:hover:bg-slate-800 text-muted-foreground mr-1 rounded-full p-1 transition-colors"
+              className="bg-transparent! hover:bg-muted dark:hover:bg-muted text-muted-foreground mr-1 rounded-full p-1 transition-colors"
               aria-label="Clear search"
             >
               <XIcon className="h-4 w-4" />

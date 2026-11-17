@@ -32,8 +32,8 @@ export interface StructuredNotification {
 
 export const SEVERITY_COLORS: Record<Severity, string> = {
   info: "bg-primary/10 text-primary",
-  warning: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
-  urgent: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
+  warning: "bg-warning/10 text-warning dark:text-warning",
+  urgent: "bg-warning/10 text-warning dark:text-warning",
   critical: "bg-destructive/10 text-destructive",
 };
 

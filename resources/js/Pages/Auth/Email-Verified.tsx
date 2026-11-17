@@ -9,8 +9,8 @@ export default function EmailVerified() {
     <GuestLayout title="Email Verified">
       <Card>
         <CardHeader className="space-y-1 text-center">
-          <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
-            <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
+          <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-status-success dark:bg-status-success/30">
+            <CheckCircle2 className="h-8 w-8 text-status-success dark:text-status-success" />
           </div>
           <CardTitle className="text-2xl">Email verified!</CardTitle>
           <CardDescription>

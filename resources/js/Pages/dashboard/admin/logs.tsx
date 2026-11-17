@@ -64,13 +64,13 @@ const PER_PAGE_OPTIONS = ["100", "200", "500", "1000"];
 
 function lineClass(line: string) {
   if (/\.(ALERT|CRITICAL|EMERGENCY)\b/.test(line)) {
-    return "text-red-600 dark:text-red-400 font-semibold";
+    return "text-status-error dark:text-status-error font-semibold";
   }
   if (/\.ERROR\b/.test(line)) {
-    return "text-rose-500 dark:text-rose-400";
+    return "text-accent-rose dark:text-accent-rose";
   }
   if (/\.WARNING\b/.test(line)) {
-    return "text-amber-600 dark:text-amber-400";
+    return "text-warning dark:text-warning";
   }
   if (/\.(NOTICE|INFO|DEBUG)\b/.test(line)) {
     return "text-muted-foreground";
@@ -331,7 +331,7 @@ export default function LogViewer({
                     {log.size} · modified {log.modified} · {log.total_lines.toLocaleString()} lines
                     total
                     {log.truncated && (
-                      <span className="ml-2 text-amber-500">tail may be truncated</span>
+                      <span className="ml-2 text-warning">tail may be truncated</span>
                     )}
                   </>
                 ) : (

@@ -18,7 +18,7 @@ export function SystemStatusCards({
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       <Card
         size="sm"
-        className={`border-l-4 ${notificationTableExists ? "border-l-green-500" : "border-l-amber-500"}`}
+        className={`border-l-4 ${notificationTableExists ? "border-l-status-success" : "border-l-warning"}`}
       >
         <CardContent className="space-y-1">
           <div className="flex items-center gap-2">
@@ -37,7 +37,7 @@ export function SystemStatusCards({
       </Card>
       <Card
         size="sm"
-        className={`border-l-4 ${emailConfigured ? "border-l-green-500" : "border-l-amber-500"}`}
+        className={`border-l-4 ${emailConfigured ? "border-l-status-success" : "border-l-warning"}`}
       >
         <CardContent className="space-y-1">
           <div className="flex items-center gap-2">
@@ -57,7 +57,7 @@ export function SystemStatusCards({
           )}
         </CardContent>
       </Card>
-      <Card size="sm" className="border-l-4 border-l-blue-500">
+      <Card size="sm" className="border-l-4 border-l-status-info">
         <CardContent className="space-y-1">
           <div className="flex items-center gap-2">
             <Bell className="h-4 w-4 text-muted-foreground" />
@@ -72,7 +72,7 @@ export function SystemStatusCards({
           </p>
         </CardContent>
       </Card>
-      <Card size="sm" className="border-l-4 border-l-slate-500">
+      <Card size="sm" className="border-l-4 border-l-muted-foreground">
         <CardContent className="space-y-1">
           <div className="flex items-center gap-2">
             <BellRing className="h-4 w-4 text-muted-foreground" />

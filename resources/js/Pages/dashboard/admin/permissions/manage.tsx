@@ -127,9 +127,9 @@ export default function PermissionsManager() {
       </div>
 
       {isLocked && (
-        <Alert className="mb-6 border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950">
-          <ShieldAlert className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-          <AlertDescription className="text-amber-700 dark:text-amber-300 ml-2">
+        <Alert className="mb-6 border-warning bg-warning dark:border-warning dark:bg-warning">
+          <ShieldAlert className="h-5 w-5 text-warning dark:text-warning" />
+          <AlertDescription className="text-warning dark:text-warning ml-2">
             The <strong>{currentRole.name}</strong> role is locked and cannot be modified from this
             interface to prevent accidental self-lockout.
           </AlertDescription>
