@@ -21,17 +21,17 @@ function SeoScore({ score, size = "md", className }: SeoScoreProps) {
 
   const color =
     clamped >= 70
-      ? "text-green-600 dark:text-green-500"
+      ? "text-status-success"
       : clamped >= 40
-        ? "text-yellow-600 dark:text-yellow-500"
-        : "text-red-600 dark:text-red-500";
+        ? "text-warning"
+        : "text-status-error";
 
   const strokeColor =
     clamped >= 70
-      ? "stroke-green-500 dark:stroke-green-400"
+      ? "stroke-status-success"
       : clamped >= 40
-        ? "stroke-yellow-500 dark:stroke-yellow-400"
-        : "stroke-red-500 dark:stroke-red-400";
+        ? "stroke-warning"
+        : "stroke-status-error";
 
   return (
     <div

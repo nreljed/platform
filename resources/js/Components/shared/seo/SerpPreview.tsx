@@ -50,7 +50,7 @@ function SerpPreview({
         >
           {displayTitle}
           {titleTruncated && (
-            <span className="ml-1 text-xs text-red-500 dark:text-red-400">
+            <span className="ml-1 text-xs text-status-error">
               ({displayTitle.length}/{maxTitleWidth})
             </span>
           )}

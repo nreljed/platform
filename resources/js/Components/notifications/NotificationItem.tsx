@@ -65,7 +65,7 @@ const typeConfig: Record<string, TypeIconConfig> = {
   },
   "account.deleted": {
     icon: Trash2,
-    color: "text-red-500 dark:text-red-400",
+    color: "text-status-error",
     label: "Account Deleted",
   },
 };
