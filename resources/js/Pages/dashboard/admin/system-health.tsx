@@ -354,13 +354,13 @@ function StatusDot({ ok }: { ok: boolean }) {
 function SeverityIcon({ severity }: { severity: string }) {
   switch (severity) {
     case "critical": {
-      return <XCircle className="h-4 w-4 shrink-0 text-red-500 dark:text-red-400" />;
+      return <XCircle className="h-4 w-4 shrink-0 text-status-error" />;
     }
     case "high": {
-      return <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500 dark:text-amber-400" />;
+      return <AlertTriangle className="h-4 w-4 shrink-0 text-warning" />;
     }
     default: {
-      return <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500 dark:text-emerald-400" />;
+      return <CheckCircle2 className="h-4 w-4 shrink-0 text-status-success" />;
     }
   }
 }
