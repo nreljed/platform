@@ -111,15 +111,15 @@ export function hasInertiaPage(doc: Document = document, id = "app"): boolean {
     return doc.querySelector("[data-page]") !== null;
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function FoundationShell({ App, props }: { App: any; props: any }) {
+function FoundationShell({ App, props }: { App: React.ElementType; props: unknown }) {
+    const initialPage = (props as { initialPage?: { url?: string } } | null)?.initialPage;
     return (
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <TooltipProvider>
                 {/* Belt and braces: if Inertia is ever booted without a page,
                     the shell still renders instead of throwing on `.url`. */}
-                <ErrorBoundary key={props?.initialPage?.url ?? "foundation"}>
-                    <App {...props} />
+                <ErrorBoundary key={initialPage?.url ?? "foundation"}>
+                    <App {...(props as Record<string, unknown>)} />
                 </ErrorBoundary>
                 <InertiaFlashListener />
                 <Toaster />
