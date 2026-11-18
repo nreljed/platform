@@ -55,7 +55,7 @@ export function StickySaveBar({
           <span
             className={cn(
               "h-2 w-2 rounded-full",
-              errorCount > 0 ? "bg-destructive" : "bg-amber-500",
+              errorCount > 0 ? "bg-destructive" : "bg-warning",
             )}
           />
           {description ?? (errorCount > 0 ? `${errorCount} error${errorCount === 1 ? "" : "s"} to fix` : "Unsaved changes")}

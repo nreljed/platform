@@ -103,7 +103,7 @@ export default function Register({ errors: pageErrors }: { errors?: Record<strin
                   )}
                   {usernameAvail.status === "taken" && <X className="h-4 w-4 text-destructive" />}
                   {usernameAvail.status === "available" && (
-                    <Check className="h-4 w-4 text-green-500 dark:text-green-400" />
+                    <Check className="h-4 w-4 text-status-success dark:text-status-success" />
                   )}
                 </span>
               </div>
@@ -146,7 +146,7 @@ export default function Register({ errors: pageErrors }: { errors?: Record<strin
                   )}
                   {emailAvail.status === "taken" && <X className="h-4 w-4 text-destructive" />}
                   {emailAvail.status === "available" && (
-                    <Check className="h-4 w-4 text-green-500 dark:text-green-400" />
+                    <Check className="h-4 w-4 text-status-success dark:text-status-success" />
                   )}
                 </span>
               </div>

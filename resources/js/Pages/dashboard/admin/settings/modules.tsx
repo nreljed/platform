@@ -132,12 +132,12 @@ export default function ModulesSettings({
                         )}
                         {mod.package && <p className="text-xs text-muted-foreground">{mod.package}</p>}
                         {hasDep && (
-                          <p className="flex items-center gap-1 mt-1 text-xs text-amber-600 dark:text-amber-400">
+                          <p className="flex items-center gap-1 mt-1 text-xs text-warning dark:text-warning">
                             <AlertCircle className="h-3 w-3" /> Missing or disabled dependency
                           </p>
                         )}
                         {mod.enabled && !hasDep && (
-                          <p className="flex items-center gap-1 mt-1 text-xs text-green-600 dark:text-green-400">
+                          <p className="flex items-center gap-1 mt-1 text-xs text-status-success dark:text-status-success">
                             <CheckCircle2 className="h-3 w-3" /> Enabled
                           </p>
                         )}

@@ -64,16 +64,16 @@ async function getZxcvbn(): Promise<ZxcvbnFn> {
 
 export function getPasswordStrengthColor(score: number): string {
   if (score <= 1) return "bg-destructive";
-  if (score === 2) return "bg-amber-500 dark:bg-amber-400";
-  if (score === 3) return "bg-lime-500 dark:bg-lime-400";
-  return "bg-green-500 dark:bg-green-400";
+  if (score === 2) return "bg-warning dark:bg-warning";
+  if (score === 3) return "bg-accent-cyan dark:bg-accent-cyan";
+  return "bg-status-success dark:bg-status-success";
 }
 
 export function getPasswordStrengthTextColor(score: number): string {
-  if (score <= 1) return "text-destructive dark:text-red-400";
-  if (score === 2) return "text-amber-600 dark:text-amber-400";
-  if (score === 3) return "text-lime-600 dark:text-lime-400";
-  return "text-green-600 dark:text-green-400";
+  if (score <= 1) return "text-destructive";
+  if (score === 2) return "text-warning dark:text-warning";
+  if (score === 3) return "text-accent-cyan dark:text-accent-cyan";
+  return "text-status-success dark:text-status-success";
 }
 
 export function getPasswordStrengthLabel(
@@ -296,7 +296,7 @@ export function PasswordInput({
               <Tooltip>
                 <TooltipTrigger
                   render={
-                    <div className="flex items-center text-green-500 dark:text-green-400 cursor-default">
+                    <div className="flex items-center text-status-success dark:text-status-success cursor-default">
                       <Check className="h-4 w-4" />
                     </div>
                   }
@@ -325,7 +325,7 @@ export function PasswordInput({
                     <div
                       className={cn(
                         meetsMinLength
-                          ? "text-green-500 dark:text-green-400"
+                          ? "text-status-success dark:text-status-success"
                           : "text-muted-foreground",
                       )}
                     >
@@ -334,7 +334,7 @@ export function PasswordInput({
                     <div
                       className={cn(
                         meetsUppercase
-                          ? "text-green-500 dark:text-green-400"
+                          ? "text-status-success dark:text-status-success"
                           : "text-muted-foreground",
                       )}
                     >
@@ -343,7 +343,7 @@ export function PasswordInput({
                     <div
                       className={cn(
                         meetsLowercase
-                          ? "text-green-500 dark:text-green-400"
+                          ? "text-status-success dark:text-status-success"
                           : "text-muted-foreground",
                       )}
                     >
@@ -352,7 +352,7 @@ export function PasswordInput({
                     <div
                       className={cn(
                         meetsNumber
-                          ? "text-green-500 dark:text-green-400"
+                          ? "text-status-success dark:text-status-success"
                           : "text-muted-foreground",
                       )}
                     >
@@ -361,7 +361,7 @@ export function PasswordInput({
                     <div
                       className={cn(
                         meetsSpecial
-                          ? "text-green-500 dark:text-green-400"
+                          ? "text-status-success dark:text-status-success"
                           : "text-muted-foreground",
                       )}
                     >
@@ -371,7 +371,7 @@ export function PasswordInput({
                       <div
                         className={cn(
                           !isSameAsCurrent
-                            ? "text-green-500 dark:text-green-400"
+                            ? "text-status-success dark:text-status-success"
                             : "text-muted-foreground",
                         )}
                       >
@@ -435,7 +435,7 @@ export function PasswordInput({
             {confirmLabel} {required && <span className="text-destructive">*</span>}
           </FieldLabel>
           {passwordsMatch && confirmPassword.length > 0 && (
-            <span className="text-sm text-green-600 dark:text-green-400">Match!</span>
+            <span className="text-sm text-status-success dark:text-status-success">Match!</span>
           )}
           {passwordsDoNotMatch && <span className="text-sm text-destructive">Don't match</span>}
         </div>
@@ -452,7 +452,7 @@ export function PasswordInput({
             className={cn(
               "pe-9",
               passwordsDoNotMatch && "border-destructive",
-              passwordsMatch && "border-green-500 dark:border-green-400",
+              passwordsMatch && "border-status-success dark:border-status-success",
             )}
           />
           <InputGroupAddon align="inline-end" className="right-1 gap-1">
@@ -460,7 +460,7 @@ export function PasswordInput({
               <Tooltip>
                 <TooltipTrigger
                   render={
-                    <div className="flex items-center text-green-500 dark:text-green-400">
+                    <div className="flex items-center text-status-success dark:text-status-success">
                       <Check className="h-4 w-4" />
                     </div>
                   }

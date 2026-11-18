@@ -53,7 +53,7 @@ export function useFieldValidation(options: FieldValidationOptions): FieldValida
                 )?.detail?.page?.props;
                 resolve({ available: p?.available ?? false, message: p?.message });
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              }) as any,
+              }) as unknown as (page: unknown) => void,
               onError: (errors) => reject(errors),
             });
           },

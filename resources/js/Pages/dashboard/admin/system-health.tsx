@@ -345,7 +345,7 @@ function StatusDot({ ok }: { ok: boolean }) {
   return (
     <span
       className={`inline-block h-2.5 w-2.5 rounded-full shrink-0 ${
-        ok ? "bg-emerald-500 dark:bg-emerald-400" : "bg-red-500 dark:bg-red-400"
+        ok ? "bg-status-success dark:bg-status-success" : "bg-status-error dark:bg-status-error"
       }`}
     />
   );
@@ -354,13 +354,13 @@ function StatusDot({ ok }: { ok: boolean }) {
 function SeverityIcon({ severity }: { severity: string }) {
   switch (severity) {
     case "critical": {
-      return <XCircle className="h-4 w-4 shrink-0 text-red-500 dark:text-red-400" />;
+      return <XCircle className="h-4 w-4 shrink-0 text-status-error" />;
     }
     case "high": {
-      return <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500 dark:text-amber-400" />;
+      return <AlertTriangle className="h-4 w-4 shrink-0 text-warning" />;
     }
     default: {
-      return <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500 dark:text-emerald-400" />;
+      return <CheckCircle2 className="h-4 w-4 shrink-0 text-status-success" />;
     }
   }
 }
@@ -423,12 +423,12 @@ function CollapsibleSection({
 
   const borderColor =
     status === "good"
-      ? "border-emerald-500/30 dark:border-emerald-400/30"
+      ? "border-status-success/30 dark:border-status-success/30"
       : status === "warning"
-        ? "border-amber-500/30 dark:border-amber-400/30"
+        ? "border-warning/30 dark:border-warning/30"
         : status === "critical"
-          ? "border-red-500/30 dark:border-red-400/30"
-          : "border-sky-500/30 dark:border-sky-400/30";
+          ? "border-status-error/30 dark:border-status-error/30"
+          : "border-status-info/30 dark:border-status-info/30";
 
   const badgeVariant =
     status === "good"
@@ -763,19 +763,19 @@ export default function SystemHealth(props: SystemHealthProps) {
           <Card
             className={
               !hasIssues
-                ? "border-emerald-500/30 dark:border-emerald-400/30"
+                ? "border-status-success/30 dark:border-status-success/30"
                 : criticalCount > 0
-                  ? "border-red-500/30 dark:border-red-400/30"
-                  : "border-amber-500/30 dark:border-amber-400/30"
+                  ? "border-status-error/30 dark:border-status-error/30"
+                  : "border-warning/30 dark:border-warning/30"
             }
           >
             <CardContent className="flex items-center gap-3 p-4">
               {!hasIssues ? (
-                <CheckCircle2 className="h-8 w-8 shrink-0 text-emerald-500 dark:text-emerald-400" />
+                <CheckCircle2 className="h-8 w-8 shrink-0 text-status-success dark:text-status-success" />
               ) : criticalCount > 0 ? (
-                <XCircle className="h-8 w-8 shrink-0 text-red-500 dark:text-red-400" />
+                <XCircle className="h-8 w-8 shrink-0 text-status-error dark:text-status-error" />
               ) : (
-                <AlertTriangle className="h-8 w-8 shrink-0 text-amber-500 dark:text-amber-400" />
+                <AlertTriangle className="h-8 w-8 shrink-0 text-warning dark:text-warning" />
               )}
               <div>
                 <p className="text-2xl font-bold">{!hasIssues ? "Good" : totalIssues}</p>
@@ -823,9 +823,9 @@ export default function SystemHealth(props: SystemHealthProps) {
           <Card
             className={
               appStatus === "up-to-date" && coreStatus !== "update-available"
-                ? "border-emerald-500/30 dark:border-emerald-400/30"
+                ? "border-status-success/30 dark:border-status-success/30"
                 : appStatus === "update-available" || coreStatus === "update-available"
-                  ? "border-amber-500/30 dark:border-amber-400/30"
+                  ? "border-warning/30 dark:border-warning/30"
                   : undefined
             }
           >
@@ -959,7 +959,7 @@ export default function SystemHealth(props: SystemHealthProps) {
                         </a>
                       ) : null}
                       {props.core_package.needs_reinstall && (
-                        <span className="text-xs text-amber-500 dark:text-amber-400">
+                        <span className="text-xs text-warning dark:text-warning">
                           vendor {props.core_package.vendor_version} vs source{" "}
                           {props.core_package.source_version} &mdash; run composer reinstall
                         </span>
@@ -1078,16 +1078,16 @@ export default function SystemHealth(props: SystemHealthProps) {
           <Card
             className={
               criticalCount > 0
-                ? "border-red-500/30 dark:border-red-400/30"
-                : "border-amber-500/30 dark:border-amber-400/30"
+                ? "border-status-error/30 dark:border-status-error/30"
+                : "border-warning/30 dark:border-warning/30"
             }
           >
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-base">
                 {criticalCount > 0 ? (
-                  <XCircle className="h-5 w-5 text-red-500 dark:text-red-400" />
+                  <XCircle className="h-5 w-5 text-status-error dark:text-status-error" />
                 ) : (
-                  <AlertTriangle className="h-5 w-5 text-amber-500 dark:text-amber-400" />
+                  <AlertTriangle className="h-5 w-5 text-warning dark:text-warning" />
                 )}
                 Recommendations
               </CardTitle>
@@ -1098,9 +1098,9 @@ export default function SystemHealth(props: SystemHealthProps) {
                   key={i}
                   className={`rounded-lg border p-3 ${
                     rec.severity === "critical"
-                      ? "border-red-500/30 bg-red-500/5 dark:border-red-400/30 dark:bg-red-400/10"
+                      ? "border-status-error/30 bg-status-error/5 dark:border-status-error/30 dark:bg-status-error/10"
                       : rec.severity === "high"
-                        ? "border-amber-500/30 bg-amber-500/5 dark:border-amber-400/30 dark:bg-amber-400/10"
+                        ? "border-warning/30 bg-warning/5 dark:border-warning/30 dark:bg-warning/10"
                         : "border-border/50 bg-muted/30"
                   }`}
                 >
@@ -1127,7 +1127,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* Application */}
           <CollapsibleSection
             title="Application"
-            icon={<Globe className="h-4 w-4 text-sky-500 dark:text-sky-400" />}
+            icon={<Globe className="h-4 w-4 text-status-info dark:text-status-info" />}
             status={
               props.laravel.debug && props.laravel.environment === "production"
                 ? "critical"
@@ -1174,7 +1174,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* PHP Configuration */}
           <CollapsibleSection
             title="PHP Configuration"
-            icon={<Cpu className="h-4 w-4 text-sky-500 dark:text-sky-400" />}
+            icon={<Cpu className="h-4 w-4 text-status-info dark:text-status-info" />}
             status={props.php.memory_limit_ok && props.php.version_ok ? "good" : "warning"}
           >
             <div className="space-y-1">
@@ -1210,7 +1210,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* OPcache */}
           <CollapsibleSection
             title="OPcache"
-            icon={<Activity className="h-4 w-4 text-purple-500 dark:text-purple-400" />}
+            icon={<Activity className="h-4 w-4 text-accent-purple dark:text-accent-purple" />}
             status={
               props.opcache.enabled ? "good" : props.opcache.extension_loaded ? "warning" : "info"
             }
@@ -1258,7 +1258,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* PHP Extensions */}
           <CollapsibleSection
             title="PHP Extensions"
-            icon={<Plug className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />}
+            icon={<Plug className="h-4 w-4 text-status-success dark:text-status-success" />}
             status={all_extensions_loaded ? "good" : "critical"}
           >
             <div className="space-y-4">
@@ -1270,9 +1270,9 @@ export default function SystemHealth(props: SystemHealthProps) {
                   {props.extensions.map((ext) => (
                     <div key={ext.name} className="flex items-center gap-2 py-1 text-sm">
                       {ext.loaded ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500 dark:text-emerald-400" />
+                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-status-success dark:text-status-success" />
                       ) : (
-                        <XCircle className="h-3.5 w-3.5 shrink-0 text-red-500 dark:text-red-400" />
+                        <XCircle className="h-3.5 w-3.5 shrink-0 text-status-error dark:text-status-error" />
                       )}
                       <span className={ext.required ? "font-medium" : "text-muted-foreground"}>
                         {ext.name}
@@ -1317,7 +1317,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* Database */}
           <CollapsibleSection
             title="Database"
-            icon={<Database className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />}
+            icon={<Database className="h-4 w-4 text-accent-cyan dark:text-accent-cyan" />}
             status={props.database.version_ok ? "good" : "critical"}
           >
             <div className="space-y-1">
@@ -1339,7 +1339,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* Server & OS */}
           <CollapsibleSection
             title="Server & OS"
-            icon={<Server className="h-4 w-4 text-purple-500 dark:text-purple-400" />}
+            icon={<Server className="h-4 w-4 text-accent-purple dark:text-accent-purple" />}
             status={props.server.is_https ? "good" : "warning"}
           >
             <div className="space-y-1">
@@ -1365,7 +1365,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* Storage / Cache */}
           <CollapsibleSection
             title="Storage & Cache"
-            icon={<FolderOpen className="h-4 w-4 text-rose-500 dark:text-rose-400" />}
+            icon={<FolderOpen className="h-4 w-4 text-accent-rose dark:text-accent-rose" />}
             status={props.storage.dirs.every((d) => d.writable) ? "good" : "critical"}
           >
             <div className="space-y-1">
@@ -1376,7 +1376,7 @@ export default function SystemHealth(props: SystemHealthProps) {
                     <MiniCard
                       value={`${props.storage.disk.percent}%`}
                       label="Disk Used"
-                      color={props.storage.disk.percent >= 90 ? "var(--red-500)" : undefined}
+                      color={props.storage.disk.percent >= 90 ? "var(--status-error)" : undefined}
                     />
                   </div>
                   <InfoRow
@@ -1409,7 +1409,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* Build Cache */}
           <CollapsibleSection
             title="Build Cache (Vite)"
-            icon={<Layers className="h-4 w-4 text-sky-500 dark:text-sky-400" />}
+            icon={<Layers className="h-4 w-4 text-status-info dark:text-status-info" />}
             status={props.build.exists ? "good" : "critical"}
           >
             <div className="space-y-1">
@@ -1423,7 +1423,7 @@ export default function SystemHealth(props: SystemHealthProps) {
                   <InfoRow label="Last Built" value={props.build.modified_at ?? "?"} />
                   <InfoRow label="Age" value={props.build.age ?? "?"} />
                   {props.build.age_hours !== undefined && props.build.age_hours > 24 && (
-                    <p className="text-[10px] text-amber-500 dark:text-amber-400 mt-1">
+                    <p className="text-[10px] text-warning dark:text-warning mt-1">
                       Build is over 24 hours old. Run{" "}
                       <code className="text-[10px]">npm run build</code> after code changes.
                     </p>
@@ -1436,7 +1436,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* Services Config */}
           <CollapsibleSection
             title="Services Configuration"
-            icon={<Settings className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />}
+            icon={<Settings className="h-4 w-4 text-accent-cyan dark:text-accent-cyan" />}
             status={
               props.queue.driver !== "sync" || props.cache.driver !== "file" ? "good" : "info"
             }
@@ -1488,7 +1488,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* Logging */}
           <CollapsibleSection
             title="Logging"
-            icon={<FileText className="h-4 w-4 text-rose-500 dark:text-rose-400" />}
+            icon={<FileText className="h-4 w-4 text-accent-rose dark:text-accent-rose" />}
             status="info"
           >
             <div className="space-y-1">
@@ -1555,7 +1555,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {props.schedule.length > 0 && (
             <CollapsibleSection
               title="Scheduled Commands"
-              icon={<Timer className="h-4 w-4 text-amber-500 dark:text-amber-400" />}
+              icon={<Timer className="h-4 w-4 text-warning dark:text-warning" />}
               status="info"
             >
               <div className="space-y-1">
@@ -1589,7 +1589,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {/* Statistics */}
           <CollapsibleSection
             title="Statistics"
-            icon={<Users className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />}
+            icon={<Users className="h-4 w-4 text-accent-cyan dark:text-accent-cyan" />}
             status="info"
           >
             <div className="space-y-1">
@@ -1615,7 +1615,7 @@ export default function SystemHealth(props: SystemHealthProps) {
           {props.debug_access_url && (
             <CollapsibleSection
               title="Diagnostics"
-              icon={<Bug className="h-4 w-4 text-rose-500 dark:text-rose-400" />}
+              icon={<Bug className="h-4 w-4 text-accent-rose dark:text-accent-rose" />}
               status="info"
             >
               <div className="space-y-1">

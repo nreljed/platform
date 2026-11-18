@@ -298,7 +298,7 @@ export function TemplateSimulationSection({
                   title="Template preview"
                   sandbox="allow-same-origin"
                   className={cn(
-                    "w-full rounded-md border bg-white dark:bg-gray-900",
+                    "w-full rounded-md border bg-background dark:bg-muted",
                     previewSize === "desktop" && "max-w-[820px]",
                     previewSize === "tablet" && "max-w-[600px]",
                     previewSize === "mobile" && "max-w-[375px]",
@@ -332,22 +332,22 @@ export function TemplateSimulationSection({
                     className={cn(
                       "rounded-md border p-3 text-xs font-mono",
                       entry.success
-                        ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/30"
-                        : "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30",
+                        ? "border-status-success bg-status-success dark:border-status-success dark:bg-status-success/30"
+                        : "border-status-error bg-status-error dark:border-status-error dark:bg-status-error/30",
                     )}
                   >
                     <div className="flex items-center gap-2 mb-1.5">
                       {entry.success ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                        <CheckCircle2 className="h-3.5 w-3.5 text-status-success dark:text-status-success" />
                       ) : (
-                        <XCircle className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
+                        <XCircle className="h-3.5 w-3.5 text-status-error dark:text-status-error" />
                       )}
                       <span
                         className={cn(
                           "font-semibold",
                           entry.success
-                            ? "text-green-700 dark:text-green-300"
-                            : "text-red-700 dark:text-red-300",
+                            ? "text-status-success dark:text-status-success"
+                            : "text-status-error dark:text-status-error",
                         )}
                       >
                         {entry.success ? "Delivered" : "Failed"}
@@ -376,7 +376,7 @@ export function TemplateSimulationSection({
                       </span>
                     </div>
                     {entry.error && (
-                      <div className="mt-1.5 rounded bg-red-100 p-1.5 text-red-700 dark:bg-red-900/40 dark:text-red-300">
+                      <div className="mt-1.5 rounded bg-status-error p-1.5 text-status-error dark:bg-status-error/40 dark:text-status-error">
                         Error: {entry.error}
                       </div>
                     )}

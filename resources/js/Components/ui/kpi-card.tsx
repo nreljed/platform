@@ -43,7 +43,7 @@ function KpiCard({
             {change !== undefined && (
               <div className="mt-1 flex items-center gap-1">
                 {isPositive && (
-                  <TrendingUp className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                  <TrendingUp className="h-3.5 w-3.5 shrink-0 text-status-success dark:text-status-success" />
                 )}
                 {isNegative && (
                   <TrendingDown className="h-3.5 w-3.5 shrink-0 text-destructive" />
@@ -54,7 +54,7 @@ function KpiCard({
                 <span
                   className={cn(
                     "text-xs font-medium tabular-nums",
-                    isPositive && "text-emerald-600 dark:text-emerald-400",
+                    isPositive && "text-status-success dark:text-status-success",
                     isNegative && "text-destructive",
                     !isPositive && !isNegative && "text-muted-foreground",
                   )}

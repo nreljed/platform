@@ -264,7 +264,7 @@ export default function NotificationsTest() {
       if (customEmail) payload.to = customEmail;
       await new Promise<void>((resolve, reject) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        router.post(route("dashboard.admin.settings.email.test"), payload as any, {
+        router.post(route("dashboard.admin.settings.email.test"), payload as unknown as Parameters<typeof router.post>[1], {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => resolve(),
@@ -300,7 +300,7 @@ export default function NotificationsTest() {
       if (customEmail) payload.email = customEmail;
       await new Promise<void>((resolve, reject) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        router.post(route("dashboard.admin.settings.email.template-test"), payload as any, {
+        router.post(route("dashboard.admin.settings.email.template-test"), payload as unknown as Parameters<typeof router.post>[1], {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => resolve(),
@@ -609,7 +609,7 @@ export default function NotificationsTest() {
 
         {result && (
           <div
-            className={`flex items-start gap-3 rounded-lg border p-4 text-sm ${result.ok ? "border-green-500/20 bg-green-500/5 text-green-700 dark:border-green-400/20 dark:bg-green-400/10 dark:text-green-400" : "border-red-500/20 bg-red-500/5 text-red-700 dark:border-red-400/20 dark:bg-red-400/10 dark:text-red-400"}`}
+            className={`flex items-start gap-3 rounded-lg border p-4 text-sm ${result.ok ? "border-status-success/20 bg-status-success/5 text-status-success dark:border-status-success/20 dark:bg-status-success/10 dark:text-status-success" : "border-status-error/20 bg-status-error/5 text-status-error dark:border-status-error/20 dark:bg-status-error/10 dark:text-status-error"}`}
           >
             <div className="mt-0.5 shrink-0">
               {result.ok ? (
@@ -645,7 +645,7 @@ export default function NotificationsTest() {
                 {resultHistory.map((r) => (
                   <div key={r.id} className="flex items-center gap-3 px-4 py-2 text-xs">
                     <div
-                      className={`shrink-0 ${r.ok ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
+                      className={`shrink-0 ${r.ok ? "text-status-success dark:text-status-success" : "text-status-error dark:text-status-error"}`}
                     >
                       {r.ok ? <CheckCircle2 className="h-3 w-3" /> : <X className="h-3 w-3" />}
                     </div>

@@ -36,9 +36,9 @@ function SuccessRedirect({ status }: { status: string }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Alert className="bg-green-500/10 border-green-500/20 dark:bg-green-500/20">
-            <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 shrink-0" />
-            <AlertDescription className="text-green-700 dark:text-green-300">
+          <Alert className="bg-status-success/10 border-status-success/20 dark:bg-status-success/20">
+            <CheckCircle className="h-5 w-5 text-status-success dark:text-status-success shrink-0" />
+            <AlertDescription className="text-status-success dark:text-status-success">
               {status}
             </AlertDescription>
           </Alert>
@@ -124,9 +124,9 @@ export default function ResetPassword({
           <input type="hidden" name="email" value={data.email} />
           <CardContent className="grid gap-4">
             {status && (
-              <Alert className="bg-green-500/10 border-green-500/20 dark:bg-green-500/20">
-                <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 shrink-0" />
-                <AlertDescription className="text-green-700 dark:text-green-300">
+              <Alert className="bg-status-success/10 border-status-success/20 dark:bg-status-success/20">
+                <CheckCircle className="h-5 w-5 text-status-success dark:text-status-success shrink-0" />
+                <AlertDescription className="text-status-success dark:text-status-success">
                   {status}
                 </AlertDescription>
               </Alert>

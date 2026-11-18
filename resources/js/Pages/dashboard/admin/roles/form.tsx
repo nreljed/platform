@@ -144,9 +144,9 @@ export default function AdminRolesForm() {
       </div>
 
       {isLocked && (
-        <Alert className="mb-6 border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950">
-          <ShieldAlert className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-          <AlertDescription className="text-amber-700 dark:text-amber-300 ml-2">
+        <Alert className="mb-6 border-warning bg-warning dark:border-warning dark:bg-warning">
+          <ShieldAlert className="h-5 w-5 text-warning dark:text-warning" />
+          <AlertDescription className="text-warning dark:text-warning ml-2">
             <strong>{role!.name}</strong> is a system role managed by the config catalog and is
             read-only here to prevent accidental lockout. To change its permissions, edit the
             catalog in <code className="text-xs">config/roles.php</code> or use the Permissions

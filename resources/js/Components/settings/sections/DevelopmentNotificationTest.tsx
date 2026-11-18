@@ -249,7 +249,7 @@ export function DevelopmentNotificationTest({
         </div>
         {result && (
           <div
-            className={`flex items-start gap-3 rounded-lg border p-3 text-sm ${result.ok ? "border-green-500/20 bg-green-500/5 text-green-700 dark:border-green-400/20 dark:bg-green-400/10 dark:text-green-400" : "border-red-500/20 bg-red-500/5 text-red-700 dark:border-red-400/20 dark:bg-red-400/10 dark:text-red-400"}`}
+            className={`flex items-start gap-3 rounded-lg border p-3 text-sm ${result.ok ? "border-status-success/20 bg-status-success/5 text-status-success dark:border-status-success/20 dark:bg-status-success/10 dark:text-status-success" : "border-status-error/20 bg-status-error/5 text-status-error dark:border-status-error/20 dark:bg-status-error/10 dark:text-status-error"}`}
           >
             <div className="flex-1 min-w-0">
               <p className="font-medium">{result.text}</p>

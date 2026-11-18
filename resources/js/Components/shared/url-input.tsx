@@ -70,7 +70,7 @@ function UrlInput({
       {value && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           {isValidUrl(value) ? (
-            <Globe className="h-4 w-4 text-green-500 dark:text-green-400" />
+            <Globe className="h-4 w-4 text-status-success dark:text-status-success" />
           ) : (
             <Globe className="h-4 w-4 text-muted-foreground" />
           )}

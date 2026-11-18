@@ -67,7 +67,7 @@ const SortableImage = React.memo(function SortableImage({
         : {})}
       className={`group relative aspect-square rounded-lg overflow-hidden bg-muted select-none touch-none ${
         isFeatured
-          ? "border-3 border-yellow-500 dark:border-yellow-400"
+          ? "border-3 border-warning dark:border-warning"
           : "border-2 border-transparent"
       } ${
         isDragging
