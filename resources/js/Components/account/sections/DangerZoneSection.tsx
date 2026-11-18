@@ -71,7 +71,7 @@ export function DangerZoneSection({
         router.post(
           route("dashboard.account.verify-delete-password"),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          { current_password: currentPassword } as any,
+          { current_password: currentPassword } as unknown as Parameters<typeof router.post>[1],
           {
             preserveState: true,
             preserveScroll: true,

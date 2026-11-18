@@ -39,7 +39,7 @@ export function usePasswordVerification(): UsePasswordVerificationReturn {
                 )?.detail?.page?.props;
                 resolve({ verified: p?.verified ?? false, message: p?.message });
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              }) as any,
+              }) as unknown as (page: unknown) => void,
               onError: (errors) => reject(errors),
             },
           );

@@ -264,7 +264,7 @@ export default function NotificationsTest() {
       if (customEmail) payload.to = customEmail;
       await new Promise<void>((resolve, reject) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        router.post(route("dashboard.admin.settings.email.test"), payload as any, {
+        router.post(route("dashboard.admin.settings.email.test"), payload as unknown as Parameters<typeof router.post>[1], {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => resolve(),
@@ -300,7 +300,7 @@ export default function NotificationsTest() {
       if (customEmail) payload.email = customEmail;
       await new Promise<void>((resolve, reject) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        router.post(route("dashboard.admin.settings.email.template-test"), payload as any, {
+        router.post(route("dashboard.admin.settings.email.template-test"), payload as unknown as Parameters<typeof router.post>[1], {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => resolve(),
