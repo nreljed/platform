@@ -35,8 +35,9 @@ const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 export type FoundationAppConfig = {
     /**
-     * The starting page map — normally `registerCoreTemplates()` from `./dashboard`
-     * plus `registerStarterThemePages()` from `../themes/starter`. Core pages are
+     * The starting page map - normally `registerCoreTemplates()` from `./dashboard`.
+     * Themes are project-owned (see docs/frontend.md); platform no longer ships a
+     * starter theme. Core pages are
      * opt-in: a project decides which pages it uses by spreading the kit here
      * (and/or adding its own entries).
      */

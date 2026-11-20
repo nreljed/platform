@@ -43,13 +43,14 @@ exports (`@nreljed/blog/pages` → `registerBlogPages()`, `@nreljed/shop-module/
 `registerShopPages()`, …); their **public/template pages are theme-owned and ship in the
 starter theme or the app, never in the module**.
 
-### Starter Theme (fork-me)
+### Themes (project-owned)
 
-`@nreljed/platform/themes/starter` exports `registerStarterThemePages()` — the opt-in,
-**never auto-registered** template kit (public marketing + `blog/public/*`). Consuming apps
-either spread it into `basePages`, or fork the `Pages/` tree into the project (the normal
-path, see `resources/themes/starter/README.md`). Public pages **must never** be added to the
-core `resources/js/Pages` kit — that table is a contract (see
+Platform no longer ships a starter theme or blog rendering. Themes are **project-owned**:
+each consuming app keeps its marketing + blog public templates under its own
+`resources/js/frontend/pages/...` (and its style guide under `public/styleguide`).
+Platform provides only the shared component kit (`Components/ui/*`, `Components/shared/*`)
+and `registerCoreTemplates()` for the control panel. Public pages **must never** be added to
+the core `resources/js/Pages` kit - that table is a contract (see
 `tests/FrontendPageInventoryContractTest.php`).
 
 ## Directory Layout
@@ -60,7 +61,7 @@ resources/js/
 ├── Components/
 │   ├── account/              # account nav + sections (profile, contact, email, password,
 │   │                         #   notification prefs, avatar, security, integrations, danger zone)
-│   ├── blog/                 # ProseContent (blog article renderer — shared kit, imported by nreljed/blog pages via `@/`)
+│   ├── 
 │   ├── dashboard/            # KpiCard, Sparkline, RevenueChart, RecentOrdersTable, ...
 │   ├── editor/               # Lexical rich text editor (image, layout, tables, YouTube,
 │   │                         #   slash commands, TOC, find/replace, word count)
